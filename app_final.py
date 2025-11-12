@@ -1,7 +1,22 @@
 import streamlit as st
 
-# --- İÇERİK DOSYALARINI İÇE AKTARMA (IMPORT) ---
-# DİKKAT: İçerik dosyalarınızın (math_content.py, science_content.py, vb.) mevcut ve doğru olması gerekir.
+# --- 1. KOÇ MODÜLÜ İÇERİĞİ TANIMLAMA (Eski görsellerinizde yer alan modüle içerik eklendi) ---
+COACH_CONTENT = """
+## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🎓 Konu: Etkili Ders Çalışma Yöntemleri ve Zaman Yönetimi</p>
+</div>
+### 🗓️ Haftalık Çalışma Planı
+* **Zaman Yönetimi:** Günlük rutin oluşturma ve derslere ayrılan sürenin belirlenmesi.
+* **Pomodoro Tekniği:** 25 dakika çalışma, 5 dakika mola tekniği ile odaklanmayı artırma.
+* **Verimli Not Alma:** Anahtar kelimeler ve zihin haritası kullanarak not tutma.
+
+### 🎯 Motivasyon ve Hedef Belirleme
+* **SMART Hedefler:** (Specific, Measurable, Achievable, Relevant, Time-bound) belirleme.
+* **Motivasyon Artırma:** Başarıları takip etme ve küçük ödüllerle kendini teşvik etme.
+"""
+
+# --- 2. İÇERİK DOSYALARINI İÇE AKTARMA (IMPORT) ---
 from math_content import MATH_CONTENT
 from turkish_content import TURKISH_CONTENT
 from english_content import ENGLISH_CONTENT
@@ -17,15 +32,14 @@ except ImportError:
     Lütfen bu dosyayı oluşturup içine 'SCIENCE_CONTENT' değişkenini tanımlayın.
     """
 
-# --- 2. STREAMLIT SAYFA AYARLARI ---
+# --- 3. STREAMLIT SAYFA AYARLARI ---
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
-
-# --- 3. BAŞLIK VE SEKME YAPISI ---
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# 6 ANA DERS SEKMESİ OLUŞTURULDU (Koç Modülü kaldırıldı)
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+# 7 SEKME OLUŞTURULDU (Koç Modülü en başta)
+tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
+    "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
     "🧪 Fen Bilimleri",
@@ -34,8 +48,28 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "🕌 Din Kültürü",
 ])
 
-# --- 4. TAB 1: MATEMATİK İÇERİKLERİ ---
-with tab1:
+# ==============================================================================
+# --- 4. TAB 0: KOÇ MODÜLÜ ---
+# ==============================================================================
+with tab_coach:
+    st.header("💡 Koç Modülü - Rehberlik ve Mentorluk")
+    col_coach_btn1, col_coach_btn2, col_coach_btn3 = st.columns(3)
+    
+    with col_coach_btn1:
+        st.button("📝 Çalışma Planı Oluştur", type="primary", key="coach_plan") 
+    with col_coach_btn2:
+        st.button("🧠 Motivasyon Teknikleri", type="secondary", key="coach_motivasyon")
+    with col_coach_btn3:
+        st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
+    
+    st.markdown("---")
+    st.markdown(COACH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 5. TAB 1: MATEMATİK İÇERİKLERİ ---
+# ==============================================================================
+with tab_math:
     st.header("🔢 Matematik Dersi İçerikleri")
     col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
     
@@ -50,8 +84,10 @@ with tab1:
     st.markdown(MATH_CONTENT, unsafe_allow_html=True)
 
 
-# --- 5. TAB 2: TÜRKÇE İÇERİKLERİ ---
-with tab2:
+# ==============================================================================
+# --- 6. TAB 2: TÜRKÇE İÇERİKLERİ ---
+# ==============================================================================
+with tab_tr:
     st.header("📝 Türkçe Dersi İçerikleri")
     col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
 
@@ -65,8 +101,11 @@ with tab2:
     st.markdown("---")
     st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
 
-# --- 6. TAB 3: FEN BİLİMLERİ İÇERİKLERİ ---
-with tab3:
+
+# ==============================================================================
+# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ ---
+# ==============================================================================
+with tab_sci:
     st.header("🧪 Fen Bilimleri Dersi İçerikleri")
     col_fen_btn1, col_fen_btn2, col_fen_btn3 = st.columns(3)
     
@@ -80,11 +119,13 @@ with tab3:
     st.markdown("---")
     st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
 
-# --- 7. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
-with tab4:
+
+# ==============================================================================
+# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
+# ==============================================================================
+with tab_soc:
     st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
     col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
     
     with col_sosyal_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
-    with col
+        st.button("📄 Konu Anlatımı", type="primary", key
