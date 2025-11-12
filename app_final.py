@@ -69,7 +69,7 @@ st.markdown(
 # --- OTURUM DURUMU (SESSION STATE) BAŞLANGIÇ AYARLARI ---
 ADMIN_PASSWORD = "123" 
 
-# 7. SINIF DERS VERİLERİ (Konu Anlatımı ve Quiz/Test Soruları)
+# 7. SINIF DERS VERİLERİ (Konu Anlatımı, Quiz/Test Soruları, Kelime Kartları)
 DEFAULT_DERSLER = {
     "Matematik": {
         "konu": "7. Sınıf Matematik Tüm Üniteler", 
@@ -108,7 +108,14 @@ Bu konular, lise matematiği için sağlam bir temel oluşturur.""",
     * **Farklı İşaretliler:** Sonuç her zaman **Negatiftir** ($+\cdot-=-$, $-\cdot+=-$).
     * **Örnek 7 (Çarpma):** $(-6) \cdot (-3) = +18$ (Aynı işaret)
     * **Örnek 8 (Bölme):** $15 \div (-5) = -3$ (Farklı işaret)
-"""
+""",
+        "kelimeler": [
+            {"tr": "Tam Sayı", "en": "Integer"},
+            {"tr": "Kesir", "en": "Fraction"},
+            {"tr": "Denklem", "en": "Equation"},
+            {"tr": "Oran", "en": "Ratio"},
+            {"tr": "Çevre", "en": "Perimeter"},
+        ]
     },
     "Türkçe": {
         "konu": "7. Sınıf Türkçe Tüm Konular",
@@ -141,7 +148,14 @@ Fiiller, cümlede bir işi, oluşu veya hareketi zaman ve kişiye bağlı olarak
     * **Kurallı Birleşik Fiiller (Yeterlik, Tezlik, Sürerlik, Yaklaşma):** *gel-ebilmek*, *git-ivermek*, *bak-akalmak*.
     * **Yardımcı Fiille Kurulanlar:** *etmek, olmak, eylemek, kılmak* gibi yardımcı fiillerle kurulur. (*hasta olmak, yardım etmek*)
     * **Anlamca Kaynaşmış (Deyimleşmiş):** Deyimler. (*gözden düşmek, kulak vermek*)
-"""
+""",
+        "kelimeler": [
+            {"tr": "Hürriyet", "en": "Özgürlük (Eş Anlamlı)"},
+            {"tr": "Mecaz", "en": "Gerçek Anlam Dışında Kullanım"},
+            {"tr": "Fiil", "en": "Eylem (Yapılan İş)"},
+            {"tr": "Zarf", "en": "Belirteç"},
+            {"tr": "Sıfat", "en": "Önad"},
+        ]
     },
     "Fen Bilimleri": {
         "konu": "7. Sınıf Fen Bilimleri Tüm Üniteler",
@@ -180,7 +194,14 @@ Hücre bölünmesi, canlılarda büyüme, üreme ve onarım amaçlı gerçekleş
     * **Oluşan Hücre Sayısı:** 4 yeni hücre oluşur.
     * **Kalıtsal Çeşitlilik:** Oluşan hücreler **farklı** kalıtsal yapıdadır (Kalıtsal Çeşitlilik VAR).
     * **Örnek:** Bir insanın üreme hücrelerinin oluşması.
-"""
+""",
+        "kelimeler": [
+            {"tr": "Mitoz", "en": "Vücut Hücresi Bölünmesi"},
+            {"tr": "Mayoz", "en": "Üreme Hücresi Bölünmesi"},
+            {"tr": "Proton", "en": "Pozitif Yük"},
+            {"tr": "Hücre", "en": "Cell"},
+            {"tr": "Kütle", "en": "Mass"},
+        ]
     },
     "Din Kültürü ve Ahlak Bilgisi": { 
         "konu": "7. Sınıf Din Kültürü Tüm Üniteler", 
@@ -214,7 +235,14 @@ Melekler, Allah'ın emirlerini yerine getiren, nurdan yaratılmış, gözle gör
 
 4.  **Azrail (A.S.):** **Ölüm Meleği** olarak bilinir. Eceli gelen canlıların ruhunu almakla görevlidir.
     * *Örnek Görev:* Allah'ın emriyle her canlının yaşam süresini sonlandırmak.
-"""
+""",
+        "kelimeler": [
+            {"tr": "Ahiret", "en": "Öteki Dünya"},
+            {"tr": "Kıyamet", "en": "Son (Dünyanın Sonu)"},
+            {"tr": "Hac", "en": "Kâbe Ziyareti"},
+            {"tr": "Dürüstlük", "en": "Sıdk"},
+            {"tr": "Tevazu", "en": "Alçakgönüllülük"},
+        ]
     },
     "Sosyal Bilgiler": {
         # Konu adını görseldeki gibi düzeltiyoruz
@@ -252,7 +280,14 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
 * **Empati Kurmak:** Kendini karşındakinin yerine koymak.
 * **Göz Teması Kurmak:** Samimiyeti ve dikkati gösterir.
 * **Aktif Dinleme:** Sadece duymak değil, söylenenin anlamını kavramaya çalışmak.
-"""
+""",
+        "kelimeler": [
+            {"tr": "Empati", "en": "Duygudaşlık"},
+            {"tr": "İletişim", "en": "Communication"},
+            {"tr": "Miras", "en": "Heritage"},
+            {"tr": "Vatandaşlık", "en": "Citizenship"},
+            {"tr": "Ben Dili", "en": "I-Language"},
+        ]
     },
     "İngilizce": {
         "konu": "7. Sınıf İngilizce Tüm Üniteler", 
@@ -286,7 +321,14 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
         * *Selfish* (Bencil) $\rightarrow$ He is **selfish** and never shares.
         * *Rude* (Kaba) $\rightarrow$ Don't be **rude** to your teachers.
         * *Lazy* (Tembel) $\rightarrow$ She is a bit **lazy** sometimes.
-"""
+""",
+        "kelimeler": [
+            {"tr": "Cömert", "en": "Generous"},
+            {"tr": "Kısa", "en": "Short"},
+            {"tr": "Uzun", "en": "Tall"},
+            {"tr": "Nazik", "en": "Kind"},
+            {"tr": "Tembel", "en": "Lazy"},
+        ]
     }
 } 
 
@@ -321,6 +363,11 @@ if 'test_konusu' not in st.session_state:
     st.session_state['test_konusu'] = ""
 if 'koc_mesaj' not in st.session_state:
     st.session_state['koc_mesaj'] = ""
+# Kelime Modülü için yeni state'ler
+if 'current_word_index' not in st.session_state:
+    st.session_state['current_word_index'] = 0
+if 'show_translation' not in st.session_state:
+    st.session_state['show_translation'] = False
 
 
 # --- PORTFOLYO İÇERİK FONKSİYONU ---
@@ -343,6 +390,57 @@ def get_portfolyo_bilgisi(baslik):
         return ("""Hızlı metin çevirisi yapabileceğiniz simülasyon aracıdır.""", "🌍")
     return ("İçerik Bulunamadı.", "❓")
 
+# --- KELİME ÖĞRENME MODÜLÜ İŞLEVİ (YENİ EKLENEN) ---
+def render_kelime_ogrenme_modulu(ders_adi, kelimeler):
+    st.header(f"🔠 {ders_adi} - Kelime Öğrenme Kartları")
+    st.info("Aşağıdaki kartları kullanarak konuya ait önemli terimleri ve kelimeleri öğrenin. İlerleme tuşlarına basarak kartlar arasında geçiş yapabilirsiniz.")
+    
+    if not kelimeler:
+        st.warning("Bu ders için tanımlanmış kelime kartı bulunmamaktadır.")
+        return
+
+    toplam_kelime = len(kelimeler)
+    current_index = st.session_state['current_word_index'] % toplam_kelime # İndeksi toplam kelime sayısına göre döngüye sok
+
+    # Mevcut kelime
+    current_word = kelimeler[current_index]
+    
+    # Kelime kartı görselleştirmesi (Container veya Columns kullanarak daha şık bir görünüm)
+    kart_container = st.container(border=True)
+    with kart_container:
+        st.markdown(f"### Kelime {current_index + 1} / {toplam_kelime}")
+        
+        # Kelime kartının ön yüzü (Türkçe)
+        st.markdown(f"#### 🇹🇷 **{current_word['tr']}**")
+        
+        st.markdown("---")
+        
+        # Çeviri gösterim kontrolü
+        if st.session_state['show_translation']:
+            st.markdown(f"#### 🇬🇧 **Anlamı:** {current_word['en']}")
+        else:
+            st.markdown("#### Anlamını görmek için 'Çeviriyi Göster'e tıklayın.")
+            
+    # Navigasyon Butonları
+    col_prev, col_flip, col_next = st.columns(3)
+
+    with col_prev:
+        if st.button("⬅️ Önceki Kelime", use_container_width=True):
+            st.session_state['current_word_index'] = (current_index - 1) if current_index > 0 else toplam_kelime - 1
+            st.session_state['show_translation'] = False
+            st.rerun()
+
+    with col_flip:
+        if st.button("🔄 Çeviriyi Göster/Gizle", use_container_width=True):
+            st.session_state['show_translation'] = not st.session_state['show_translation']
+            st.rerun()
+
+    with col_next:
+        if st.button("➡️ Sonraki Kelime", use_container_width=True):
+            st.session_state['current_word_index'] = (current_index + 1) % toplam_kelime
+            st.session_state['show_translation'] = False
+            st.rerun()
+
 
 # --- DERS MODÜLLERİ (Konu Anlatımı, Ders Koçlarımız, Çalışma Alanı/PDF/Deneme) ---
 def render_ders_modulu(ders_adi, ders_veri, modul):
@@ -350,31 +448,39 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
     st.subheader(f"✅ Seçili Sayfa: {ders_adi}")
     st.markdown(f"## 📚 {ders_adi} Dersi İçerikleri", unsafe_allow_html=True)
     
-    # Modül Navigasyonu (Görseldeki buton metinleri ve ikonları düzenleniyor)
-    col_konu, col_pdf, col_koc, col_alan = st.columns(4)
+    # Modül Navigasyonu (5 Buton Eklendi)
+    col_konu, col_pdf, col_koc, col_alan, col_kelime = st.columns(5)
     
     with col_konu:
-        # Konu Anlatımı (Görselde adı Konu Anlatımı, kodda da aynı)
+        # Konu Anlatımı 
         if st.button("📖 Konu Anlatımı", key="btn_konu_anlatim_new", use_container_width=True):
             st.session_state['secilen_modul'] = "Konu Anlatımı"
             st.session_state['test_konusu'] = "" 
-            st.session_state['koc_mesaj'] = "" # Koç mesajını temizle
+            st.session_state['koc_mesaj'] = "" 
     with col_pdf:
-        # PDF Sonuç Kontrol (Görselde adı PDF Sonuç Kontrol, kodda da aynı)
+        # PDF Sonuç Kontrol 
         if st.button("🔶 PDF Sonuç Kontrol", key="btn_pdf_kontrol_new", use_container_width=True):
             st.session_state['secilen_modul'] = "PDF Kontrol"
             st.session_state['test_konusu'] = ""
             st.session_state['koc_mesaj'] = ""
     with col_koc:
-        # Ders Koçlarımız (Görselde adı Ders Koçlarımız, kodda da aynı)
+        # Ders Koçlarımız
         if st.button("🔶 Ders Koçlarımız", key="btn_ders_koclari", use_container_width=True):
             st.session_state['secilen_modul'] = "Ders Koçlarımız"
             st.session_state['test_konusu'] = ""
     with col_alan:
-        # Çalışma Alanı (Görseldeki adı "Çalışma Alanı", kodda "Deneme Sınavı" yerine bu isim kullanılacak)
+        # Çalışma Alanı
         if st.button("🔶 Çalışma Alanı", key="btn_deneme_sinavi_new", use_container_width=True):
             st.session_state['secilen_modul'] = "Deneme Sınavı" # Modül adı içeride sabit kalmalı
             st.session_state['koc_mesaj'] = ""
+    with col_kelime:
+        # Yeni Kelime Öğrenme Modülü Butonu
+        if st.button("🔠 Kelime Öğren", key="btn_kelime_ogrenme", use_container_width=True):
+            st.session_state['secilen_modul'] = "Kelime Öğrenme"
+            st.session_state['test_konusu'] = ""
+            st.session_state['koc_mesaj'] = ""
+            st.session_state['current_word_index'] = 0 # Yeni modüle geçerken kartı sıfırla
+            st.session_state['show_translation'] = False
             
     st.markdown("---")
 
@@ -452,7 +558,11 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                 else:
                      st.warning("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
             else:
+                # Koç cevabı butonu henüz tıklanmadıysa bu bilgi gösterilir
                 st.info("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
+    
+    elif modul == "Kelime Öğrenme":
+        render_kelime_ogrenme_modulu(ders_adi, ders_veri.get('kelimeler', []))
 
 
 # --- DİNAMİK TEST ALANI İŞLEVİ ---
@@ -490,8 +600,8 @@ def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
         with st.form(f"quiz_form_{ders_adi}_soru", clear_on_submit=False): # Key çakışmasını engelle
             kullanici_cevaplari = {}
             
-            # Dinamik konu başlığını yansıtmak için soruları yeniden yazarız.
-            guncel_sorular = [{"q": q['q'].replace("Sözcükte Anlam İlişkileri", st.session_state['test_konusu']), **q} for q in sorular]
+            # Sorular sabit kalsa bile, testin simülasyon olduğunu belirtmek için bu kısmı koruduk
+            guncel_sorular = [q for q in sorular] 
             
             for i, q in enumerate(guncel_sorular):
                 q_text = q['q']
@@ -547,6 +657,7 @@ def render_cevirici():
         
         if st.form_submit_button("Çevir"):
             if kaynak_metin:
+                # Görseldeki çıktı formatına daha yakın bir çıktı simülasyonu
                 cevrilmis_metin = f"[{hedef_dil} Çevirisi]: {kaynak_metin.upper()} (Simülasyon Çevirisi Başarılı!)"
                 st.success(f"Çeviri Tamamlandı ({kaynak_dil} -> {hedef_dil}):")
                 st.code(cevrilmis_metin)
@@ -564,10 +675,20 @@ if not st.session_state['admin_mode']:
 
     if st.session_state['music_enabled']:
         # Müzik çalma kodu
-        st.audio(st.session_state['music_url'], format="audio/mp3", loop=True)
-        
+        # Streamlit'in ses bileşeni, bir HTML tag'ı olmadığından Volume'ü doğrudan Python'da ayarlayamazsınız. 
+        # Ancak kullanıcı slider'ı hareket ettirdiğinde rerender edip, sesi tamamen kapatıp açarak kontrol edebiliriz.
+        # Basitlik adına, sadece HTML audio tag'ı kullanıp volume ayarını HTML ile yapalım:
+        st.markdown(f"""
+            <audio id="background-music" controls autoplay loop style="display:none;">
+                <source src="{st.session_state['music_url']}" type="audio/mp3">
+            </audio>
+            <script>
+                var audio = document.getElementById('background-music');
+                audio.volume = {st.session_state['music_volume']};
+            </script>
+        """, unsafe_allow_html=True)
+
         with col_kapat:
-            # Syntax hatası düzeltilmiş buton
             if st.button("🔊 Müzik Kapat", key="btn_kapat_ses", use_container_width=True):
                 st.session_state['music_enabled'] = False
                 st.rerun()
@@ -609,11 +730,13 @@ if not st.session_state['admin_mode']:
         with cols[i]:
             if st.button(f"🔹 {sayfa}", key=f"btn_{sayfa}", use_container_width=True):
                 st.session_state['secilen_sayfa'] = sayfa
-                # Ders sayfasına geçildiğinde modül varsayılana ('Konu Anlatımı') ayarlansın
+                # Ders sayfasına geçildiğinde modül varsayılana ('Konu Anlatımı') ayarlanır
                 if sayfa in DERS_SAYFALAR:
                     st.session_state['secilen_modul'] = "Konu Anlatımı" 
-                    st.session_state['test_konusu'] = "" # Konu değişince testi sıfırla
-                    st.session_state['koc_mesaj'] = "" # Koç mesajını temizle
+                    st.session_state['test_konusu'] = "" 
+                    st.session_state['koc_mesaj'] = "" 
+                    st.session_state['current_word_index'] = 0 # Kelime kartlarını sıfırla
+                    st.session_state['show_translation'] = False
                 else:
                     st.session_state['secilen_modul'] = "Konu Anlatımı"
                 st.rerun()
