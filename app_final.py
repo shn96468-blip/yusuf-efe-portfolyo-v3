@@ -1,6 +1,8 @@
 import streamlit as st
 
-# --- 1. KOÇ MODÜLÜ İÇERİĞİ TANIMLAMA ---
+# --- 1. TÜM İÇERİKLERİN TANIMI (Dosya bulma hatasını önlemek için kodun içine alındı) ---
+
+# KOÇ MODÜLÜ İÇERİĞİ
 COACH_CONTENT = """
 ## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
 <div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
@@ -16,29 +18,113 @@ COACH_CONTENT = """
 * **Motivasyon Artırma:** Başarıları takip etme ve küçük ödüllerle kendini teşvik etme.
 """
 
-# --- 2. İÇERİK DOSYALARINI İÇE AKTARMA (IMPORT) ---
-# DİKKAT: Bu dosyaların (math_content.py, turkish_content.py vb.) app_final.py ile AYNI KLASÖRDE olması ZORUNLUDUR.
-from math_content import MATH_CONTENT
-from turkish_content import TURKISH_CONTENT
-from english_content import ENGLISH_CONTENT
-from religion_content import RELIGION_CONTENT
-from history_content import SOCIAL_CONTENT 
+# MATEMATİK İÇERİĞİ (Daha önce 'math_content.py' dosyasındaydı)
+MATH_CONTENT = """
+## 📘 Matematik - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf Matematik Müfredatı Özeti</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* Tam Sayılarla İşlemler
+* Rasyonel Sayılar
+* Cebirsel İfadeler
+* Oran ve Orantı
+* Yüzdeler
+* Doğrular ve Açılar
+* Çokgenler ve Alan
+* Çember ve Daire
+* Veri Analizi
+"""
 
-try:
-    from science_content import SCIENCE_CONTENT 
-except ImportError:
-    # science_content.py dosyası eksikse, hata vermeden uyarı göstermesini sağlar
-    SCIENCE_CONTENT = """## ⚠️ Eksik Dosya Uyarısı
-    Fen Bilimleri içeriği, 'science_content.py' dosyasından içe aktarılamadı.
-    Lütfen bu dosyayı oluşturup içine 'SCIENCE_CONTENT' değişkenini tanımlayın.
-    """
+# TÜRKÇE İÇERİĞİ (Daha önce 'turkish_content.py' dosyasındaydı)
+TURKISH_CONTENT = """
+## 📝 Türkçe - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf Türkçe Müfredatı Özeti</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* Sözcükte Anlam
+* Cümlede Anlam
+* Paragrafta Anlam
+* Fiiller (Eylem)
+* Fiilde Anlam Kayması
+* Ekler ve Köklere Giriş
+* Yazım Kuralları ve Noktalama İşaretleri
+* Metin Türleri (Hikâye, Roman, Şiir)
+"""
 
-# --- 3. STREAMLIT SAYFA AYARLARI ---
+# FEN BİLİMLERİ İÇERİĞİ (Daha önce 'science_content.py' dosyasındaydı)
+SCIENCE_CONTENT = """
+## 🧪 Fen Bilimleri - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf Fen Müfredatı Özeti</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* Güneş Sistemi ve Ötesi
+* Hücre
+* Kuvvet ve Enerji
+* Saf Madde ve Karışımlar
+* Kimyasal Tepkimeler
+* Işığın Maddeyle Etkileşimi
+* Canlılarda Üreme, Büyüme ve Gelişme
+* Elektrik Devreleri
+"""
+
+# SOSYAL BİLGİLER İÇERİĞİ (Daha önce 'history_content.py' dosyasındaydı)
+SOCIAL_CONTENT = """
+## 🌍 Sosyal Bilgiler - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf Sosyal Bilgiler Tüm Üniteler</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* 1. ÜNİTE: BİREY VE TOPLUM
+* 2. ÜNİTE: KÜLTÜR VE MİRAS
+* 3. ÜNİTE: İNSANLAR, YERLER VE ÇEVRELER
+* 4. ÜNİTE: BİLİM, TEKNOLOJİ VE TOPLUM
+* 5. ÜNİTE: ÜRETİM, DAĞITIM VE TÜKETİM
+* 6. ÜNİTE: ETKİN VATANDAŞLIK
+* 7. ÜNİTE: KÜRESEL BAĞLANTILAR
+"""
+
+# İNGİLİZCE İÇERİĞİ (Daha önce 'english_content.py' dosyasındaydı)
+ENGLISH_CONTENT = """
+## 🗣️ İngilizce - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf İngilizce Üniteleri</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* Appearance and Personality (Dış Görünüş ve Karakter)
+* Sports (Spor)
+* Biographies (Biyografiler)
+* Wild Animals (Vahşi Hayvanlar)
+* Television (Televizyon)
+* Parties (Partiler)
+* Superstitions (Batıl İnançlar)
+* Public Buildings (Halk Binaları)
+* Environment (Çevre)
+* Planets (Gezegenler)
+"""
+
+# DİN KÜLTÜRÜ İÇERİĞİ (Daha önce 'religion_content.py' dosyasındaydı)
+RELIGION_CONTENT = """
+## 🕌 Din Kültürü ve Ahlak Bilgisi - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf Din Kültürü Müfredatı Özeti</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* Melek ve Ahiret İnancı
+* Hac ve Kurban İbadeti
+* Ahlaki Davranışlar
+* İslam Düşüncesinde Yorumlar
+* İletişim ve Nezaket
+"""
+
+# --- 2. STREAMLIT SAYFA AYARLARI ---
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# 7 SEKME OLUŞTURULDU (Koç Modülü en başta)
+# 7 SEKME OLUŞTURULDU
 tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
     "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
