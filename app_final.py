@@ -268,9 +268,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap Simülasyonu)")
         st.info("Bu modül, sanal bir ders koçuyla etkileşim simülasyonunu içerir. Sorunuzu yazın ve alandan çıkın.")
         
-        st.markdown(f"##### **Koç:** {ders_adi} dersi Koçu")
-        
-        # *** BURASI GÜNCELLENDİ: Buton kaldırıldı, cevap anında gösteriliyor ***
+        # *** BURASI GÜNCELLENDİ: Koçun anlık cevabı için text_area ***
         koç_mesaj = st.text_area(
             "Koça Sorunuzu Yazın:", 
             placeholder="Örneğin: Tam sayılarla çarpma işlemi nasıl yapılır?", 
@@ -279,14 +277,11 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         
         if koç_mesaj:
             # Koçun vereceği yapay cevap
-            cevap = f"Merhaba! {ders_adi} Koçunuz size yardımcı olmaya hazır.\n\n"
-            if len(koç_mesaj) < 10:
-                cevap += f"Girdiğiniz konu: **'{koç_mesaj}'**. Lütfen sorunuzu biraz daha detaylı yazın ki, size özel çalışma planı hazırlayabileyim."
-            else:
-                cevap += f"Harika bir soru: **'{koç_mesaj}'**. Bu konuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!"
+            # Sadece girilen metni yansıtan sadeleştirilmiş cevap.
+            cevap = f"'{koç_mesaj}' konusuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!"
             
-            st.success("✅ **Koçunuzdan Anında Cevap:**")
-            st.markdown(cevap)
+            # Sadece cevabı gösterir, başlık ve ek metin yok.
+            st.success(f"**Koç Cevabı:** {cevap}")
         else:
             st.info("Lütfen Koçunuza bir soru yazın.")
 
