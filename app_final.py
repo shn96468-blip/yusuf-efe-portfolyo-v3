@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import os # Dosya işlemlerini kontrol etmek için eklendi
 
 # --- SAYFA VE TEMA AYARLARI ---
 st.set_page_config(
@@ -10,6 +11,7 @@ st.set_page_config(
 )
 
 # Koyu Temayı zorlamak ve Dinamik Hover Efekti eklemek için CSS enjeksiyonu
+# NOT: Bu stil, Yönetici Modu'nda seçilen renge göre güncellenecektir.
 st.markdown(
     f"""
     <style>
@@ -22,7 +24,7 @@ st.markdown(
         background-color: #0E1117;
     }}
     h1, h2, h3, h4, h5, h6 {{
-        color: #FF4B4B; /* Başlıklar kırmızı */
+        color: {st.session_state.get('app_color', '#FF4B4B')}; /* Başlıklar mevcut renkte */
     }}
     .stTextInput, .stTextArea, .stSelectbox {{
         background-color: #262730;
@@ -30,24 +32,23 @@ st.markdown(
         border: 1px solid #31333F;
     }}
     
-    /* SÜRPRİZ 1: DİNAMİK BUTON STİLİ (HOVER EFEKTİ) */
+    /* DİNAMİK BUTON STİLİ (HOVER EFEKTİ) */
     .stButton>button {{
         color: white;
-        border-color: #FF4B4B;
+        border-color: {st.session_state.get('app_color', '#FF4B4B')};
         border-width: 2px;
         font-weight: bold;
         transition: all 0.3s ease; /* Yumuşak geçiş */
     }}
     .stButton>button:hover {{
-        background-color: #FF4B4B; /* Üzerine gelince arkaplanı kırmızı yap */
+        background-color: {st.session_state.get('app_color', '#FF4B4B')}; /* Üzerine gelince arkaplanı renkli yap */
         color: #0E1117; /* Yazı rengini koyu yap */
-        border-color: #FF4B4B; 
+        border-color: {st.session_state.get('app_color', '#FF4B4B')}; 
         box-shadow: 0 0 10px rgba(255, 75, 75, 0.7); /* Hafif parlama */
     }}
-    /* Normal Focus/Active durumu korundu */
     .stButton>button:focus:not(:active) {{
-        border-color: #FF4B4B; 
-        color: #FF4B4B;
+        border-color: {st.session_state.get('app_color', '#FF4B4B')}; 
+        color: {st.session_state.get('app_color', '#FF4B4B')};
         box-shadow: 0 0 0 0.2rem rgba(255, 75, 75, 0.25);
     }}
     
@@ -55,13 +56,13 @@ st.markdown(
     .stAlert {{
         background-color: #1E3147 !important; /* Mavi-Koyu Ton */
         color: white !important;
-        border-left: 5px solid #FF4B4B !important; /* Kırmızı vurgu */
+        border-left: 5px solid {st.session_state.get('app_color', '#FF4B4B')} !important; /* Vurgu rengi */
     }}
     
-    /* Koç cevabı için özel stil (image_9bdebe.png) */
+    /* Koç cevabı için özel stil (image_9bdebe.png'deki gibi) */
     .koç-cevap-kutusu {{
         background-color: #1a433a !important; 
-        border-left: 5px solid #FF4B4B; /* Kırmızı vurgu */
+        border-left: 5px solid {st.session_state.get('app_color', '#FF4B4B')}; /* Vurgu rengi */
         padding: 15px; 
         margin-bottom: 20px;
         color: white; 
@@ -78,57 +79,95 @@ st.markdown(
 
 # --- OTURUM DURUMU (SESSION STATE) BAŞLANGIÇ AYARLARI ---
 ADMIN_PASSWORD = "123" 
+GENEL_FON_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
+SESLI_ACIKLAMA_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" # Simülasyon Ses URL'si
 
-# KELİME ÇEVİRİSİ İÇİN BASİT SÖZLÜK (2. Sınıftan 12. Sınıfa kadar kelimeler)
-KELIME_SOZLUGU = {
-    # --- 2. SINIF SEVİYESİ ÖRNEKLERİ (Basit Kelimeler) ---
-    "merhaba": "hello",
-    "görüşürüz": "goodbye",
-    "kedi": "cat",
-    "köpek": "dog",
-    "sarı": "yellow",
-    "mavi": "blue",
-    "bir": "one",
-    "iki": "two",
-    "lütfen": "please",
-    "teşekkürler": "thank you",
+
+# --- KELİME SÖZLÜĞÜNÜ DOSYADAN OKUMA İŞLEVİ ---
+def load_kelime_sozlugu(file_path="kelime_sozlugu.txt"):
+    """Metin belgesinden kelime çiftlerini (Türkçe:İngilizce) yükler."""
+    sozluk = {}
     
-    # --- 7. SINIF SEVİYESİ (Orta Seviye Kelimeler) ---
-    "elma": "apple",
-    "kitap": "book",
-    "koşmak": "run",
-    "güneş": "sun",
-    "sayı": "number",
-    "dürüst": "honest",
-    "cömert": "generous",
-    "yorgun": "tired",
-    "yazılım": "software",
-    "iletişim": "communication",
-    "deniz": "sea",
-    "çiçek": "flower",
-    "dostluk": "friendship",
-    "bilgi": "information",
-    "başarı": "success",
-    "öğrenme": "learning",
-    "çeviri": "translation",
-    "kelime": "word",
-    "nazik": "kind", 
-    "tekrar": "again", 
-    
-    # --- 12. SINIF SEVİYESİ ÖRNEKLERİ (Akademik/Karmaşık Kelimeler) ---
-    "küreselleşme": "globalization",
-    "sürdürülebilirlik": "sustainability",
-    "yenilik": "innovation",
-    "eleştirel": "critical",
-    "perspektif": "perspective",
-    "hipotez": "hypothesis",
-    "yeterlilik": "competence",
-    "adaptasyon": "adaptation",
-    "tükenmek": "extinction",
-}
+    if not os.path.exists(file_path):
+        st.error(f"❌ Hata: Sözlük dosyası '{file_path}' bulunamadı! Uygulama varsayılan (demo) kelimeleri kullanacaktır.")
+        # Dosya bulunamazsa demo sözlük döndür
+        return {
+            "demo": "test",
+            "başarı": "success",
+            "kitap": "book"
+        }
+        
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+                
+                parts = line.split(':', 1)
+                if len(parts) == 2:
+                    tr = parts[0].strip().lower()
+                    en = parts[1].strip().lower()
+                    sozluk[tr] = en
+                
+        if not sozluk:
+            st.warning(f"⚠️ Uyarı: '{file_path}' dosyası okundu ancak geçerli kelime çifti bulunamadı. Demo sözlük kullanılıyor.")
+            return {
+                "demo": "test",
+                "başarı": "success",
+                "kitap": "book"
+            } 
+        
+        return sozluk
+        
+    except Exception as e:
+        st.error(f"❌ Sözlük yüklenirken beklenmedik bir hata oluştu: {e}. Demo sözlük kullanılıyor.")
+        return {
+            "demo": "test",
+            "başarı": "success",
+            "kitap": "book"
+        }
+
+# --- SÖZLÜK TANIMLAMASI ---
+KELIME_SOZLUGU = load_kelime_sozlugu()
 
 
-# 7. SINIF DERS VERİLERİ (Değişiklik yapılmadı)
+# Session State Tanımlamaları
+if 'admin_mode' not in st.session_state:
+    st.session_state['admin_mode'] = False
+if 'app_color' not in st.session_state:
+    st.session_state['app_color'] = '#FF4B4B'
+if 'secilen_sayfa' not in st.session_state:
+    st.session_state['secilen_sayfa'] = "Hakkımda" 
+if 'music_enabled' not in st.session_state:
+    st.session_state['music_enabled'] = True 
+if 'music_url' not in st.session_state:
+    st.session_state['music_url'] = GENEL_FON_URL
+if 'music_volume' not in st.session_state:
+    st.session_state['music_volume'] = 0.5 
+if 'show_admin_login' not in st.session_state:
+    st.session_state['show_admin_login'] = False
+if 'announcement' not in st.session_state:
+    st.session_state['announcement'] = "🚀 Hoş geldiniz! 7. Sınıf Ders içeriklerini ve araçları keşfedin."
+if 'announcement_color' not in st.session_state:
+    st.session_state['announcement_color'] = 'success'
+if 'secilen_modul' not in st.session_state:
+    st.session_state['secilen_modul'] = "Konu Anlatımı" 
+if 'test_konusu' not in st.session_state:
+    st.session_state['test_konusu'] = ""
+if 'koc_mesaj' not in st.session_state:
+    st.session_state['koc_mesaj'] = ""
+if 'current_word_index' not in st.session_state:
+    st.session_state['current_word_index'] = 0
+if 'show_translation' not in st.session_state:
+    st.session_state['show_translation'] = False
+if 'kelime_ceviri_sonuc' not in st.session_state:
+    st.session_state['kelime_ceviri_sonuc'] = ""
+if 'kelime_ceviri_input' not in st.session_state:
+    st.session_state['kelime_ceviri_input'] = ""
+
+
+# 7. SINIF DERS VERİLERİ (Aynı kaldı)
 DEFAULT_DERSLER = {
     "Matematik": {
         "konu": "7. Sınıf Matematik Tüm Üniteler", 
@@ -391,45 +430,6 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
 } 
 
 
-# GENEL ARKA PLAN MÜZİĞİ İÇİN ÖRNEK MP3 LİNKİ
-GENEL_FON_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
-SESLI_ACIKLAMA_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" # Simülasyon Ses URL'si
-
-# Session State Tanımlamaları
-if 'admin_mode' not in st.session_state:
-    st.session_state['admin_mode'] = False
-if 'app_color' not in st.session_state:
-    st.session_state['app_color'] = '#FF4B4B'
-if 'secilen_sayfa' not in st.session_state:
-    st.session_state['secilen_sayfa'] = "Hakkımda" 
-if 'music_enabled' not in st.session_state:
-    st.session_state['music_enabled'] = True 
-if 'music_url' not in st.session_state:
-    st.session_state['music_url'] = GENEL_FON_URL
-if 'music_volume' not in st.session_state:
-    st.session_state['music_volume'] = 0.5 
-if 'show_admin_login' not in st.session_state:
-    st.session_state['show_admin_login'] = False
-if 'announcement' not in st.session_state:
-    st.session_state['announcement'] = "🚀 Hoş geldiniz! 7. Sınıf Ders içeriklerini ve araçları keşfedin."
-if 'announcement_color' not in st.session_state:
-    st.session_state['announcement_color'] = 'success'
-if 'secilen_modul' not in st.session_state:
-    st.session_state['secilen_modul'] = "Konu Anlatımı" 
-if 'test_konusu' not in st.session_state:
-    st.session_state['test_konusu'] = ""
-if 'koc_mesaj' not in st.session_state:
-    st.session_state['koc_mesaj'] = ""
-if 'current_word_index' not in st.session_state:
-    st.session_state['current_word_index'] = 0
-if 'show_translation' not in st.session_state:
-    st.session_state['show_translation'] = False
-if 'kelime_ceviri_sonuc' not in st.session_state:
-    st.session_state['kelime_ceviri_sonuc'] = ""
-if 'kelime_ceviri_input' not in st.session_state:
-    st.session_state['kelime_ceviri_input'] = ""
-
-
 # --- PORTFOLYO İÇERİK FONKSİYONU ---
 def get_portfolyo_bilgisi(baslik):
     if baslik == "Hakkımda":
@@ -567,7 +567,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                 if koç_mesaj:
                     koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
                     
-                    # Koç Cevabı Metin Kutusu (image_9bdebe.png'deki gibi)
+                    # Koç Cevabı Metin Kutusu
                     st.markdown(
                         f"""
                         <div class='koç-cevap-kutusu'>
@@ -580,7 +580,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                     
                     st.markdown("---")
                     
-                    # SÜRPRİZ 2: Koç Açıklaması metin başlığına yeşil renk stili eklendi
+                    # Koç Açıklaması metin başlığına yeşil renk stili eklendi
                     st.markdown(f"**<span style='color: #90EE90;'>Koç Açıklaması - Konu: {koç_mesaj.capitalize()}</span>**", unsafe_allow_html=True)
                     st.markdown(koç_anlatimi)
                     
@@ -679,7 +679,12 @@ def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
 # --- KELİME ÇEVİRİSİ İŞLEVİ ---
 def render_kelime_ceviri():
     st.markdown("### 🔠 Kelime Çevirisi (Hızlı Sözlük)")
-    st.info("Tek bir kelime girin. Sözlüğümüzde varsa hızlıca Türkçe <-> İngilizce çevirisini görün.")
+    
+    # Sözlük boşsa veya demo kullanıyorsa uyarı ver
+    if len(KELIME_SOZLUGU) <= 5:
+        st.error("❌ Kelime sözlüğü dosyadan yüklenemedi. Sadece demo kelimeleri çevirebilirsiniz.")
+    else:
+        st.info(f"Sözlükte **{len(KELIME_SOZLUGU)}** kelime çifti bulunmaktadır. Tek bir kelime girin. Sözlüğümüzde varsa hızlıca Türkçe <-> İngilizce çevirisini görün.")
     
     with st.form("kelime_ceviri_form", clear_on_submit=False):
         
@@ -716,14 +721,14 @@ def render_kelime_ceviri():
                 if ingilizce_karsilik:
                     sonuc = f"**🇹🇷 {kelime_input.capitalize()}** ➡️ **🇬🇧 {ingilizce_karsilik.capitalize()}**"
                 else:
-                    sonuc = f"**{kelime_input.capitalize()}** kelimesinin İngilizce karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
+                    sonuc = f"**{kelime_input.capitalize()}** kelimesinin İngilizce karşılığı sözlüğümüzde bulunamadı. (Sözlüğünüzü genişletin!)"
             
             else: # İngilizce -> Türkçe
                 turkce_karsilik = next((tr for tr, en in KELIME_SOZLUGU.items() if en == kelime_input), None)
                 if turkce_karsilik:
                     sonuc = f"**🇬🇧 {kelime_input.capitalize()}** ➡️ **🇹🇷 {turkce_karsilik.capitalize()}**"
                 else:
-                    sonuc = f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
+                    sonuc = f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı sözlüğümüzde bulunamadı. (Sözlüğünüzü genişletin!)"
                     
             st.session_state['kelime_ceviri_sonuc'] = sonuc
             st.rerun()
@@ -883,33 +888,7 @@ if st.session_state['admin_mode']:
     )
     if new_color != st.session_state['app_color']:
         st.session_state['app_color'] = new_color
-        # Yeni CSS stilini enjekte et
-        st.markdown(
-            f"""
-            <style>
-            /* Dinamik renk güncellemeleri */
-            h1, h2, h3, h4, h5, h6,
-            .stButton>button {{
-                border-color: {new_color}; 
-            }}
-            .stButton>button:hover {{
-                background-color: {new_color}; /* Yönetici rengine göre hover */
-                color: #0E1117; 
-                border-color: {new_color}; 
-                box-shadow: 0 0 10px rgba({int(new_color[1:3], 16)}, {int(new_color[3:5], 16)}, {int(new_color[5:7], 16)}, 0.7);
-            }}
-            .stButton>button:focus:not(:active) {{
-                border-color: {new_color}; 
-                color: {new_color};
-                box-shadow: 0 0 0 0.2rem rgba({int(new_color[1:3], 16)}, {int(new_color[3:5], 16)}, {int(new_color[5:7], 16)}, 0.25);
-            }}
-            .stAlert {{
-                border-left: 5px solid {new_color} !important;
-            }}
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
+        # CSS yeniden uygulanması için rerun
         st.rerun()
     
     # MÜZİK KONTROLÜ
@@ -981,4 +960,4 @@ with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
         st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.4 (Gelişmiş CSS ve Sözlük)")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.5 (Harici Sözlük Desteği)")
