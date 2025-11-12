@@ -9,62 +9,68 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Koyu Temayı zorlamak için CSS enjeksiyonu (Güncel renk ayarları ve düzeltmeler)
+# Koyu Temayı zorlamak ve Dinamik Hover Efekti eklemek için CSS enjeksiyonu
 st.markdown(
-    """
+    f"""
     <style>
     /* Genel koyu arkaplan ve renk ayarları korundu */
-    .stApp {
+    .stApp {{
         background-color: #0E1117; 
-        color: white; /* Metin rengi varsayılan olarak beyaz */
-    }
-    .css-1d391kg { 
+        color: white; 
+    }}
+    .css-1d391kg {{ 
         background-color: #0E1117;
-    }
-    h1, h2, h3, h4, h5, h6 {
+    }}
+    h1, h2, h3, h4, h5, h6 {{
         color: #FF4B4B; /* Başlıklar kırmızı */
-    }
-    .stTextInput, .stTextArea, .stSelectbox {
+    }}
+    .stTextInput, .stTextArea, .stSelectbox {{
         background-color: #262730;
         color: white;
         border: 1px solid #31333F;
-    }
-    .stButton>button {
+    }}
+    
+    /* SÜRPRİZ 1: DİNAMİK BUTON STİLİ (HOVER EFEKTİ) */
+    .stButton>button {{
         color: white;
         border-color: #FF4B4B;
         border-width: 2px;
         font-weight: bold;
-    }
-    
-    /* Özel Buton Stili (Hover/Focus) */
-    .stButton>button:focus:not(:active) {
+        transition: all 0.3s ease; /* Yumuşak geçiş */
+    }}
+    .stButton>button:hover {{
+        background-color: #FF4B4B; /* Üzerine gelince arkaplanı kırmızı yap */
+        color: #0E1117; /* Yazı rengini koyu yap */
+        border-color: #FF4B4B; 
+        box-shadow: 0 0 10px rgba(255, 75, 75, 0.7); /* Hafif parlama */
+    }}
+    /* Normal Focus/Active durumu korundu */
+    .stButton>button:focus:not(:active) {{
         border-color: #FF4B4B; 
         color: #FF4B4B;
         box-shadow: 0 0 0 0.2rem rgba(255, 75, 75, 0.25);
-    }
+    }}
     
-    /* Konu kutusu stili (Görseldeki koyu mavi/info kutusu) */
-    /* st.info ve st.success alanları için */
-    .stAlert {
+    /* Konu kutusu stili (st.info) */
+    .stAlert {{
         background-color: #1E3147 !important; /* Mavi-Koyu Ton */
         color: white !important;
         border-left: 5px solid #FF4B4B !important; /* Kırmızı vurgu */
-    }
+    }}
     
-    /* Koç cevabı için özel stil - Arkaplan ve metin rengi düzeltildi */
-    .koç-cevap-kutusu {
-        /* image_9bdebe.png'deki koyu arkaplana yakın bir ton */
+    /* Koç cevabı için özel stil (image_9bdebe.png) */
+    .koç-cevap-kutusu {{
         background-color: #1a433a !important; 
         border-left: 5px solid #FF4B4B; /* Kırmızı vurgu */
         padding: 15px; 
         margin-bottom: 20px;
-        color: white; /* Metin rengi artık beyaz */
-    }
-    .koç-cevap-metni {
-        color: #90EE90; /* Koç cevabı başlığını daha görünür hale getirdik (Açık yeşil) */
+        color: white; 
+    }}
+    .koç-cevap-metni {{
+        color: #90EE90; /* Açık yeşil */
         font-weight: bold;
         font-size: 1.1em;
-    }
+    }}
     </style>
     """,
     unsafe_allow_html=True
@@ -73,7 +79,7 @@ st.markdown(
 # --- OTURUM DURUMU (SESSION STATE) BAŞLANGIÇ AYARLARI ---
 ADMIN_PASSWORD = "123" 
 
-# KELİME ÇEVİRİSİ İÇİN BASİT SÖZLÜK (Tüm Sınıflar Birleştirildi)
+# KELİME ÇEVİRİSİ İÇİN BASİT SÖZLÜK (2. Sınıftan 12. Sınıfa kadar kelimeler)
 KELIME_SOZLUGU = {
     # --- 2. SINIF SEVİYESİ ÖRNEKLERİ (Basit Kelimeler) ---
     "merhaba": "hello",
@@ -107,7 +113,7 @@ KELIME_SOZLUGU = {
     "çeviri": "translation",
     "kelime": "word",
     "nazik": "kind", 
-    "tekrar": "again", # image_9cd5e3.png'daki kelime için ekledik
+    "tekrar": "again", 
     
     # --- 12. SINIF SEVİYESİ ÖRNEKLERİ (Akademik/Karmaşık Kelimeler) ---
     "küreselleşme": "globalization",
@@ -122,7 +128,7 @@ KELIME_SOZLUGU = {
 }
 
 
-# 7. SINIF DERS VERİLERİ (Önceki koddan tamamen kopyalanmıştır)
+# 7. SINIF DERS VERİLERİ (Değişiklik yapılmadı)
 DEFAULT_DERSLER = {
     "Matematik": {
         "konu": "7. Sınıf Matematik Tüm Üniteler", 
@@ -298,7 +304,6 @@ Melekler, Allah'ın emirlerini yerine getiren, nurdan yaratılmış, gözle gör
         ]
     },
     "Sosyal Bilgiler": {
-        # Konu adını görseldeki gibi düzeltiyoruz
         "konu": "İletişim ve İnsan İlişkileri", 
         "anlatim": """7. Sınıf Sosyal Bilgiler dersi 7 ana üniteden oluşmaktadır:
         
@@ -332,7 +337,7 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
 
 * **Empati Kurmak:** Kendini karşındakinin yerine koymak.
 * **Göz Teması Kurmak:** Samimiyeti ve dikkati gösterir.
-* **Aktif Dinleme:** Sadece duymak değil, söylenenin anlamını kavramaya çalışmak.
+* **Aktif Dinleme:** Söylenenin anlamını kavramaya çalışmak.
 """,
         "kelimeler": [
             {"tr": "Empati", "en": "Duygudaşlık"},
@@ -410,13 +415,11 @@ if 'announcement' not in st.session_state:
 if 'announcement_color' not in st.session_state:
     st.session_state['announcement_color'] = 'success'
 if 'secilen_modul' not in st.session_state:
-    # Varsayılan modül: Konu Anlatımı
     st.session_state['secilen_modul'] = "Konu Anlatımı" 
 if 'test_konusu' not in st.session_state:
     st.session_state['test_konusu'] = ""
 if 'koc_mesaj' not in st.session_state:
     st.session_state['koc_mesaj'] = ""
-# Kelime Modülü için yeni state'ler
 if 'current_word_index' not in st.session_state:
     st.session_state['current_word_index'] = 0
 if 'show_translation' not in st.session_state:
@@ -444,7 +447,6 @@ def get_portfolyo_bilgisi(baslik):
 * **LinkedIn:** /yusufeşahin
 * **GitHub:** /yusufeşahinprojeler""", "📧")
     elif baslik == "Çeviri Aracı":
-        # Başlık artık "Çeviri Araçları" olacak
         return ("""Hızlı metin ve kelime çevirisi yapabileceğiniz simülasyon araçlarıdır.""", "🌍") 
     return ("İçerik Bulunamadı.", "❓")
 
@@ -565,8 +567,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                 if koç_mesaj:
                     koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
                     
-                    # Koç Cevabı Metin Kutusu (HTML stil kullanımı - Hata Düzeltildi)
-                    # Koç Cevabı Başlığı artık dinamik olarak kullanıcının sorusunu gösterecek.
+                    # Koç Cevabı Metin Kutusu (image_9bdebe.png'deki gibi)
                     st.markdown(
                         f"""
                         <div class='koç-cevap-kutusu'>
@@ -577,9 +578,10 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                         unsafe_allow_html=True
                     )
                     
-                    # Koç Açıklaması metin başlığı da kullanıcı sorusunu gösterecek
                     st.markdown("---")
-                    st.markdown(f"**Koç Açıklaması - Konu: {koç_mesaj.capitalize()}**")
+                    
+                    # SÜRPRİZ 2: Koç Açıklaması metin başlığına yeşil renk stili eklendi
+                    st.markdown(f"**<span style='color: #90EE90;'>Koç Açıklaması - Konu: {koç_mesaj.capitalize()}</span>**", unsafe_allow_html=True)
                     st.markdown(koç_anlatimi)
                     
                     st.markdown("---")
@@ -674,7 +676,7 @@ def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
                 
                 st.markdown(f"## 🎉 Toplam Sonuç: {dogru_sayisi} Doğru / {len(guncel_sorular)} Soru")
 
-# --- KELİME ÇEVİRİSİ İŞLEVİ (YENİ EKLEME) ---
+# --- KELİME ÇEVİRİSİ İŞLEVİ ---
 def render_kelime_ceviri():
     st.markdown("### 🔠 Kelime Çevirisi (Hızlı Sözlük)")
     st.info("Tek bir kelime girin. Sözlüğümüzde varsa hızlıca Türkçe <-> İngilizce çevirisini görün.")
@@ -710,7 +712,6 @@ def render_kelime_ceviri():
             sonuc = ""
             
             if yon == "Türkçe -> İngilizce":
-                # Kelimeyi sözlükte ara
                 ingilizce_karsilik = KELIME_SOZLUGU.get(kelime_input)
                 if ingilizce_karsilik:
                     sonuc = f"**🇹🇷 {kelime_input.capitalize()}** ➡️ **🇬🇧 {ingilizce_karsilik.capitalize()}**"
@@ -718,7 +719,6 @@ def render_kelime_ceviri():
                     sonuc = f"**{kelime_input.capitalize()}** kelimesinin İngilizce karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
             
             else: # İngilizce -> Türkçe
-                # Sözlükteki değerleri kontrol et
                 turkce_karsilik = next((tr for tr, en in KELIME_SOZLUGU.items() if en == kelime_input), None)
                 if turkce_karsilik:
                     sonuc = f"**🇬🇧 {kelime_input.capitalize()}** ➡️ **🇹🇷 {turkce_karsilik.capitalize()}**"
@@ -736,7 +736,7 @@ def render_kelime_ceviri():
         st.markdown(f"#### {st.session_state['kelime_ceviri_sonuc']}", unsafe_allow_html=True)
 
 
-# --- METİN ÇEVİRİSİ İŞLEVİ (ESKİ) ---
+# --- METİN ÇEVİRİSİ İŞLEVİ ---
 def render_metin_ceviri():
     st.markdown("### 📝 Metin Çevirisi")
     st.info("Girdiğiniz metin, burada seçtiğiniz dile çevrilmiş gibi gösterilecektir.")
@@ -763,12 +763,10 @@ def render_metin_ceviri():
 def render_cevirici():
     st.header("🌍 Çeviri Araçları")
     
-    # 1. Metin Çevirisi
     render_metin_ceviri()
     
-    st.markdown("<br><br>", unsafe_allow_html=True) # İki araç arasına boşluk koy
+    st.markdown("<br><br>", unsafe_allow_html=True) 
 
-    # 2. Kelime Çevirisi (Yeni Eklenen)
     render_kelime_ceviri()
 
 
@@ -834,7 +832,6 @@ if not st.session_state['admin_mode']:
         with cols[i]:
             if st.button(f"🔹 {sayfa}", key=f"btn_{sayfa}", use_container_width=True):
                 st.session_state['secilen_sayfa'] = sayfa
-                # Ders sayfasına geçildiğinde modül varsayılana ('Konu Anlatımı') ayarlanır
                 if sayfa in DERS_SAYFALAR:
                     st.session_state['secilen_modul'] = "Konu Anlatımı" 
                     st.session_state['test_konusu'] = "" 
@@ -844,7 +841,6 @@ if not st.session_state['admin_mode']:
                 else:
                     st.session_state['secilen_modul'] = "Konu Anlatımı"
                 
-                # Çeviri sayfasına geçildiğinde kelime çeviri sonucunu temizle
                 if sayfa == "Çeviri Aracı":
                     st.session_state['kelime_ceviri_sonuc'] = ""
                     st.session_state['kelime_ceviri_input'] = ""
@@ -857,16 +853,13 @@ if not st.session_state['admin_mode']:
     
     # --- İÇERİK YAZDIRMA VE ÖZELLİK ÇAĞIRMA ---
     
-    # 1. DERS SAYFASI İÇERİĞİ (Artık Modül Yapısı Kullanıyor)
     if secilen_sayfa in DERS_SAYFALAR:
         ders_veri = DEFAULT_DERSLER[secilen_sayfa]
         render_ders_modulu(secilen_sayfa, ders_veri, st.session_state['secilen_modul'])
         
-    # 2. ÇEVİRİ ARACI (Artık Metin ve Kelime çevirisini de içeriyor)
     elif secilen_sayfa == "Çeviri Aracı":
         render_cevirici()
         
-    # 3. PORTFOLYO SAYFALARI (Hakkımda, Projelerim, İletişim)
     else:
         icerik, simge = get_portfolyo_bilgisi(secilen_sayfa)
         st.subheader(f"✅ Seçili Sayfa: {secilen_sayfa}")
@@ -894,9 +887,16 @@ if st.session_state['admin_mode']:
         st.markdown(
             f"""
             <style>
+            /* Dinamik renk güncellemeleri */
             h1, h2, h3, h4, h5, h6,
             .stButton>button {{
                 border-color: {new_color}; 
+            }}
+            .stButton>button:hover {{
+                background-color: {new_color}; /* Yönetici rengine göre hover */
+                color: #0E1117; 
+                border-color: {new_color}; 
+                box-shadow: 0 0 10px rgba({int(new_color[1:3], 16)}, {int(new_color[3:5], 16)}, {int(new_color[5:7], 16)}, 0.7);
             }}
             .stButton>button:focus:not(:active) {{
                 border-color: {new_color}; 
@@ -923,7 +923,6 @@ if st.session_state['admin_mode']:
         "Müzik Kapalı": ""
     }
     
-    # Yönetici Ses Düzeyi
     yeni_volume = st.sidebar.slider("Yönetici Ses Seviyesi", 0.0, 1.0, st.session_state['music_volume'], step=0.1, key="admin_music_volume_slider")
     if yeni_volume != st.session_state['music_volume']:
         st.session_state['music_volume'] = yeni_volume
@@ -982,4 +981,4 @@ with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
         st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.3 (Tüm Sınıf Sözlüğü Eklendi)")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.4 (Gelişmiş CSS ve Sözlük)")
