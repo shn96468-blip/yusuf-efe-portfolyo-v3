@@ -185,6 +185,8 @@ if 'secilen_modul' not in st.session_state:
     st.session_state['secilen_modul'] = "Konu Anlatımı" 
 if 'test_konusu' not in st.session_state:
     st.session_state['test_konusu'] = ""
+if 'koc_mesaj' not in st.session_state:
+    st.session_state['koc_mesaj'] = ""
 
 
 # --- PORTFOLYO İÇERİK FONKSİYONU ---
@@ -222,11 +224,13 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         if st.button("📖 Konu Anlatımı", key="btn_konu_anlatim_new", use_container_width=True):
             st.session_state['secilen_modul'] = "Konu Anlatımı"
             st.session_state['test_konusu'] = "" 
+            st.session_state['koc_mesaj'] = "" # Koç mesajını temizle
     with col_pdf:
         # PDF Sonuç Kontrol
         if st.button("🔶 PDF Sonuç Kontrol", key="btn_pdf_kontrol_new", use_container_width=True):
             st.session_state['secilen_modul'] = "PDF Kontrol"
             st.session_state['test_konusu'] = ""
+            st.session_state['koc_mesaj'] = ""
     with col_koc:
         # Ders Koçlarımız (Simülasyon Modülü)
         if st.button("🧑‍🏫 Ders Koçlarımız", key="btn_ders_koclari", use_container_width=True):
@@ -236,6 +240,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         # Çalışma Alanı (Bu Deneme Sınavı/Quiz için kullanılıyor)
         if st.button("🔥 Deneme Sınavı", key="btn_deneme_sinavi_new", use_container_width=True):
             st.session_state['secilen_modul'] = "Deneme Sınavı"
+            st.session_state['koc_mesaj'] = ""
             
     st.markdown("---")
 
@@ -260,16 +265,31 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         st.file_uploader("Lütfen Cevap Anahtarını Kontrol Etmek İstediğiniz PDF'i Yükleyin:")
 
     elif modul == "Ders Koçlarımız":
-        st.header("🧑‍🏫 Ders Koçlarımız (Simülasyon)")
-        st.info("Bu modül, sanal bir ders koçuyla etkileşim simülasyonunu içerir.")
+        st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap Simülasyonu)")
+        st.info("Bu modül, sanal bir ders koçuyla etkileşim simülasyonunu içerir. Sorunuzu yazın ve alandan çıkın.")
         
         st.markdown(f"##### **Koç:** {ders_adi} dersi Koçu")
-        koç_mesaj = st.text_area("Koça Sorunuzu Yazın:", placeholder="Örneğin: Tam sayılarla çarpma işlemi nasıl yapılır?")
-        if st.button("Soruyu Gönder"):
-            if koç_mesaj:
-                st.success(f"Koçun Cevabı: Girilen konu olan '{koç_mesaj}' ile ilgili daha fazla alıştırma yapmalısın. Koçluk simülasyonu başarılı!")
+        
+        # *** BURASI GÜNCELLENDİ: Buton kaldırıldı, cevap anında gösteriliyor ***
+        koç_mesaj = st.text_area(
+            "Koça Sorunuzu Yazın:", 
+            placeholder="Örneğin: Tam sayılarla çarpma işlemi nasıl yapılır?", 
+            key=f"koc_input_{ders_adi}"
+        )
+        
+        if koç_mesaj:
+            # Koçun vereceği yapay cevap
+            cevap = f"Merhaba! {ders_adi} Koçunuz size yardımcı olmaya hazır.\n\n"
+            if len(koç_mesaj) < 10:
+                cevap += f"Girdiğiniz konu: **'{koç_mesaj}'**. Lütfen sorunuzu biraz daha detaylı yazın ki, size özel çalışma planı hazırlayabileyim."
             else:
-                st.warning("Lütfen bir soru giriniz.")
+                cevap += f"Harika bir soru: **'{koç_mesaj}'**. Bu konuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!"
+            
+            st.success("✅ **Koçunuzdan Anında Cevap:**")
+            st.markdown(cevap)
+        else:
+            st.info("Lütfen Koçunuza bir soru yazın.")
+
 
 # --- DİNAMİK TEST ALANI İŞLEVİ ---
 def render_dinamik_test_alani(ders_adi, sorular):
@@ -383,7 +403,7 @@ if not st.session_state['admin_mode']:
         st.audio(st.session_state['music_url'], format="audio/mp3", loop=True)
         
         with col_kapat:
-            # Syntax hatası burada düzeltildi: st.button çağrısı tek satırda
+            # Syntax hatası düzeltilmiş buton
             if st.button("🔊 Müzik Kapat", key="btn_kapat_ses", use_container_width=True):
                 st.session_state['music_enabled'] = False
                 st.rerun()
@@ -429,6 +449,7 @@ if not st.session_state['admin_mode']:
                 if sayfa in DERS_SAYFALAR:
                     st.session_state['secilen_modul'] = "Konu Anlatımı" 
                     st.session_state['test_konusu'] = "" # Konu değişince testi sıfırla
+                    st.session_state['koc_mesaj'] = "" # Koç mesajını temizle
                 else:
                     st.session_state['secilen_modul'] = "Konu Anlatımı"
                 st.rerun()
