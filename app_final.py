@@ -1,50 +1,10 @@
 import streamlit as st
-import random
-import time
+# import random # Artık Kelime Kartları kullanılmadığı için Random kütüphanesine gerek kalmadı.
+# import time # Artık kullanılmıyor.
 
-# --- 1. SÖZLÜK YÜKLEME FONKSİYONU ---
-def load_dictionary(file_path="kelime_sozlugu.txt"):
-    """Sözlük dosyasını okur ve Türkçe -> İngilizce ve İngilizce -> Türkçe olmak üzere iki sözlük oluşturur."""
-    tr_en_dict = {}
-    en_tr_dict = {}
-    
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                if line and not line.startswith('#'):
-                    # Satırı türkçe:ingilizce formatında ayır
-                    if ':' in line:
-                        tr_word, en_word = line.split(':', 1)
-                        tr_word = tr_word.strip().lower()
-                        en_word = en_word.strip().lower()
-                        
-                        if tr_word and en_word:
-                            # Türkçe -> İngilizce
-                            tr_en_dict[tr_word] = en_word
-                            # İngilizce -> Türkçe
-                            en_tr_dict[en_word] = tr_word
-                    
-        if not tr_en_dict:
-            st.warning("⚠️ Sözlük dosyası boş veya format hatası içeriyor. Lütfen 'türkçe:ingilizce' formatını kontrol edin.")
-            return None, None
-            
-        return tr_en_dict, en_tr_dict
-
-    except FileNotFoundError:
-        st.error(f"❌ Hata: Sözlük dosyası '{file_path}' bulunamadı! Sözlük dosyası bulunamadı hatası almışsınız. Uygulama demo kelimelerle çalıştırılacaktır.")
-        
-        # --- Demo kelimeler (Hata durumunda) ---
-        demo_tr_en = {"merhaba": "hello", "kitap": "book", "başarı": "success", "koşmak": "run"}
-        demo_en_tr = {"hello": "merhaba", "book": "kitap", "success": "başarı", "run": "koşmak"}
-        return demo_tr_en, demo_en_tr
-    except Exception as e:
-        st.error(f"❌ Sözlük yüklenirken beklenmedik bir hata oluştu: {e}")
-        return None, None
-
-# --- SÖZLÜĞÜ YÜKLE ---
-TR_EN_DICT, EN_TR_DICT = load_dictionary()
-ALL_WORDS = list(TR_EN_DICT.keys()) # Kelime Kartları için Türkçe kelimeler listesi
+# --- SÖZLÜK YÜKLEME ARTIK SADECE DEMO İÇİN KALDI ---
+# Sözlük yükleme fonksiyonu koddan tamamen kaldırılabilir, 
+# ancak Koç Modülü içindeki metinlerin anlaşılması için içeriği tutuyorum.
 
 # --- SABİT METİNLER VE İÇERİK ---
 MATH_CONTENT = """
@@ -106,12 +66,11 @@ st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eği
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs([
+# Sadece 3 sekme kaldı: Koç, Matematik ve Türkçe
+tab1, tab2, tab3 = st.tabs([
     "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
-    "🗣️ Kelime Çevirisi (Hızlı Sözlük)", 
-    "🧠 Kelime Kartları (Test Modülü)"
 ])
 
 # --- 4. TAB 1: KOÇ MODÜLÜ ---
@@ -138,12 +97,12 @@ with tab1:
         </div>
         """, unsafe_allow_html=True
     )
-    st.markdown(MATH_CONTENT.replace("## 📘 Matematik", "## Matematik").replace("### 📄 Detaylı Konu Özeti", ""), unsafe_allow_html=True) # Cebirsel ifadeler konu başlığı görselde var
+    st.markdown(MATH_CONTENT.replace("## 📘 Matematik", "## Matematik").replace("### 📄 Detaylı Konu Özeti", ""), unsafe_allow_html=True) 
 
     # Sesli Çıktı Simülasyonu
     st.markdown("---")
     st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
-    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", start_time=182) 
+    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", start_time=182)
     st.caption("(Yukarıdaki ses bileşeni, konunun sesli olarak okunduğunu simüle eder.)")
 
 # --- 5. TAB 2: MATEMATİK İÇERİKLERİ ---
@@ -176,110 +135,3 @@ with tab3:
 
     st.markdown("---")
     st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
-
-# --- 7. TAB 4: KELİME ÇEVİRİSİ (HIZLI SÖZLÜK) ---
-with tab4:
-    st.header("🗣️ Kelime Çevirisi (Hızlı Sözlük)")
-    st.info("Tek bir kelime girin. Sözlüğümüzde varsa hızlıca Türkçe ↔ İngilizce çevirisini görün.")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        kelime_input = st.text_input("Çevrilecek Kelimeyi Girin:", placeholder="Örn: başarı veya one").strip().lower()
-
-    with col2:
-        cevir_yonu = st.selectbox("Çeviri Yönü:", 
-                                   ["Türkçe -> İngilizce", "İngilizce -> Türkçe"])
-    
-    if st.button("Kelimeyi Çevir", type="primary"):
-        st.markdown("---")
-        st.subheader("💡 Çeviri Sonucu")
-
-        if not kelime_input:
-            st.error("Lütfen çevrilecek bir kelime girin.")
-        else:
-            sonuc = None
-            if cevir_yonu == "Türkçe -> İngilizce":
-                if kelime_input in TR_EN_DICT:
-                    sonuc = TR_EN_DICT[kelime_input]
-                    st.success(f"**{kelime_input.capitalize()}** kelimesinin İngilizce karşılığı: **{sonuc.capitalize()}**")
-                else:
-                    # Kullanıcının önceki hatasına benzer uyarı
-                    st.warning(f"**{kelime_input.capitalize()}** kelimesinin İngilizce karşılığı sözlüğümüzde bulunamadı. (Sözlüğünüzü genişletin!)")
-            
-            elif cevir_yonu == "İngilizce -> Türkçe":
-                if kelime_input in EN_TR_DICT:
-                    sonuc = EN_TR_DICT[kelime_input]
-                    st.success(f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı: **{sonuc.capitalize()}**")
-                else:
-                    # Kullanıcının önceki hatasına benzer uyarı
-                    st.warning(f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı sözlüğümüzde bulunamadı. (Sözlüğünüzü genişletin!)")
-            
-            # Sesli robot simülasyonu
-            if sonuc:
-                st.markdown("---")
-                st.subheader("🔊 Sesli Okunuş (Simülasyon)")
-                st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", start_time=60)
-                st.caption("(Yukarıdaki ses bileşeni, çevrilen kelimenin sesli okunuşunu simüle eder.)")
-
-# --- 8. TAB 5: KELİME KARTLARI (TEST MODÜLÜ) ---
-with tab5:
-    st.header("🧠 Kelime Kartları (Test Modülü)")
-    
-    # Kelime listesi boşsa uyarı ver
-    if not ALL_WORDS:
-        st.error("Kelime Kartları modülünü kullanmak için sözlüğünüzde kelime bulunmalıdır.")
-    else:
-        # Session State Yönetimi
-        if 'test_words' not in st.session_state:
-            st.session_state.test_words = random.sample(ALL_WORDS, min(5, len(ALL_WORDS)))
-            st.session_state.current_index = 0
-            st.session_state.show_translation = False
-
-        current_tr_word = st.session_state.test_words[st.session_state.current_index]
-        current_en_word = TR_EN_DICT.get(current_tr_word, "ÇEVİRİ BULUNAMADI")
-
-        st.subheader(f"Kelime {st.session_state.current_index + 1} / {len(st.session_state.test_words)}")
-        st.markdown(f"## 🇹🇷 {current_tr_word.capitalize()}")
-
-        # Çeviriyi Göster/Gizle butonu
-        def toggle_translation():
-            st.session_state.show_translation = not st.session_state.show_translation
-
-        # Önceki/Sonraki butonları
-        def next_word():
-            st.session_state.current_index = (st.session_state.current_index + 1) % len(st.session_state.test_words)
-            st.session_state.show_translation = False
-
-        def prev_word():
-            st.session_state.current_index = (st.session_state.current_index - 1) % len(st.session_state.test_words)
-            st.session_state.show_translation = False
-
-        st.markdown("---")
-
-        if st.session_state.show_translation:
-            st.info(f"🇬🇧 Anlamı: **{current_en_word.capitalize()}**")
-        else:
-            st.info("Anlamını görmek için 'Çeviriyi Göster'e tıklayın.")
-
-
-        col_card1, col_card2, col_card3 = st.columns([1, 1, 1])
-
-        with col_card1:
-            st.button("⬅️ Önceki Kelime", on_click=prev_word, disabled=(len(st.session_state.test_words) == 1))
-
-        with col_card2:
-            button_label = "Çeviriyi Gizle" if st.session_state.show_translation else "Çeviriyi Göster"
-            st.button(f"👁️ {button_label}", on_click=toggle_translation, type="primary")
-
-        with col_card3:
-            st.button("➡️ Sonraki Kelime", on_click=next_word, type="secondary")
-            
-        st.markdown("---")
-        
-        # Testi Yenile butonu
-        if st.button("🔄 Yeni Bir Test Başlat (5 Kelime)", help="Sözlükten rastgele 5 yeni kelime seçer"):
-             st.session_state.test_words = random.sample(ALL_WORDS, min(5, len(ALL_WORDS)))
-             st.session_state.current_index = 0
-             st.session_state.show_translation = False
-             st.experimental_rerun()
