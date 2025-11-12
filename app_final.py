@@ -8,20 +8,27 @@ MOCK_USERS = [
     {"username": "efe", "email": "efe@mail.com", "password_hash": "e456"},
 ]
 
-# Varsayılan Not Kartları - SADECE 7. Sınıf Konularına Odaklanıldı
+# Varsayılan Not Kartları - SADECE 7. Sınıf Konularına Odaklanıldı (Görüntüdeki Hatalı Konuları Düzelttim)
 DEFAULT_NOTLAR = {
-    "Matematik": "Rasyonel Sayılar ve İşlemler (7. Sınıf)", 
+    "Matematik": "Rasyonel Sayılar ve İşlemler (7. Sınıf)", # Temel Fonksiyonlar yerine Rasyonel Sayılar
     "Türkçe": "Fiiller ve Anlam Özellikleri (7. Sınıf)",     
     "Din Kültürü": "Melek ve Ahiret İnancı (7. Sınıf)",      
     "Tarih": "Orta Çağ ve Türk İslam Devletleri (7. Sınıf)", 
-    "Sosyal Bilgiler": "Türk Tarihinde Yolculuk (7. Sınıf)", 
+    "Sosyal Bilgiler": "Türk Tarihinde Yolculuk (7. Sınıf)", # Temel Sosyal Kavramlar yerine Türk Tarihinde Yolculuk
 }
 
-# PDF Cevap Anahtarları (Artık Session State ile dinamik yönetilecek)
+# PDF Cevap Anahtarları (Önceki işten kalanlar)
 DEFAULT_PDF_CEVAPLARI = {
-    "DENEME_1": "ADBCBAADCC", # 10 soruluk deneme
-    "MAT_KONU_2": "CBAAD",    # 5 soruluk matematik föyü
+    "DENEME_1": "ADBCBAADCC", 
+    "MAT_KONU_2": "CBAAD",    
 }
+
+# Ders Koçları (Yeni Özellik)
+MOCK_KOCLAR = [
+    {"ad": "Ayşe Yılmaz", "alan": "Matematik & Fen", "bio": "5 yıllık deneyimli koç. Analitik düşünme odaklı."},
+    {"ad": "Mehmet Kaya", "alan": "Türkçe & Sosyal", "bio": "Sınav stratejileri ve motivasyon uzmanı."},
+    {"ad": "Fatma Demir", "alan": "Din Kültürü & İngilizce", "bio": "Birebir takiple öğrenci başarısı odaklı."},
+]
 
 
 # Session State Tanımlamaları (Mutlaka En Üstte Olmalı)
@@ -33,6 +40,7 @@ if 'current_user' not in st.session_state:
     st.session_state['current_user'] = None
 if 'app_color' not in st.session_state:
     st.session_state['app_color'] = '#FF4B4B'
+# HATA DÜZELTMESİ: secilen_sayfa değişkeninin başlangıçta tanımlı olması sağlanmıştır.
 if 'secilen_sayfa' not in st.session_state:
     st.session_state['secilen_sayfa'] = "Hakkımda" 
 if 'music_enabled' not in st.session_state:
@@ -66,7 +74,7 @@ if 'deneme_aktif' not in st.session_state:
 if 'deneme_konusu' not in st.session_state:
     st.session_state['deneme_konusu'] = ""
 if 'pdf_cevaplari' not in st.session_state:
-    st.session_state['pdf_cevaplari'] = DEFAULT_PDF_CEVAPLARI.copy() # PDF cevap anahtarları artık burada tutuluyor
+    st.session_state['pdf_cevaplari'] = DEFAULT_PDF_CEVAPLARI.copy() 
 
 
 # --- SAYFA AYARLARI ---
@@ -109,9 +117,21 @@ def user_login(username, password):
     else:
         st.error("Kullanıcı adı veya şifre yanlış. (Demo: yusuf/y123)")
 
+def user_login_as_guest():
+    st.session_state['user_logged_in'] = True
+    st.session_state['current_user'] = "ZİYARETÇİ"
+    st.session_state['show_user_login'] = False
+    st.success("Misafir olarak giriş yapıldı. Bazı özellikler kısıtlanmıştır.")
+    time.sleep(1)
+    st.rerun()
+
+
 def user_logout():
     st.session_state['user_logged_in'] = False
     st.session_state['current_user'] = None
+    st.session_state['show_user_login'] = False
+    st.session_state['show_admin_login'] = False
+    st.session_state['show_user_register'] = False
     st.rerun()
 
 def forgot_password_simulation(email_or_username, is_admin=False):
@@ -122,37 +142,21 @@ def forgot_password_simulation(email_or_username, is_admin=False):
     else:
         st.sidebar.success(f" Kullanıcı şifresi sıfırlama kodu '{email_or_username}@mail.com' adresine gönderildi.")
         
-# --- MÜZİK ÇALMA MANTIĞI (Yorum Satırı Yapıldı) ---
-# if st.session_state['music_enabled'] and st.session_state['music_url']:
-#     st.audio(
-#         st.session_state['music_url'], 
-#         format="audio/mp3", 
-#         start_time=0, 
-#         loop=True
-#     )
-
 # --- CHAT BOT MANTIĞI (7. Sınıfa Odaklı Detaylı Cevaplar Eklendi) ---
 def general_chat_portfolyo(mesaj):
     mesaj_lower = mesaj.lower().strip()
     
     # 7. Sınıf Konu Cevapları
     if "rasyonel sayı" in mesaj_lower or "rasyonel nedir" in mesaj_lower:
-        cevap = "🤖 (Kanka): Rasyonel sayılar, a ve b birer tam sayı olmak üzere, b'nin sıfır olmadığı durumlarda a/b şeklinde yazılabilen sayılardır. Kesirler ve ondalık sayılar da bu kümeye dahildir. Örneğin, 3/4 veya -1.5 birer rasyonel sayıdır. İki rasyonel sayı çarpılırken paylar çarpılıp paya, paydalar çarpılıp paydaya yazılır."
-    elif "fiil" in mesaj_lower or "eylem nedir" in mesaj_lower:
-        cevap = "🤖 (Kanka): Türkçede fiil (eylem), bir durumu, olayı, hareketi veya kılışı zaman ve kişi belirterek bildiren kelime türüdür. Fiiller, 'mek' veya 'mak' mastar ekini alabilir. Örneğin, 'oku-', 'gel-', 'git-' birer fiildir. Fiillerin en temel anlam özellikleri kılış, durum ve oluş olarak üçe ayrılır."
-    elif "melek" in mesaj_lower or "ahiret" in mesaj_lower:
-        cevap = "🤖 (Kanka): Din Kültürü dersinde 7. Sınıf konusu olan Melekler, Allah'ın nurdan yarattığı, gözle görülmeyen, daima O'na itaat eden varlıklardır. Ahiret ise ölümden sonraki sonsuz yaşamdır; bu inanç, dünya hayatının bir imtihan olduğu fikrini pekiştirir."
-    elif "orta çağ" in mesaj_lower or "sosyal" in mesaj_lower:
-        cevap = "🤖 (Kanka): Orta Çağ, yaklaşık 5. yüzyıldan 15. yüzyıla kadar süren dönemdir. 7. Sınıf konularında bu dönemde ortaya çıkan Türk-İslam devletlerinin (Gazneliler, Selçuklular) yapısı, kültürü ve bilime katkıları incelenir."
+        cevap = "🤖 (Kanka): Rasyonel sayılar, a ve b birer tam sayı olmak üzere, b'nin sıfır olmadığı durumlarda a/b şeklinde yazılabilen sayılardır. Kesirler ve ondalık sayılar da bu kümeye dahildir. Örneğin, 3/4 veya -1.5 birer rasyonel sayıdır."
+    elif "koç" in mesaj_lower or "koçluk" in mesaj_lower:
+        cevap = "🤖 (Kanka): Koçlarımız, 7. Sınıf konularında size özel ders programı hazırlama ve motivasyon konularında yardımcı olurlar. 'Ders Koçlarımız' sayfasından detaylı bilgiye ulaşabilirsiniz."
+    elif "deneme" in mesaj_lower:
+        cevap = "🤖 (Kanka): Deneme Sınavı bölümünden 7. Sınıf genel tekrar denemelerini çözebilir veya PDF Sonuç Kontrol bölümünden indirdiğin denemelerin sonuçlarını kontrol edebilirsin."
     elif "merhaba" in mesaj_lower or "selam" in mesaj_lower:
-        cevap = "🤖 (Kanka): Merhaba! Ben senin 7. Sınıf konularında yardımcı olan AI asistanın Kanka. Bana Rasyonel Sayılar, Fiiller veya Türk Tarihi ile ilgili detaylı sorular sorabilirsin!"
-    elif "proje" in mesaj_lower:
-        cevap = "🤖 (Kanka): Yusuf Efe Şahin'in projeleri sayfasında, Streamlit ile yaptığı bu portfolyo sitesi gibi teknoloji ve yazılım çalışmalarını görebilirsin."
-    elif "kanka" in mesaj_lower:
-        cevap = "🤖 (Kanka): Emrinizdeyim! 7. sınıf müfredatından herhangi bir konuda (Matematik, Türkçe, Din veya Sosyal) detaylı bilgi verebilirim."
+        cevap = "🤖 (Kanka): Merhaba! Ben senin 7. Sınıf konularında yardımcı olan AI asistanın Kanka. Sana nasıl yardımcı olabilirim?"
     else:
-        # Geliştirilmiş genel cevap
-        cevap = f"🤖 (Kanka): Şu anda sadece 7. Sınıf konularına odaklanabiliyorum. Lütfen sorunuzu (Matematik, Türkçe, Din veya Sosyal) bu derslerin temel konularıyla ilgili daha spesifik olarak sorun. Örneğin: 'Rasyonel sayılarda çarpma nasıl yapılır?'"
+        cevap = f"🤖 (Kanka): Şu anda sadece 7. Sınıf konularına odaklanabiliyorum. Lütfen daha spesifik bir soru sorun veya Koçluk, Deneme, PDF gibi anahtar kelimeleri kullanın."
     
     return cevap
 
@@ -197,11 +201,11 @@ if not st.session_state['admin_mode']:
     if st.session_state['announcement_color'] == 'success':
         st.success(f"📣 {st.session_state['announcement']}")
     
-    # --- NAVİGASYON ---
+    # --- NAVİGASYON (Yeni Sayfalar Eklendi) ---
     st.header("🌐 Site Bölümleri (7. Sınıf Dersleri Dahil)")
 
     DERS_ISIMLERI = list(DEFAULT_NOTLAR.keys()) 
-    SAYFALAR = ["Hakkımda", "Projelerim", "İletişim", "Kanka Chat", "Deneme Sınavı", "PDF Sonuç Kontrol"] + DERS_ISIMLERI 
+    SAYFALAR = ["Hakkımda", "Projelerim", "İletişim", "Kanka Chat", "Deneme Sınavı", "PDF Sonuç Kontrol", "Ders Koçlarımız", "Çalışma Alanı"] + DERS_ISIMLERI 
     
     num_cols_for_nav = 6
     cols_nav = st.columns(num_cols_for_nav)
@@ -226,11 +230,11 @@ if not st.session_state['admin_mode']:
         st.info(f"👉 Ana Konu: **{konu}**")
         st.markdown("---")
 
-        if st.session_state['user_logged_in']:
+        if st.session_state['user_logged_in'] and st.session_state['current_user'] != "ZİYARETÇİ":
             st.success(f"**{secilen_sayfa}** dersine ait detaylı notlara erişim izniniz var. (Simülasyon İçeriği)")
             st.markdown(f"Burada **{konu}** ile ilgili zenginleştirilmiş, gerçek içerik gösterilecektir.")
         else:
-            st.warning("Bu dersin notlarının tamamını görmek için lütfen üye girişi yapın.")
+            st.warning("Bu dersin notlarının tamamını görmek için lütfen tam üye girişi yapın.")
             
     # 2. PORTFOLYO SAYFALARI (Hakkımda, Projelerim)
     elif secilen_sayfa in ["Hakkımda", "Projelerim"]:
@@ -238,11 +242,6 @@ if not st.session_state['admin_mode']:
 
         st.markdown(f"## {simge} {secilen_sayfa}")
         st.markdown(f"**{icerik}**")
-        
-        if secilen_sayfa == "Projelerim":
-            st.markdown("---")
-            st.subheader("⚠️ Bilgi Notu")
-            st.info("Derslere ait notlar artık Projelerim sayfasında kart olarak değil, **doğrudan ana navigasyon menüsünden** erişilebilir ayrı sayfalar olarak sunulmaktadır. (7. Sınıf Odaklı)")
     
     # 3. İLETİŞİM SAYFASI
     elif secilen_sayfa == "İletişim":
@@ -252,18 +251,8 @@ if not st.session_state['admin_mode']:
             
             * **E-posta:** yusuf_efe_sahin@mail.com (Simülasyon)
             * **LinkedIn:** /yusufeşahin (Simülasyon)
-            * **Telefon:** 05xx xxx xx xx (Simülasyon)
-            
-            Veya aşağıdaki formu kullanabilirsiniz:
         """)
         
-        with st.form("iletisim_formu", clear_on_submit=True):
-            st.text_input("Adınız ve Soyadınız:")
-            st.text_input("E-posta Adresiniz:")
-            st.text_area("Mesajınız:")
-            if st.form_submit_button("Gönder"):
-                st.success("Mesajınız başarıyla alınmıştır. En kısa sürede geri dönüş yapılacaktır.")
-             
     # 4. KANKA CHAT BOT ALANI
     elif secilen_sayfa == "Kanka Chat":
         with st.expander("💬 KANKA Sohbet Alanını Aç"):
@@ -279,10 +268,6 @@ if not st.session_state['admin_mode']:
                 robot_cevap = general_chat_portfolyo(kanka_mesaji)
                 st.session_state.chat_history.append({"user": kanka_mesaji, "robot": robot_cevap})
                 st.rerun()
-            
-            if st.session_state.chat_history and st.button("Sohbeti Temizle"):
-                st.session_state.chat_history = []
-                st.rerun()
     
     # 5. DENEME SINAVI SAYFASI
     elif secilen_sayfa == "Deneme Sınavı":
@@ -290,33 +275,23 @@ if not st.session_state['admin_mode']:
         st.info("Bu alandan 7. Sınıf seviyesinde karma deneme sınavı çözerek bilginizi test edebilirsiniz. **İsteyen öğrenci PDF indirip çözebilir, isteyen bu sayfada çözebilir.**")
         
         if not st.session_state['deneme_aktif']:
-            st.markdown("### Deneme Sınavına Hazırlık")
-            
-            konu_secim = st.selectbox(
-                "Deneme Sınavı Türünü Seçin:",
-                options=["7. Sınıf Genel Tekrar (Demo)", "Sadece Matematik", "Sadece Türkçe"],
-                key="deneme_konu_select"
-            )
-            
             if st.button("Denemeyi Başlat (5 Soru)", key="start_deneme_btn"):
                 st.session_state['deneme_aktif'] = True
-                st.session_state['deneme_konusu'] = konu_secim
-                st.session_state['quiz_questions'] = DENEME_SINAVI_SORULARI # Genel denemeyi yüklüyoruz
+                st.session_state['deneme_konusu'] = "7. Sınıf Genel Tekrar (Demo)"
+                st.session_state['quiz_questions'] = DENEME_SINAVI_SORULARI 
                 st.session_state['quiz_submitted'] = False
                 st.rerun()
         
+        # Sınav Aktif ise Formu Göster
         if st.session_state['deneme_aktif'] and st.session_state['quiz_questions']:
+            # ... (Önceki kodda Deneme Sınavı formu burada devam ediyor)
             st.subheader(f"Aktif Deneme: {st.session_state['deneme_konusu']} ({len(st.session_state['quiz_questions'])} Soru)")
             
             with st.form("deneme_form"):
                 kullanici_cevaplari = {}
                 
                 for i, q in enumerate(st.session_state['quiz_questions']):
-                    # Rasyonel sayı formülleri LaTeX ile gösterilebilir
                     q_text = q['q']
-                    if "rasyonel" in q_text.lower() and "sayısının ondalık" in q_text.lower():
-                         q_text = "$$-2 \\frac{1}{4}$$ sayısının ondalık gösterimi nedir?"
-                    
                     st.markdown(f"**Soru {i+1} ({q['ders']}):** {q_text}")
                     kullanici_cevaplari[f"q_{i}"] = st.radio(f"Cevabınız:", q['a'], key=f"q_radio_{i}")
                     st.markdown("---")
@@ -344,6 +319,7 @@ if not st.session_state['admin_mode']:
                     st.markdown("---")
                     if st.button("Yeni Deneme Başlat"):
                          st.rerun()
+
     
     # 6. PDF SONUÇ KONTROL SAYFASI
     elif secilen_sayfa == "PDF Sonuç Kontrol":
@@ -413,6 +389,48 @@ if not st.session_state['admin_mode']:
                             st.markdown("---")
                             st.markdown(f"**(NOT: Net hesaplaması için 4 yanlışın 1 doğruyu götürmesi kuralı uygulanmamıştır. Simülasyon.)**")
 
+    # 7. DERS KOÇLARIMIZ SAYFASI (YENİ)
+    elif secilen_sayfa == "Ders Koçlarımız":
+        st.header("👨‍🏫 Ders Koçlarımız")
+        st.info("Başarıya giden yolda size destek olacak, alanında uzman koçlarımızla tanışın.")
+        
+        cols_koc = st.columns(3)
+        for i, koc in enumerate(MOCK_KOCLAR):
+            with cols_koc[i % 3]:
+                with st.container(border=True):
+                    st.subheader(koc['ad'])
+                    st.markdown(f"**Uzmanlık Alanı:** *{koc['alan']}*")
+                    st.caption(koc['bio'])
+                    if st.session_state['user_logged_in'] and st.session_state['current_user'] != "ZİYARETÇİ":
+                        st.button("Randevu Al (Simülasyon)", key=f"koc_randevu_{i}", use_container_width=True)
+                    else:
+                        st.warning("Randevu almak için tam üye girişi yapın.")
+
+    # 8. KOÇ-ÖĞRENCİ ÇALIŞMA ALANI SAYFASI (YENİ)
+    elif secilen_sayfa == "Çalışma Alanı":
+        st.header("🎯 Koç-Öğrenci Çalışma Alanı")
+        
+        if st.session_state['user_logged_in'] and st.session_state['current_user'] != "ZİYARETÇİ":
+            st.success(f"Hoş geldiniz, **{st.session_state['current_user'].upper()}**. Burası Koçunuzla birlikte planlama yapabileceğiniz alan.")
+            
+            st.markdown("---")
+            st.subheader("🗓️ Haftalık Program (Demo)")
+            st.markdown("""
+            * **Pazartesi:** Rasyonel Sayılar Tekrarı (30 Soru)
+            * **Salı:** Türkçe Fiiller Konu Anlatımı
+            * **Çarşamba:** Deneme Sınavı Çözümü
+            * **Perşembe:** Koç Görüşmesi (19:00)
+            * **Cuma:** Sosyal Bilgiler Özet Çıkarma
+            """)
+            
+            st.subheader("📝 Koçunuza Mesaj Gönder (Simülasyon)")
+            with st.form("koc_mesaj_formu", clear_on_submit=True):
+                st.text_area("Mesajınız:")
+                if st.form_submit_button("Gönder"):
+                    st.success("Mesajınız koçunuza başarıyla iletildi.")
+        else:
+            st.warning("Bu alana erişmek için lütfen tam üye girişi yapın.")
+
 
     st.markdown("---")
 
@@ -433,7 +451,7 @@ if st.session_state['admin_mode']:
         st.session_state['app_color'] = new_color
         st.rerun()
     
-    # MÜZİK KONTROLÜ (YÖNETİCİ PANELİNDE MÜZİK AYARLARI)
+    # MÜZİK KONTROLÜ
     st.sidebar.markdown("---")
     st.sidebar.subheader("🎶 Müzik Ayarları")
     
@@ -466,7 +484,7 @@ if st.session_state['admin_mode']:
         st.session_state['music_enabled'] = bool(yeni_url) 
         st.rerun() 
     
-    # PDF YÖNETİMİ (YENİ EKLENEN BÖLÜM - YÖNETİCİ KONTROLÜ)
+    # PDF YÖNETİMİ (YÖNETİCİ KONTROLÜ)
     st.sidebar.markdown("---")
     st.sidebar.subheader("📄 PDF Cevap Yönetimi")
     with st.sidebar.form("pdf_management_form", clear_on_submit=True):
@@ -536,12 +554,17 @@ else:
                 else:
                     st.error("Hatalı yönetici şifresi.")
     
-    # ÜYE GİRİŞ/ÇIKIŞ
+    # ÜYE GİRİŞ/ÇIKIŞ VE ZİYARETÇİ GİRİŞİ (YENİ)
     if st.session_state['user_logged_in']:
         st.sidebar.success(f"Giriş Yapıldı: {st.session_state['current_user'].upper()}")
         st.sidebar.button("🚪 Üye Çıkışı", on_click=user_logout)
     else:
+        # Standart Giriş Butonu
         st.sidebar.button("👤 Üye Girişi", on_click=lambda: st.session_state.update({'show_user_login': not st.session_state['show_user_login'], 'show_admin_login': False, 'show_user_register': False}))
+        
+        # Ziyaretçi Girişi Butonu
+        st.sidebar.button("🟢 Ziyaretçi Girişi", on_click=user_login_as_guest)
+
         if st.session_state['show_user_login']:
             with st.sidebar.form("user_login_form"):
                 user_name = st.text_input("Kullanıcı Adı")
