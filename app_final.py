@@ -89,4 +89,16 @@ DEFAULT_DERSLER = {
     },
     "Sosyal Bilgiler": {
         "konu": "İletişim ve İnsan İlişkileri",
-        "anlatim": "İletişim, duygu, düşün
+        "anlatim": """İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılmasıdır. Etkili iletişimde empati kurmak önemlidir. \n\n**Etkili İletişim:** 'Ben dili' kullanmak, göz teması kurmak.""", # Hata burada düzeltildi.
+        "not_icerik": "**Ana Konu:** Temel Sosyal Kavramlar \n\nSosyal Bilgiler dersine ait detaylı notlara erişim izniniz var. (Simülasyon içeriği) \n\nBurada Temel Sosyal Kavramlar ile ilgili zenginleştirilmiş, gerçek içerik gösterilecektir.",
+        "sorular": [
+            {"q": " Aşağıdakilerden hangisi etkili iletişimi olumsuz etkiler?", "a": ["Empati kurmak", "Göz teması kurmak", "Yargılayıcı konuşmak", "Açık ve net konuşmak"], "c": "Yargılayıcı konuşmak"},
+            {"q": " 'Kızgın olduğumu anlıyorum.' cümlesi hangi iletişim diline örnektir?", "a": ["Sen dili", "Ben dili", "Emir dili", "Vücut dili"], "c": "Ben dili"},
+        ]
+    },
+    "İngilizce": {
+        "konu": "Appearance and Personality (Görünüş ve Kişilik)",
+        "anlatim": "İngilizce 7. sınıfın ilk konularından biri, insanların fiziksel görünümleri (tall, short, slim) ve kişilik özellikleri (generous, selfish, friendly) hakkında konuşmaktır. \n\n**Görünüş:** *He is tall and handsome.* \n**Kişilik:** *She is very kind and helpful.*",
+        "not_icerik": "**Ana Konu:** Görünüş ve Kişilik \n\nİngilizce dersine ait detaylı notlara erişim izniniz var. (Simülasyon içeriği) \n\nBurada Görünüş ve Kişilik ile ilgili zenginleştirilmiş, gerçek içerik gösterilecektir.",
+        "sorular": [
+            {"q":
