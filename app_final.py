@@ -14,7 +14,7 @@ DEFAULT_NOTLAR = {
     "Türkçe": "Dil Bilgisi Kuralları",
     "Din Kültürü": "Temel Kavramlar",
     "Tarih": "Önemli Olaylar ve Dönemler",
-    "Sosyal Bilgiler": "Temel Sosyal Kavramlar", # Yeni Eklenen Ders
+    "Sosyal Bilgiler": "Temel Sosyal Kavramlar", 
 }
 
 # Session State Tanımlamaları (Mutlaka En Üstte Olmalı)
@@ -64,45 +64,4 @@ st.set_page_config(
 # --- PORTFOLYO İÇERİK FONKSİYONU ---
 def get_portfolyo_bilgisi(baslik):
     if baslik == "Hakkımda":
-        return ("Merhaba, ben Yusuf Efe Şahin. Bu kişisel portfolyo sayfamda, teknoloji, yazılım ve tasarım alanındaki çalışmalarımı sergiliyorum. Yaratıcı projeler geliştirmeye ve sürekli öğrenmeye odaklıyım.", "👨‍💻")
-    elif baslik == "Projelerim":
-        return ("Yaptığım bazı öne çıkan projeler ve kullandığım teknolojiler aşağıdadır.\n\n* **Portfolyo Sitesi (Streamlit/Python):** Yönetici ve üye panelli kişisel site.\n* **Notlar:** Ders notlarına artık doğrudan ana menüden erişebilirsiniz.", "💡")
-    return ("İçerik Bulunamadı.", "❓")
-
-
-# --- GİRİŞ / ÇIKIŞ VE KONTROL FONKSİYONLARI ---
-def user_login(username, password):
-    if not st.session_state['user_login_allowed']:
-        st.error("Üye girişi şu anda bakımdadır.")
-        return
-    for user in MOCK_USERS:
-        if user["username"] == username and user["password_hash"] == password:
-            st.session_state['user_logged_in'] = True
-            st.session_state['current_user'] = username
-            st.session_state['show_user_login'] = False
-            st.success(f"Hoş geldiniz, {username.upper()}!") 
-            time.sleep(1)
-            st.rerun()
-            return
-    if len(username) > 0 and len(password) > 0:
-         st.session_state['user_logged_in'] = True
-         st.session_state['current_user'] = username
-         st.session_state['show_user_login'] = False
-         st.success(f"Hoş geldiniz, {username.upper()}! (Simülasyon Girişi Başarılı)")
-         time.sleep(1)
-         st.rerun()
-    else:
-        st.error("Kullanıcı adı veya şifre yanlış. (Demo: yusuf/y123)")
-
-def user_logout():
-    st.session_state['user_logged_in'] = False
-    st.session_state['current_user'] = None
-    st.rerun()
-
-def forgot_password_simulation(email_or_username, is_admin=False):
-    st.sidebar.warning("Sistem simülasyon modunda olduğundan, şifre sıfırlama kodu e-posta adresinize gönderilmiş gibi yapıldı.")
-    time.sleep(1)
-    if is_admin:
-        st.sidebar.success(f" Yönetici Şifresi sıfırlama maili 'admin@portfolyo.com' adresine gönderildi.")
-    else:
-        st.sidebar.success(f" Kullanıcı şifresi sıfırlama kodu '{email
+        return ("Merhaba, ben Yusuf Efe
