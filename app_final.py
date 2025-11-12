@@ -9,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Koyu Temayı zorlamak için CSS enjeksiyonu
+# Koyu Temayı zorlamak için CSS enjeksiyonu (Önceki renk ayarları korunmuştur)
 st.markdown(
     """
     <style>
@@ -32,12 +32,6 @@ st.markdown(
     .stButton>button {
         color: white;
         border-color: #FF4B4B;
-    }
-    
-    /* Görseldeki buton kenarlıkları için özel stil ekliyoruz */
-    .stButton>button {
-        color: white;
-        border-color: #FF4B4B; /* Kırmızı/Turuncu ton */
         border-width: 2px;
         font-weight: bold;
     }
@@ -56,10 +50,15 @@ st.markdown(
         border-left: 5px solid #FF4B4B !important; /* Kırmızı vurgu */
     }
     
-    /* Konu kutusunun ikonunu ve başlığını hizalama */
-    .css-1f9e236.e1qvo95c1 { /* Streamlit Info/Warning/Success div'inin içindeki metin */
-        font-size: 1.1rem;
-        font-weight: 600;
+    /* Koç cevabı için özel stil - görseldeki yeşil tonuna yakın */
+    .koç-cevap-kutusu {
+        border-left: 5px solid #FF4B4B; 
+        padding: 10px; 
+        background-color: #1E3147;
+    }
+    .koç-cevap-metni {
+        color: #FF4B4B; 
+        font-weight: bold;
     }
     </style>
     """,
@@ -69,7 +68,30 @@ st.markdown(
 # --- OTURUM DURUMU (SESSION STATE) BAŞLANGIÇ AYARLARI ---
 ADMIN_PASSWORD = "123" 
 
-# 7. SINIF DERS VERİLERİ (Konu Anlatımı, Quiz/Test Soruları, Kelime Kartları)
+# KELİME ÇEVİRİSİ İÇİN BASİT SÖZLÜK (Simülasyon amaçlı)
+KELIME_SOZLUGU = {
+    "elma": "apple",
+    "kitap": "book",
+    "koşmak": "run",
+    "güneş": "sun",
+    "sayı": "number",
+    "dürüst": "honest",
+    "cömert": "generous",
+    "yorgun": "tired",
+    "yazılım": "software",
+    "iletişim": "communication",
+    "deniz": "sea",
+    "çiçek": "flower",
+    "dostluk": "friendship",
+    "bilgi": "information",
+    "başarı": "success",
+    "öğrenme": "learning",
+    "çeviri": "translation",
+    "kelime": "word",
+}
+
+
+# 7. SINIF DERS VERİLERİ (Önceki koddan tamamen kopyalanmıştır)
 DEFAULT_DERSLER = {
     "Matematik": {
         "konu": "7. Sınıf Matematik Tüm Üniteler", 
@@ -182,7 +204,7 @@ Hücre bölünmesi, canlılarda büyüme, üreme ve onarım amaçlı gerçekleş
 1.  **Mitoz Bölünme:**
     * **Görüldüğü Yer:** Vücut (somatik) hücrelerinde (deri, karaciğer vb.).
     * **Amaç:** Büyüme, gelişme ve yaraları onarma. Tek hücrelilerde üreme.
-    * **Kromozom Sayısı:** Sabit kalır ($2n \rightarrow 2n$ veya $n \rightarrow n$).
+    * **Kromozom Sayısı:** Sabit kalır ($2n \\rightarrow 2n$ veya $n \\rightarrow n$).
     * **Oluşan Hücre Sayısı:** 2 yeni hücre oluşur.
     * **Kalıtsal Çeşitlilik:** Oluşan hücreler **ana hücreyle aynı** kalıtsal yapıdadır (Çeşitlilik YOK).
     * **Örnek:** Parmağınız kesildiğinde yaranın iyileşmesi.
@@ -190,7 +212,7 @@ Hücre bölünmesi, canlılarda büyüme, üreme ve onarım amaçlı gerçekleş
 2.  **Mayoz Bölünme:**
     * **Görüldüğü Yer:** Üreme ana hücrelerinde (erkekte sperm ana hücresi, dişide yumurta ana hücresi).
     * **Amaç:** Eşeyli üremeyi sağlamak.
-    * **Kromozom Sayısı:** Yarıya iner ($2n \rightarrow n$).
+    * **Kromozom Sayısı:** Yarıya iner ($2n \\rightarrow n$).
     * **Oluşan Hücre Sayısı:** 4 yeni hücre oluşur.
     * **Kalıtsal Çeşitlilik:** Oluşan hücreler **farklı** kalıtsal yapıdadır (Kalıtsal Çeşitlilik VAR).
     * **Örnek:** Bir insanın üreme hücrelerinin oluşması.
@@ -368,6 +390,10 @@ if 'current_word_index' not in st.session_state:
     st.session_state['current_word_index'] = 0
 if 'show_translation' not in st.session_state:
     st.session_state['show_translation'] = False
+if 'kelime_ceviri_sonuc' not in st.session_state:
+    st.session_state['kelime_ceviri_sonuc'] = ""
+if 'kelime_ceviri_input' not in st.session_state:
+    st.session_state['kelime_ceviri_input'] = ""
 
 
 # --- PORTFOLYO İÇERİK FONKSİYONU ---
@@ -387,10 +413,11 @@ def get_portfolyo_bilgisi(baslik):
 * **LinkedIn:** /yusufeşahin
 * **GitHub:** /yusufeşahinprojeler""", "📧")
     elif baslik == "Çeviri Aracı":
-        return ("""Hızlı metin çevirisi yapabileceğiniz simülasyon aracıdır.""", "🌍")
+        # Başlık artık "Çeviri Araçları" olacak
+        return ("""Hızlı metin ve kelime çevirisi yapabileceğiniz simülasyon araçlarıdır.""", "🌍") 
     return ("İçerik Bulunamadı.", "❓")
 
-# --- KELİME ÖĞRENME MODÜLÜ İŞLEVİ (YENİ EKLENEN) ---
+# --- KELİME ÖĞRENME MODÜLÜ İŞLEVİ ---
 def render_kelime_ogrenme_modulu(ders_adi, kelimeler):
     st.header(f"🔠 {ders_adi} - Kelime Öğrenme Kartları")
     st.info("Aşağıdaki kartları kullanarak konuya ait önemli terimleri ve kelimeleri öğrenin. İlerleme tuşlarına basarak kartlar arasında geçiş yapabilirsiniz.")
@@ -400,28 +427,23 @@ def render_kelime_ogrenme_modulu(ders_adi, kelimeler):
         return
 
     toplam_kelime = len(kelimeler)
-    current_index = st.session_state['current_word_index'] % toplam_kelime # İndeksi toplam kelime sayısına göre döngüye sok
+    current_index = st.session_state['current_word_index'] % toplam_kelime 
 
-    # Mevcut kelime
     current_word = kelimeler[current_index]
     
-    # Kelime kartı görselleştirmesi (Container veya Columns kullanarak daha şık bir görünüm)
     kart_container = st.container(border=True)
     with kart_container:
         st.markdown(f"### Kelime {current_index + 1} / {toplam_kelime}")
         
-        # Kelime kartının ön yüzü (Türkçe)
         st.markdown(f"#### 🇹🇷 **{current_word['tr']}**")
         
         st.markdown("---")
         
-        # Çeviri gösterim kontrolü
         if st.session_state['show_translation']:
             st.markdown(f"#### 🇬🇧 **Anlamı:** {current_word['en']}")
         else:
             st.markdown("#### Anlamını görmek için 'Çeviriyi Göster'e tıklayın.")
             
-    # Navigasyon Butonları
     col_prev, col_flip, col_next = st.columns(3)
 
     with col_prev:
@@ -442,44 +464,38 @@ def render_kelime_ogrenme_modulu(ders_adi, kelimeler):
             st.rerun()
 
 
-# --- DERS MODÜLLERİ (Konu Anlatımı, Ders Koçlarımız, Çalışma Alanı/PDF/Deneme) ---
+# --- DERS MODÜLLERİ ---
 def render_ders_modulu(ders_adi, ders_veri, modul):
-    # Görseldeki başlığa uyması için başlık etiketini değiştirelim
     st.subheader(f"✅ Seçili Sayfa: {ders_adi}")
     st.markdown(f"## 📚 {ders_adi} Dersi İçerikleri", unsafe_allow_html=True)
     
-    # Modül Navigasyonu (5 Buton Eklendi)
+    # Modül Navigasyonu (5 Buton)
     col_konu, col_pdf, col_koc, col_alan, col_kelime = st.columns(5)
     
     with col_konu:
-        # Konu Anlatımı 
         if st.button("📖 Konu Anlatımı", key="btn_konu_anlatim_new", use_container_width=True):
             st.session_state['secilen_modul'] = "Konu Anlatımı"
             st.session_state['test_konusu'] = "" 
             st.session_state['koc_mesaj'] = "" 
     with col_pdf:
-        # PDF Sonuç Kontrol 
         if st.button("🔶 PDF Sonuç Kontrol", key="btn_pdf_kontrol_new", use_container_width=True):
             st.session_state['secilen_modul'] = "PDF Kontrol"
             st.session_state['test_konusu'] = ""
             st.session_state['koc_mesaj'] = ""
     with col_koc:
-        # Ders Koçlarımız
         if st.button("🔶 Ders Koçlarımız", key="btn_ders_koclari", use_container_width=True):
             st.session_state['secilen_modul'] = "Ders Koçlarımız"
             st.session_state['test_konusu'] = ""
     with col_alan:
-        # Çalışma Alanı
         if st.button("🔶 Çalışma Alanı", key="btn_deneme_sinavi_new", use_container_width=True):
-            st.session_state['secilen_modul'] = "Deneme Sınavı" # Modül adı içeride sabit kalmalı
+            st.session_state['secilen_modul'] = "Deneme Sınavı" 
             st.session_state['koc_mesaj'] = ""
     with col_kelime:
-        # Yeni Kelime Öğrenme Modülü Butonu
         if st.button("🔠 Kelime Öğren", key="btn_kelime_ogrenme", use_container_width=True):
             st.session_state['secilen_modul'] = "Kelime Öğrenme"
             st.session_state['test_konusu'] = ""
             st.session_state['koc_mesaj'] = ""
-            st.session_state['current_word_index'] = 0 # Yeni modüle geçerken kartı sıfırla
+            st.session_state['current_word_index'] = 0 
             st.session_state['show_translation'] = False
             
     st.markdown("---")
@@ -488,17 +504,15 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
     if modul == "Konu Anlatımı":
         st.header(f"📖 {ders_adi} - Konu Anlatımı ve Özet")
         
-        # Konu başlığını gösteren kısım (Görseldeki gibi)
         st.info(f"👉 **Konu:** {ders_veri['konu']}") 
         
         st.markdown("---")
         
-        # Başlık Görseldeki gibi "Detaylı Konu Anlatımı" olarak güncellendi
         st.subheader("📝 Detaylı Konu Anlatımı")
         st.markdown(ders_veri['anlatim']) 
 
     elif modul == "Deneme Sınavı":
-        render_dinamik_test_alani(ders_adi, ders_veri['sorular'], "Çalışma Alanı") # Başlık için Çalışma Alanı gönderildi
+        render_dinamik_test_alani(ders_adi, ders_veri['sorular'], "Çalışma Alanı") 
 
     elif modul == "PDF Kontrol":
         st.header("📄 PDF Sonuç Kontrol (Simülasyon)")
@@ -509,21 +523,18 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap ve Sesli Simülasyon)")
         st.info("Konunuzu yazın, koç size o konuyu **detaylı ve bol örnekli** anlatsın.")
         
-        # Kullanıcıdan soruyu al
         koç_mesaj = st.text_area(
             "Koça Sorunuzu Yazın:", 
             placeholder="Örneğin: Tam sayılarla çarpma işlemi nasıl yapılır?", 
             key=f"koc_input_{ders_adi}"
         )
         
-        # Form oluşturulurken key ataması düzeltildi
         with st.form(f"koc_soru_form_{ders_adi}", clear_on_submit=False):
             if st.form_submit_button("Koç Cevabını Hazırla"):
                 if koç_mesaj:
-                    # Koçun vereceği açıklayıcı (simüle edilmiş) cevap
                     koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
                     
-                    # 1. Koç Cevabı Metin Kutusu (Görseldeki gibi kırmızı kenarlıklı)
+                    # Koç Cevabı Metin Kutusu (HTML stil kullanımı korundu)
                     st.markdown(
                         f"""
                         <div style='border-left: 5px solid #FF4B4B; padding: 10px; background-color: #1E3147;'>
@@ -536,16 +547,13 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
 
                     st.markdown("---")
                     
-                    # 2. Detaylı Koç Açıklaması (Görseldeki gibi)
                     st.markdown(f"**Koç Açıklaması - Konu: {koç_mesaj.capitalize()}**")
                     st.markdown(koç_anlatimi)
                     
                     st.markdown("---")
                     
-                    # 3. Sesli Robot Simülasyonu (Autoplay kaldırıldı)
                     st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
                     
-                    # HTML Audio etiketi kullanarak ses çalma. 'autoplay' özelliği kaldırıldı.
                     st.markdown(f"""
                         <audio controls loop=false>
                             <source src="{SESLI_ACIKLAMA_URL}" type="audio/mp3">
@@ -558,7 +566,6 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                 else:
                      st.warning("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
             else:
-                # Koç cevabı butonu henüz tıklanmadıysa bu bilgi gösterilir
                 st.info("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
     
     elif modul == "Kelime Öğrenme":
@@ -567,12 +574,10 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
 
 # --- DİNAMİK TEST ALANI İŞLEVİ ---
 def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
-    st.header(f"🔥 {ders_adi} - {modül_başlık}") # Başlığı "Çalışma Alanı" olarak gösterir
+    st.header(f"🔥 {ders_adi} - {modül_başlık}") 
     
-    # Konu Adı Girişi
     with st.form(f"test_konusu_form_{ders_adi}", clear_on_submit=False):
         
-        # Konu Adı Giriniz Alanı (Görsellerdeki gibi)
         st.markdown("##### Konu Adı Giriniz:")
         test_konusu_input = st.text_input(
             "Test Yapmak İstediğiniz Konu Adını Giriniz (Örn: Tam Sayılar)", 
@@ -590,17 +595,13 @@ def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
             else:
                 st.error("Lütfen bir konu adı giriniz.")
     
-    # Kullanıcı bir konu girdiyse ve test oluşturulduysa (Simülasyon)
     if st.session_state['test_konusu'] and st.session_state['secilen_modul'] == "Deneme Sınavı":
         st.markdown("---")
         st.subheader(f"❓ Konu: **{st.session_state['test_konusu']}** Test Soruları")
         st.info(f"Bu test, **{st.session_state['test_konusu']}** konusuna özel olarak üretilmiş simülasyon sorularıdır.")
         
-        # Quiz Formu (Sorular sabit kalsa bile konuya özel olduğu hissini verir)
-        with st.form(f"quiz_form_{ders_adi}_soru", clear_on_submit=False): # Key çakışmasını engelle
+        with st.form(f"quiz_form_{ders_adi}_soru", clear_on_submit=False): 
             kullanici_cevaplari = {}
-            
-            # Sorular sabit kalsa bile, testin simülasyon olduğunu belirtmek için bu kısmı koruduk
             guncel_sorular = [q for q in sorular] 
             
             for i, q in enumerate(guncel_sorular):
@@ -641,12 +642,74 @@ def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
                 
                 st.markdown(f"## 🎉 Toplam Sonuç: {dogru_sayisi} Doğru / {len(guncel_sorular)} Soru")
 
-# --- ÇEVİRİ ARACI İŞLEVİ ---
-def render_cevirici():
-    st.header("🌍 Çeviri Aracı (Simülasyon)")
+# --- KELİME ÇEVİRİSİ İŞLEVİ (YENİ EKLEME) ---
+def render_kelime_ceviri():
+    st.markdown("### 🔠 Kelime Çevirisi (Hızlı Sözlük)")
+    st.info("Tek bir kelime girin. Sözlüğümüzde varsa hızlıca Türkçe <-> İngilizce çevirisini görün.")
+    
+    with st.form("kelime_ceviri_form", clear_on_submit=False):
+        
+        col_input, col_sonuc = st.columns(2)
+        
+        with col_input:
+            kelime_input = st.text_input(
+                "Çevrilecek Kelimeyi Girin:", 
+                key="kelime_ceviri_input_text",
+                value=st.session_state['kelime_ceviri_input'],
+                placeholder="Örn: başarı"
+            ).lower().strip()
+            
+        with col_sonuc:
+             yon = st.selectbox("Çeviri Yönü:", options=["Türkçe -> İngilizce", "İngilizce -> Türkçe"])
+        
+        if st.form_submit_button("Kelimeyi Çevir"):
+            st.session_state['kelime_ceviri_input'] = kelime_input
+            
+            if len(kelime_input.split()) > 1:
+                st.error("❌ Lütfen sadece **tek bir kelime** giriniz. Metin çevirisi için yukarıdaki aracı kullanın.")
+                st.session_state['kelime_ceviri_sonuc'] = ""
+                st.rerun()
+            
+            if not kelime_input:
+                st.warning("Lütfen çevrilecek bir kelime giriniz.")
+                st.session_state['kelime_ceviri_sonuc'] = ""
+                st.rerun()
+                
+            sonuc = ""
+            
+            if yon == "Türkçe -> İngilizce":
+                # Kelimeyi sözlükte ara
+                ingilizce_karsilik = KELIME_SOZLUGU.get(kelime_input)
+                if ingilizce_karsilik:
+                    sonuc = f"**🇹🇷 {kelime_input.capitalize()}** ➡️ **🇬🇧 {ingilizce_karsilik.capitalize()}**"
+                else:
+                    sonuc = f"**{kelime_input.capitalize()}** kelimesinin İngilizce karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
+            
+            else: # İngilizce -> Türkçe
+                # Sözlükteki değerleri kontrol et
+                turkce_karsilik = next((tr for tr, en in KELIME_SOZLUGU.items() if en == kelime_input), None)
+                if turkce_karsilik:
+                    sonuc = f"**🇬🇧 {kelime_input.capitalize()}** ➡️ **🇹🇷 {turkce_karsilik.capitalize()}**"
+                else:
+                    sonuc = f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
+                    
+            st.session_state['kelime_ceviri_sonuc'] = sonuc
+            st.rerun()
+
+        
+    # Çeviri sonucu gösterimi (rerun sonrası buraya düşer)
+    if st.session_state['kelime_ceviri_sonuc']:
+        st.markdown("---")
+        st.subheader("💡 Çeviri Sonucu")
+        st.markdown(f"#### {st.session_state['kelime_ceviri_sonuc']}", unsafe_allow_html=True)
+
+
+# --- METİN ÇEVİRİSİ İŞLEVİ (ESKİ) ---
+def render_metin_ceviri():
+    st.markdown("### 📝 Metin Çevirisi")
     st.info("Girdiğiniz metin, burada seçtiğiniz dile çevrilmiş gibi gösterilecektir.")
     
-    with st.form("cevirici_form", clear_on_submit=False):
+    with st.form("metin_cevirici_form", clear_on_submit=False):
         kaynak_metin = st.text_area("Çevrilecek Metni Giriniz:", height=150)
         
         col_dil1, col_dil2 = st.columns(2)
@@ -655,14 +718,27 @@ def render_cevirici():
         with col_dil2:
             hedef_dil = st.selectbox("Hedef Dil:", options=["İngilizce", "Türkçe", "Almanca", "İspanyolca"])
         
-        if st.form_submit_button("Çevir"):
+        if st.form_submit_button("Metni Çevir"):
             if kaynak_metin:
-                # Görseldeki çıktı formatına daha yakın bir çıktı simülasyonu
                 cevrilmis_metin = f"[{hedef_dil} Çevirisi]: {kaynak_metin.upper()} (Simülasyon Çevirisi Başarılı!)"
                 st.success(f"Çeviri Tamamlandı ({kaynak_dil} -> {hedef_dil}):")
                 st.code(cevrilmis_metin)
             else:
                 st.warning("Lütfen çevrilecek metni giriniz.")
+
+
+# --- ÇEVİRİ ARACI GENEL FONKSİYONU ---
+def render_cevirici():
+    st.header("🌍 Çeviri Araçları")
+    
+    # 1. Metin Çevirisi
+    render_metin_ceviri()
+    
+    st.markdown("<br><br>", unsafe_allow_html=True) # İki araç arasına boşluk koy
+
+    # 2. Kelime Çevirisi (Yeni Eklenen)
+    render_kelime_ceviri()
+
 
 # --- BAŞLIK AYARLARI ---
 st.title(f"💼 Yusuf Efe Şahin Portfolyo")
@@ -674,10 +750,6 @@ if not st.session_state['admin_mode']:
     col_kapat, col_ac, col_volume_slider = st.columns([1, 1, 6]) 
 
     if st.session_state['music_enabled']:
-        # Müzik çalma kodu
-        # Streamlit'in ses bileşeni, bir HTML tag'ı olmadığından Volume'ü doğrudan Python'da ayarlayamazsınız. 
-        # Ancak kullanıcı slider'ı hareket ettirdiğinde rerender edip, sesi tamamen kapatıp açarak kontrol edebiliriz.
-        # Basitlik adına, sadece HTML audio tag'ı kullanıp volume ayarını HTML ile yapalım:
         st.markdown(f"""
             <audio id="background-music" controls autoplay loop style="display:none;">
                 <source src="{st.session_state['music_url']}" type="audio/mp3">
@@ -735,10 +807,16 @@ if not st.session_state['admin_mode']:
                     st.session_state['secilen_modul'] = "Konu Anlatımı" 
                     st.session_state['test_konusu'] = "" 
                     st.session_state['koc_mesaj'] = "" 
-                    st.session_state['current_word_index'] = 0 # Kelime kartlarını sıfırla
+                    st.session_state['current_word_index'] = 0 
                     st.session_state['show_translation'] = False
                 else:
                     st.session_state['secilen_modul'] = "Konu Anlatımı"
+                
+                # Çeviri sayfasına geçildiğinde kelime çeviri sonucunu temizle
+                if sayfa == "Çeviri Aracı":
+                    st.session_state['kelime_ceviri_sonuc'] = ""
+                    st.session_state['kelime_ceviri_input'] = ""
+                    
                 st.rerun()
                 
     st.markdown("---")
@@ -752,7 +830,7 @@ if not st.session_state['admin_mode']:
         ders_veri = DEFAULT_DERSLER[secilen_sayfa]
         render_ders_modulu(secilen_sayfa, ders_veri, st.session_state['secilen_modul'])
         
-    # 2. ÇEVİRİ ARACI
+    # 2. ÇEVİRİ ARACI (Artık Metin ve Kelime çevirisini de içeriyor)
     elif secilen_sayfa == "Çeviri Aracı":
         render_cevirici()
         
@@ -828,7 +906,6 @@ if st.session_state['admin_mode']:
              yeni_url = custom_url_input
         else:
              st.sidebar.warning("Lütfen geçerli bir MP3 linki girin. (Örn: ...mp3)")
-             # Hatalı link girildiğinde mevcut URL'yi koru
              yeni_url = st.session_state['music_url'] 
     
     if yeni_url != st.session_state['music_url']:
@@ -873,4 +950,4 @@ with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
         st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.0")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.1 (Kelime Çevirisi Eklendi)")
