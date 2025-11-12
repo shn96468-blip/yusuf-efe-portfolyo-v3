@@ -24,7 +24,7 @@ st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eği
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# 6 ana ders sekmesi oluşturuldu
+# SADECE 6 ANA DERS SEKMESİ OLUŞTURULDU (Koç Modülü kaldırıldı)
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
@@ -40,7 +40,6 @@ with tab1:
     col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
     
     with col_math_btn1:
-        # Buton kısa başlık + Hata önleyici benzersiz 'key' eklendi
         st.button("📄 Konu Anlatımı", type="primary", key="mat_konu") 
     with col_math_btn2:
         st.button("♦️ PDF Sonuç Kontrol", type="secondary", key="mat_pdf")
@@ -57,7 +56,6 @@ with tab2:
     col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
 
     with col_tr_btn1:
-        # Buton kısa başlık + Hata önleyici benzersiz 'key' eklendi
         st.button("📄 Konu Anlatımı", type="primary", key="turk_konu") 
     with col_tr_btn2:
         st.button("♦️ Hikaye Analizi", type="secondary", key="turk_analiz")
@@ -73,7 +71,6 @@ with tab3:
     col_fen_btn1, col_fen_btn2, col_fen_btn3 = st.columns(3)
     
     with col_fen_btn1:
-        # Buton kısa başlık + Hata önleyici benzersiz 'key' eklendi
         st.button("📄 Konu Anlatımı", type="primary", key="fen_konu") 
     with col_fen_btn2:
         st.button("🔬 Laboratuvar Deneyleri", type="secondary", key="fen_deney")
@@ -89,7 +86,6 @@ with tab4:
     col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
     
     with col_sosyal_btn1:
-        # Buton kısa başlık + Hata önleyici benzersiz 'key' eklendi
         st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
     with col_sosyal_btn2:
         st.button("📜 Tarihi Olaylar", type="secondary", key="sos_olay")
@@ -105,28 +101,4 @@ with tab5:
     col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
     
     with col_ing_btn1:
-        # Buton kısa başlık + Hata önleyici benzersiz 'key' eklendi
-        st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
-    with col_ing_btn2:
-        st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
-    with col_ing_btn3:
-        st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
-    
-    st.markdown("---")
-    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
-
-# --- 9. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ ---
-with tab6:
-    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
-    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
-    
-    with col_din_btn1:
-        # Buton kısa başlık + Hata önleyici benzersiz 'key' eklendi
-        st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
-    with col_din_btn2:
-        st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
-    with col_din_btn3:
-        st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
-    
-    st.markdown("---")
-    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+        
