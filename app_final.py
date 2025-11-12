@@ -1,12 +1,8 @@
 import streamlit as st
-# import random # Artık Kelime Kartları kullanılmadığı için Random kütüphanesine gerek kalmadı.
-# import time # Artık kullanılmıyor.
-
-# --- SÖZLÜK YÜKLEME ARTIK SADECE DEMO İÇİN KALDI ---
-# Sözlük yükleme fonksiyonu koddan tamamen kaldırılabilir, 
-# ancak Koç Modülü içindeki metinlerin anlaşılması için içeriği tutuyorum.
+# Kelime modülleri kaldırıldığı için 'random' ve 'time' kütüphanelerine artık gerek yok.
 
 # --- SABİT METİNLER VE İÇERİK ---
+# Bu içerikler, görseldeki ders sekmelerini ve Koç Modülünü temsil eder.
 MATH_CONTENT = """
 ## 📘 Matematik - Konu Anlatımı ve Özet
 <div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
