@@ -56,7 +56,6 @@ st.markdown(
 ADMIN_PASSWORD = "123" 
 
 # 7. SINIF DERS VERİLERİ (Konu Anlatımı ve Quiz/Test Soruları)
-# Buradaki "sorular" yapısı, kullanıcının girdiği konuya göre simüle edilmiş bir test olarak kullanılacaktır.
 DEFAULT_DERSLER = {
     "Matematik": {
         "konu": "Tam Sayılarla Dört İşlem",
@@ -88,4 +87,12 @@ DEFAULT_DERSLER = {
         "konu": "Melek ve Ahiret İnancı",
         "anlatim": "İslam dininde melekler, Allah'ın emirlerini yerine getiren nurdan yaratılmış varlıklardır. Ahiret inancı ise ölümden sonraki sonsuz yaşamın varlığına inanmaktır. \n\n**Dört Büyük Melek:** Cebrail, Mikail, İsrafil, Azrail.",
         "sorular": [
-            {"q": " Vahiy meleği olarak bilinen ve peygamberlere emirleri ileten melek hangisidir
+            {"q": " Vahiy meleği olarak bilinen ve peygamberlere emirleri ileten melek hangisidir?", "a": ["Mikail", "İsrafil", "Azrail", "Cebrail"], "c": "Cebrail"}, # <<< Hata buradaydı, kapatma tırnağı (") eklendi.
+            {"q": " Aşağıdakilerden hangisi ahiret hayatının aşamalarından biri değildir?", "a": ["Kıyamet", "Haşir", "Tevhid", "Mizan"], "c": "Tevhid"},
+        ]
+    },
+    "Sosyal Bilgiler": {
+        "konu": "İletişim ve İnsan İlişkileri",
+        "anlatim": """İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılmasıdır. Etkili iletişimde empati kurmak önemlidir. \n\n**Etkili İletişim:** 'Ben dili' kullanmak, göz teması kurmak.""", 
+        "sorular": [
+            {"q": " Aşağıdakilerden hangisi etkili iletişimi olumsuz etkiler
