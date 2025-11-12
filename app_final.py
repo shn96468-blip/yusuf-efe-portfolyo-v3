@@ -10,6 +10,8 @@ st.set_page_config(
 )
 
 # Koyu Temayı zorlamak için CSS enjeksiyonu
+# Not: Görseldeki butonların turuncu kenarlık ve elmas simgeleri için özel CSS enjeksiyonu gerekiyor,
+# ancak Streamlit'in standart yapısını koruyarak sadece metin ve ikonları düzenliyoruz.
 st.markdown(
     """
     <style>
@@ -34,7 +36,15 @@ st.markdown(
         border-color: #FF4B4B;
     }
     
-    /* Özel Buton Stili */
+    /* Görseldeki buton kenarlıkları için özel stil ekliyoruz */
+    .stButton>button {
+        color: white;
+        border-color: #FF4B4B; /* Kırmızı/Turuncu ton */
+        border-width: 2px;
+        font-weight: bold;
+    }
+    
+    /* Özel Buton Stili (Hover/Focus) */
     .stButton>button:focus:not(:active) {
         border-color: #FF4B4B; 
         color: #FF4B4B;
@@ -46,6 +56,12 @@ st.markdown(
         background-color: #1E3147 !important; /* Mavi-Koyu Ton */
         color: white !important;
         border-left: 5px solid #FF4B4B !important; /* Kırmızı vurgu */
+    }
+    
+    /* Konu kutusunun ikonunu ve başlığını hizalama */
+    .css-1f9e236.e1qvo95c1 { /* Streamlit Info/Warning/Success div'inin içindeki metin */
+        font-size: 1.1rem;
+        font-weight: 600;
     }
     </style>
     """,
@@ -203,7 +219,8 @@ Melekler, Allah'ın emirlerini yerine getiren, nurdan yaratılmış, gözle gör
 """
     },
     "Sosyal Bilgiler": {
-        "konu": "7. Sınıf Sosyal Bilgiler Tüm Üniteler", 
+        # Konu adını görseldeki gibi düzeltiyoruz
+        "konu": "İletişim ve İnsan İlişkileri", 
         "anlatim": """7. Sınıf Sosyal Bilgiler dersi 7 ana üniteden oluşmaktadır:
         
 * **1. Ünite (Birey ve Toplum - İletişim ve İnsan İlişkileri):** İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılmasıdır. Etkili iletişimde empati kurmak önemlidir. Etkili iletişim unsurları: 'Ben dili' kullanmak, göz teması kurmak.
@@ -331,34 +348,34 @@ def get_portfolyo_bilgisi(baslik):
 
 # --- DERS MODÜLLERİ (Konu Anlatımı, Ders Koçlarımız, Çalışma Alanı/PDF/Deneme) ---
 def render_ders_modulu(ders_adi, ders_veri, modul):
+    # Görseldeki başlığa uyması için başlık etiketini değiştirelim
     st.subheader(f"✅ Seçili Sayfa: {ders_adi}")
-    
     st.markdown(f"## 📚 {ders_adi} Dersi İçerikleri", unsafe_allow_html=True)
     
-    # Geri Yüklenen Modül Navigasyonu (Görseldeki eski butonlar)
+    # Modül Navigasyonu (Görseldeki buton metinleri ve ikonları düzenleniyor)
     col_konu, col_pdf, col_koc, col_alan = st.columns(4)
     
     with col_konu:
-        # Konu Anlatımı (Varsayılan Modül)
+        # Konu Anlatımı (Görselde adı Konu Anlatımı, kodda da aynı)
         if st.button("📖 Konu Anlatımı", key="btn_konu_anlatim_new", use_container_width=True):
             st.session_state['secilen_modul'] = "Konu Anlatımı"
             st.session_state['test_konusu'] = "" 
             st.session_state['koc_mesaj'] = "" # Koç mesajını temizle
     with col_pdf:
-        # PDF Sonuç Kontrol
+        # PDF Sonuç Kontrol (Görselde adı PDF Sonuç Kontrol, kodda da aynı)
         if st.button("🔶 PDF Sonuç Kontrol", key="btn_pdf_kontrol_new", use_container_width=True):
             st.session_state['secilen_modul'] = "PDF Kontrol"
             st.session_state['test_konusu'] = ""
             st.session_state['koc_mesaj'] = ""
     with col_koc:
-        # Ders Koçlarımız (Simülasyon Modülü)
-        if st.button("🧑‍🏫 Ders Koçlarımız", key="btn_ders_koclari", use_container_width=True):
+        # Ders Koçlarımız (Görselde adı Ders Koçlarımız, kodda da aynı)
+        if st.button("🔶 Ders Koçlarımız", key="btn_ders_koclari", use_container_width=True):
             st.session_state['secilen_modul'] = "Ders Koçlarımız"
             st.session_state['test_konusu'] = ""
     with col_alan:
-        # Çalışma Alanı (Bu Deneme Sınavı/Quiz için kullanılıyor)
-        if st.button("🔥 Deneme Sınavı", key="btn_deneme_sinavi_new", use_container_width=True):
-            st.session_state['secilen_modul'] = "Deneme Sınavı"
+        # Çalışma Alanı (Görseldeki adı "Çalışma Alanı", kodda "Deneme Sınavı" yerine bu isim kullanılacak)
+        if st.button("🔶 Çalışma Alanı", key="btn_deneme_sinavi_new", use_container_width=True):
+            st.session_state['secilen_modul'] = "Deneme Sınavı" # Modül adı içeride sabit kalmalı
             st.session_state['koc_mesaj'] = ""
             
     st.markdown("---")
@@ -367,16 +384,17 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
     if modul == "Konu Anlatımı":
         st.header(f"📖 {ders_adi} - Konu Anlatımı ve Özet")
         
-        # Konu başlığını gösteren kısım
+        # Konu başlığını gösteren kısım (Görseldeki gibi)
         st.info(f"👉 **Konu:** {ders_veri['konu']}") 
         
         st.markdown("---")
         
-        st.subheader("📝 Detaylı Konu Özeti")
+        # Başlık Görseldeki gibi "Detaylı Konu Anlatımı" olarak güncellendi
+        st.subheader("📝 Detaylı Konu Anlatımı")
         st.markdown(ders_veri['anlatim']) 
 
     elif modul == "Deneme Sınavı":
-        render_dinamik_test_alani(ders_adi, ders_veri['sorular'])
+        render_dinamik_test_alani(ders_adi, ders_veri['sorular'], "Çalışma Alanı") # Başlık için Çalışma Alanı gönderildi
 
     elif modul == "PDF Kontrol":
         st.header("📄 PDF Sonuç Kontrol (Simülasyon)")
@@ -394,37 +412,54 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
             key=f"koc_input_{ders_adi}"
         )
         
-        if koç_mesaj:
-            # Koçun vereceği açıklayıcı (simüle edilmiş) cevap
-            koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
-            
-            # 1. Metin Açıklaması (Daha detaylı hale getirildi)
-            st.success(f"**Koç Açıklaması - Konu: {koç_mesaj.capitalize()}**")
-            st.markdown(koç_anlatimi)
+        if st.form_submit_button("Koç Cevabını Hazırla"):
+             if koç_mesaj:
+                # Koçun vereceği açıklayıcı (simüle edilmiş) cevap
+                koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
+                
+                # 1. Koç Cevabı Metin Kutusu (Görseldeki gibi kırmızı kenarlıklı)
+                # Buradaki başlığı doğrudan kullanıcının sorduğu konu ve sabit metin ile birleştirdik.
+                st.markdown(
+                    f"""
+                    <div style='border-left: 5px solid #FF4B4B; padding: 10px; background-color: #1E3147;'>
+                        <p style='color: #FF4B4B; font-weight: bold;'>Koç Cevabı: {koç_mesaj.capitalize()}</p>
+                        <p> '{koç_mesaj.capitalize()}' konusuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!</p>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
 
-            st.markdown("---")
-            
-            # 2. Sesli Robot Simülasyonu (Autoplay kaldırıldı)
-            st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
-            
-            # HTML Audio etiketi kullanarak ses çalma. 'autoplay' özelliği kaldırıldı.
-            st.markdown(f"""
-                <audio controls loop=false>
-                    <source src="{SESLI_ACIKLAMA_URL}" type="audio/mp3">
-                    Tarayıcınız ses etiketini desteklemiyor.
-                </audio>
-                <div style='margin-top: 10px; font-style: italic; color: #aaa;'>
-                (Yukarıdaki ses bileşeni, koçun bu konuyu sesli olarak okuduğunu simüle eder. Ses otomatik başlamaz.)
-                </div>
-            """, unsafe_allow_html=True)
+                st.markdown("---")
+                
+                # 2. Detaylı Koç Açıklaması (Görseldeki gibi)
+                st.markdown(f"**Koç Açıklaması - Konu: {koç_mesaj.capitalize()}**")
+                st.markdown(koç_anlatimi)
+                
+                st.markdown("---")
+                
+                # 3. Sesli Robot Simülasyonu (Autoplay kaldırıldı)
+                st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
+                
+                # HTML Audio etiketi kullanarak ses çalma. 'autoplay' özelliği kaldırıldı.
+                st.markdown(f"""
+                    <audio controls loop=false>
+                        <source src="{SESLI_ACIKLAMA_URL}" type="audio/mp3">
+                        Tarayıcınız ses etiketini desteklemiyor.
+                    </audio>
+                    <div style='margin-top: 10px; font-style: italic; color: #aaa;'>
+                    (Yukarıdaki ses bileşeni, koçun bu konuyu sesli olarak okuduğunu simüle eder. Ses otomatik başlamaz.)
+                    </div>
+                """, unsafe_allow_html=True)
+            else:
+                 st.warning("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
 
         else:
             st.info("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
 
 
 # --- DİNAMİK TEST ALANI İŞLEVİ ---
-def render_dinamik_test_alani(ders_adi, sorular):
-    st.header(f"🔥 {ders_adi} - Dinamik Test Çözme Alanı")
+def render_dinamik_test_alani(ders_adi, sorular, modül_başlık):
+    st.header(f"🔥 {ders_adi} - {modül_başlık}") # Başlığı "Çalışma Alanı" olarak gösterir
     
     # Konu Adı Girişi
     with st.form(f"test_konusu_form_{ders_adi}", clear_on_submit=False):
