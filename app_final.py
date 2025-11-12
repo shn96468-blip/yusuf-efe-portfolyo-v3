@@ -1,8 +1,7 @@
 import streamlit as st
-# Kelime modülleri kaldırıldığı için 'random' ve 'time' kütüphanelerine artık gerek yok.
 
 # --- SABİT METİNLER VE İÇERİK ---
-# Bu içerikler, görseldeki ders sekmelerini ve Koç Modülünü temsil eder.
+# Matematik Konu Anlatımı
 MATH_CONTENT = """
 ## 📘 Matematik - Konu Anlatımı ve Özet
 <div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
@@ -34,6 +33,8 @@ MATH_CONTENT = """
         * Örnek: $(+10) \div (-2) = -5$
         * Örnek: $(-10) \div (+2) = -5$
 """
+
+# Türkçe Konu Anlatımı
 TURKISH_CONTENT = """
 ## 📖 Türkçe - Konu Anlatımı ve Özet
 <div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
@@ -62,47 +63,14 @@ st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eği
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# Sadece 3 sekme kaldı: Koç, Matematik ve Türkçe
-tab1, tab2, tab3 = st.tabs([
-    "💡 Koç Modülü", 
+# Sekmeler sadece Matematik ve Türkçe olarak ayarlandı
+tab1, tab2 = st.tabs([
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
 ])
 
-# --- 4. TAB 1: KOÇ MODÜLÜ ---
+# --- 4. TAB 1: MATEMATİK İÇERİKLERİ ---
 with tab1:
-    st.header("💡 Koç Modülü (Cebirsel İfadeler)")
-    
-    # Koç Cevap Bloğu
-    st.markdown(
-        """
-        <div style='background-color: #38761d; padding: 15px; border-radius: 8px;'>
-            <p style='color: white; margin: 0;'>Koç Cevabı: 'tam sayılarda toplama nedir'</p>
-            <p style='color: #e0e0e0; font-size: 14px; margin-top: 10px;'>'konusuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!'</p>
-        </div>
-        """, unsafe_allow_html=True
-    )
-
-    st.markdown("---")
-    
-    # Koç Açıklama Bloğu
-    st.markdown(
-        """
-        <div style='background-color: #8fbc94; padding: 10px; border-radius: 5px;'>
-            <p style='color: #1a1a1a; margin: 0;'>**Koç Açıklaması - Konu: Cebirsel İfadeler **</p>
-        </div>
-        """, unsafe_allow_html=True
-    )
-    st.markdown(MATH_CONTENT.replace("## 📘 Matematik", "## Matematik").replace("### 📄 Detaylı Konu Özeti", ""), unsafe_allow_html=True) 
-
-    # Sesli Çıktı Simülasyonu
-    st.markdown("---")
-    st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
-    st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", start_time=182)
-    st.caption("(Yukarıdaki ses bileşeni, konunun sesli olarak okunduğunu simüle eder.)")
-
-# --- 5. TAB 2: MATEMATİK İÇERİKLERİ ---
-with tab2:
     st.header("🔢 Matematik Dersi İçerikleri")
     col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
     
@@ -117,8 +85,8 @@ with tab2:
     st.markdown(MATH_CONTENT, unsafe_allow_html=True)
 
 
-# --- 6. TAB 3: TÜRKÇE İÇERİKLERİ ---
-with tab3:
+# --- 5. TAB 2: TÜRKÇE İÇERİKLERİ ---
+with tab2:
     st.header("📝 Türkçe Dersi İçerikleri")
     col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
 
