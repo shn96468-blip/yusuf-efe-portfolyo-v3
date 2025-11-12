@@ -302,4 +302,29 @@ gibi:like
 sonra:after
 ancak:but
 ile:with
-i
+için:for
+arasında:between
+altında:under
+üstünde:over
+biraz:some
+hiç:any
+çoğu:most
+her:every
+az:few
+çok:much
+şimdi:now
+o zaman:then
+nerede:where
+ne zaman:when
+nasıl:how
+neden:why
+ne:what
+kim:who
+hangi:which
+bu:this
+şu:that
+burada:here
+orada:there
+bugün:today
+yarın:tomorrow
+dün:yesterday
