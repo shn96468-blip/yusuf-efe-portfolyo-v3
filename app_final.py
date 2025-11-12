@@ -1,8 +1,7 @@
 import streamlit as st
 
 # --- İÇERİK DOSYALARINI İÇE AKTARMA (IMPORT) ---
-# Bu kısım, içeriğinizi ayrı dosyalarda tuttuğunuz varsayılarak yazılmıştır.
-# Dosya adları: math_content.py, turkish_content.py, english_content.py, religion_content.py, history_content.py
+# DİKKAT: İçerik dosyalarınızın (math_content.py, science_content.py, vb.) mevcut ve doğru olması gerekir.
 from math_content import MATH_CONTENT
 from turkish_content import TURKISH_CONTENT
 from english_content import ENGLISH_CONTENT
@@ -81,47 +80,11 @@ with tab3:
     st.markdown("---")
     st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
 
-# --- 7. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ (Hizalama Düzeltildi) ---
+# --- 7. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
 with tab4:
     st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
     col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
     
     with col_sosyal_btn1:
         st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
-    with col_sosyal_btn2:
-        st.button("📜 Tarihi Olaylar", type="secondary", key="sos_olay")
-    with col_sosyal_btn3:
-        st.button("🔥 Coğrafya Bilgisi", type="secondary", key="sos_cografya")
-    
-    st.markdown("---")
-    st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
-
-# --- 8. TAB 5: İNGİLİZCE İÇERİKLERİ ---
-with tab5:
-    st.header("🗣️ İngilizce Dersi İçerikleri")
-    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
-    
-    with col_ing_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
-    with col_ing_btn2:
-        st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
-    with col_ing_btn3:
-        st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
-    
-    st.markdown("---")
-    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
-
-# --- 9. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ ---
-with tab6:
-    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
-    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
-    
-    with col_din_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
-    with col_din_btn2:
-        st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
-    with col_din_btn3:
-        st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
-    
-    st.markdown("---")
-    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+    with col
