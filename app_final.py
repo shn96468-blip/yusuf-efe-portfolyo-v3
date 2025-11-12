@@ -5,6 +5,5 @@ if st.session_state['music_enabled'] and st.session_state['music_url']:
         format="audio/mp3", 
         start_time=0, 
         loop=True,
-        # Bu kısım hatalıydı, şimdi düzeltildi:
         html_attrs={"autoplay": "autoplay", "volume": st.session_state['music_volume']} 
     )
