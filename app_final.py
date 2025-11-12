@@ -45,7 +45,6 @@ ADMIN_PASSWORD = "123"
 DEFAULT_DERSLER = {
     "Matematik": {
         "konu": "Tam Sayılarla Dört İşlem",
-        # Tek satır formatına çevrildi.
         "anlatim": "7. sınıf matematiğinde tam sayılar kümesini ve bu kümedeki toplama, çıkarma, çarpma ve bölme işlemlerini öğreniyoruz. \n\n**Örnek:** Aynı işaretli tam sayılar toplanırken işaret korunur. Farklı işaretli sayılar toplanırken büyük olanın işareti alınır.",
         "sorular": [
             {"q": " $(-5) + (+8)$ işleminin sonucu kaçtır?", "a": ["$-13$", "$+3$", "$-3$", "$+13$"], "c": "$+3$"},
@@ -54,7 +53,6 @@ DEFAULT_DERSLER = {
     },
     "Türkçe": {
         "konu": "Sözcükte Anlam İlişkileri",
-        # Tek satır formatına çevrildi.
         "anlatim": "Sözcükler arasında eş anlamlılık (anlamdaş), zıt anlamlılık (karşıt) ve yakın anlamlılık gibi ilişkiler bulunur. \n\n**Örnek:** Ak ve Beyaz eş anlamlıdır. Uzun ve Kısa zıt anlamlıdır. ",
         "sorular": [
             {"q": " 'Zengin' kelimesinin zıt anlamlısı nedir?", "a": ["Varlıklı", "Fakir", "Varlığa", "Cimri"], "c": "Fakir"},
@@ -63,7 +61,6 @@ DEFAULT_DERSLER = {
     },
     "Fen Bilimleri": {
         "konu": "Atomun Yapısı ve Periyodik Sistem",
-        # Tek satır formatına çevrildi.
         "anlatim": "Madde atomlardan oluşur. Atom, çekirdek ve katmanlardan meydana gelir. Çekirdekte proton ve nötronlar, katmanlarda ise elektronlar bulunur. \n\n**Periyodik Sistem:** Elementlerin atom numaralarına göre düzenlendiği tablodur.",
         "sorular": [
             {"q": " Atomun çekirdeğinde bulunan pozitif yüklü parçacık hangisidir?", "a": ["Elektron", "Nötron", "Proton", "Molekül"], "c": "Proton"},
@@ -72,17 +69,14 @@ DEFAULT_DERSLER = {
     },
      "Sosyal Bilgiler": {
         "konu": "İletişim ve İnsan İlişkileri",
-        # Tek satır formatına çevrildi.
         "anlatim": "İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılmasıdır. Etkili iletişimde empati kurmak önemlidir. \n\n**Etkili İletişim:** 'Ben dili' kullanmak, göz teması kurmak.",
         "sorular": [
             {"q": " Aşağıdakilerden hangisi etkili iletişimi olumsuz etkiler?", "a": ["Empati kurmak", "Göz teması kurmak", "Yargılayıcı konuşmak", "Açık ve net konuşmak"], "c": "Yargılayıcı konuşmak"},
             {"q": " 'Kızgın olduğumu anlıyorum.' cümlesi hangi iletişim diline örnektir?", "a": ["Sen dili", "Ben dili", "Emir dili", "Vücut dili"], "c": "Ben dili"},
         ]
+        # <-- Buraya kapanış parantezi (}) ve virgül (,) eksik kalmıştı.
     },
      "İngilizce": {
         "konu": "Appearance and Personality (Görünüş ve Kişilik)",
-        # Tek satır formatına çevrildi. İçindeki tek tırnaklar (\') kullanmak yerine basit çift tırnaklı dize kullanmak en güvenlisidir.
         "anlatim": "İngilizce 7. sınıfın ilk konularından biri, insanların fiziksel görünümleri (tall, short, slim) ve kişilik özellikleri (generous, selfish, friendly) hakkında konuşmaktır. \n\n**Görünüş:** *He is tall and handsome.* \n**Kişilik:** *She is very kind and helpful.*",
-        "sorular": [
-            {"q": " What does 'generous' mean?", "a": ["Cimri", "Cömert", "Yorgun", "Sinirli"], "c": "Cömert"},
-            {"q": " 'O çok uzun ve zayıf.' cümlesinin İngilizcesi hangisidir?", "a": ["He is short and plump.", "She is kind and helpful.", "He is tall and slim.", "She is short and handsome."], "c": "He is tall and slim."},
+        "sor
