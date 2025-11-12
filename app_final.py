@@ -74,3 +74,18 @@ def get_portfolyo_bilgisi(baslik):
 def user_login(username, password):
     if not st.session_state['user_login_allowed']:
         st.error("Üye girişi şu anda bakımdadır.")
+        return
+    for user in MOCK_USERS:
+        if user["username"] == username and user["password_hash"] == password:
+            st.session_state['user_logged_in'] = True
+            st.session_state['current_user'] = username
+            st.session_state['show_user_login'] = False
+            st.success(f"Hoş geldiniz, {username.upper()}!") 
+            time.sleep(1)
+            st.rerun()
+            return
+    if len(username) > 0 and len(password) > 0:
+         st.session_state['user_logged_in'] = True
+         st.session_state['current_user'] = username
+         st.session_state['show_user_login'] = False
+         st.success(f"Hoş geldiniz, {username.upper()}! (
