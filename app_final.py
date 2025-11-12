@@ -1,3 +1,4 @@
+
 import streamlit as st
 import time
 
@@ -9,20 +10,20 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Koyu Temayı zorlamak için CSS enjeksiyonu (Önceki renk ayarları korunmuştur)
+# Koyu Temayı zorlamak için CSS enjeksiyonu (Güncel renk ayarları ve düzeltmeler)
 st.markdown(
     """
     <style>
     /* Genel koyu arkaplan ve renk ayarları korundu */
     .stApp {
         background-color: #0E1117; 
-        color: white;
+        color: white; /* Metin rengi varsayılan olarak beyaz */
     }
     .css-1d391kg { 
         background-color: #0E1117;
     }
     h1, h2, h3, h4, h5, h6 {
-        color: #FF4B4B; 
+        color: #FF4B4B; /* Başlıklar kırmızı */
     }
     .stTextInput, .stTextArea, .stSelectbox {
         background-color: #262730;
@@ -43,22 +44,27 @@ st.markdown(
         box-shadow: 0 0 0 0.2rem rgba(255, 75, 75, 0.25);
     }
     
-    /* Konu kutusu stili (Görseldeki mavi kutu) */
+    /* Konu kutusu stili (Görseldeki koyu mavi/info kutusu) */
+    /* st.info ve st.success alanları için */
     .stAlert {
         background-color: #1E3147 !important; /* Mavi-Koyu Ton */
         color: white !important;
         border-left: 5px solid #FF4B4B !important; /* Kırmızı vurgu */
     }
     
-    /* Koç cevabı için özel stil - görseldeki yeşil tonuna yakın */
+    /* Koç cevabı için özel stil - Arkaplan ve metin rengi düzeltildi */
     .koç-cevap-kutusu {
-        border-left: 5px solid #FF4B4B; 
-        padding: 10px; 
-        background-color: #1E3147;
+        /* image_9bdebe.png'deki koyu arkaplana yakın bir ton */
+        background-color: #1a433a !important; 
+        border-left: 5px solid #FF4B4B; /* Kırmızı vurgu */
+        padding: 15px; 
+        margin-bottom: 20px;
+        color: white; /* Metin rengi artık beyaz */
     }
     .koç-cevap-metni {
-        color: #FF4B4B; 
+        color: #90EE90; /* Koç cevabı başlığını daha görünür hale getirdik (Açık yeşil) */
         font-weight: bold;
+        font-size: 1.1em;
     }
     </style>
     """,
@@ -88,6 +94,7 @@ KELIME_SOZLUGU = {
     "öğrenme": "learning",
     "çeviri": "translation",
     "kelime": "word",
+    "nazik": "kind", # image_9cbf24.png'deki kelime için ekledik
 }
 
 
@@ -282,7 +289,7 @@ Melekler, Allah'ın emirlerini yerine getiren, nurdan yaratılmış, gözle gör
 Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı anlamasını sağlar.""", 
         "sorular": [
             {"q": " Aşağıdakilerden hangisi etkili iletişimi olumsuz etkiler?", "a": ["Empati kurmak", "Göz teması kurmak", "Yargılayıcı konuşmak", "Açık ve net konuşmak"], "c": "Yargılayıcı konuşmak"},
-            {"q": " 'Kızgın olduğumu anlıyorum.' cümlesi hangi iletişim diline örnektir?", "a": ["Sen dili", "Ben dili", "Emir dili", "Vücut dili"], "c": "Ben dili"},
+            {"q": " 'Kızgın olduğumu anlıyorum.' cümlesinin hangi iletişim diline örnektir?", "a": ["Sen dili", "Ben dili", "Emir dili", "Vücut dili"], "c": "Ben dili"},
         ],
         "koc_anlatimi": """
 **İletişim Türleri ve "Ben Dili" Kullanımı (Örneklerle)**
@@ -534,19 +541,20 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
                 if koç_mesaj:
                     koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
                     
-                    # Koç Cevabı Metin Kutusu (HTML stil kullanımı korundu)
+                    # Koç Cevabı Metin Kutusu (HTML stil kullanımı - Hata Düzeltildi)
+                    # Koç Cevabı Başlığı artık dinamik olarak kullanıcının sorusunu gösterecek.
                     st.markdown(
                         f"""
-                        <div style='border-left: 5px solid #FF4B4B; padding: 10px; background-color: #1E3147;'>
-                            <p style='color: #FF4B4B; font-weight: bold;'>Koç Cevabı: {koç_mesaj.capitalize()}</p>
-                            <p> '{koç_mesaj.capitalize()}' konusuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!</p>
+                        <div class='koç-cevap-kutusu'>
+                            <p class='koç-cevap-metni'>Koç Cevabı: {koç_mesaj}</p>
+                            <p style='color: white;'> '{koç_mesaj.capitalize()}' konusuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!</p>
                         </div>
                         """, 
                         unsafe_allow_html=True
                     )
-
-                    st.markdown("---")
                     
+                    # Koç Açıklaması metin başlığı da kullanıcı sorusunu gösterecek
+                    st.markdown("---")
                     st.markdown(f"**Koç Açıklaması - Konu: {koç_mesaj.capitalize()}**")
                     st.markdown(koç_anlatimi)
                     
@@ -691,6 +699,7 @@ def render_kelime_ceviri():
                 if turkce_karsilik:
                     sonuc = f"**🇬🇧 {kelime_input.capitalize()}** ➡️ **🇹🇷 {turkce_karsilik.capitalize()}**"
                 else:
+                    # image_9ccefc.png hatasını simüle eden mesaj
                     sonuc = f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
                     
             st.session_state['kelime_ceviri_sonuc'] = sonuc
@@ -950,4 +959,4 @@ with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
         st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.1 (Kelime Çevirisi Eklendi)")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.2 (Stil ve Koç Cevabı Düzeltildi)")
