@@ -8,7 +8,7 @@ MOCK_USERS = [
     {"username": "efe", "email": "efe@mail.com", "password_hash": "e456"},
 ]
 
-# Varsayılan Not Kartları - GÜNCEL VE HATA GİDERİLMİŞ LİSTE
+# Varsayılan Not Kartları
 DEFAULT_NOTLAR = {
     "Matematik": "Temel Fonksiyonlar",
     "Türkçe": "Dil Bilgisi Kuralları",
@@ -88,7 +88,6 @@ def user_login(username, password):
          st.session_state['user_logged_in'] = True
          st.session_state['current_user'] = username
          st.session_state['show_user_login'] = False
-         # DÜZELTİLDİ: Eksik kapanış tırnak işareti eklendi.
          st.success(f"Hoş geldiniz, {username.upper()}! (Simülasyon Girişi Başarılı)")
          time.sleep(1)
          st.rerun()
@@ -108,7 +107,7 @@ def forgot_password_simulation(email_or_username, is_admin=False):
     else:
         st.sidebar.success(f" Kullanıcı şifresi sıfırlama kodu '{email_or_username}@mail.com' adresine gönderildi.")
         
-# --- MÜZİK ÇALMA MANTIĞI (YORUM SATIRI YAPILDI) ---
+# --- MÜZİK ÇALMA MANTIĞI (Yorum Satırı Yapıldı - Siyah Ekran Hatalarını Önlemek İçin) ---
 # if st.session_state['music_enabled'] and st.session_state['music_url']:
 #     st.audio(
 #         st.session_state['music_url'], 
@@ -143,7 +142,7 @@ st.title(f"💼 Yusuf Efe Şahin Portfolyo")
 # --- ZİYARETÇİ MODU (Admin değilse) ---
 if not st.session_state['admin_mode']:
 
-    # --- SES KONTROLLERİ (Müzik kapalı olduğu için bu düğmeler çalışmaz ama kod hatasızdır) ---
+    # --- SES KONTROLLERİ ---
     col_kapat, col_ac, col_volume_slider = st.columns([1, 1, 6]) 
 
     if st.session_state['music_enabled']:
