@@ -103,4 +103,10 @@ def forgot_password_simulation(email_or_username, is_admin=False):
     st.sidebar.warning("Sistem simülasyon modunda olduğundan, şifre sıfırlama kodu e-posta adresinize gönderilmiş gibi yapıldı.")
     time.sleep(1)
     if is_admin:
-        st.sidebar.
+        st.sidebar.success(f" Yönetici Şifresi sıfırlama maili 'admin@portfolyo.com' adresine gönderildi.")
+    else:
+        st.sidebar.success(f" Kullanıcı şifresi sıfırlama kodu '{email_or_username}@mail.com' adresine gönderildi.")
+
+
+# --- MÜZİK ÇALMA MANTIĞI (Özel Link Kontrolü Burada) ---
+if st.session_state['music_enabled'] and st.session
