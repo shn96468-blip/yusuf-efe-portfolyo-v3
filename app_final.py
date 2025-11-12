@@ -89,7 +89,7 @@ ENGLISH_CONTENT = """
 * **Superlatives:** Üstünlük derecesi (the -est / the most). (Örn: Everest is **the highest** mountain.)
 """
 
-# Din Kültürü Konu Anlatımı (Yeni Eklendi)
+# Din Kültürü Konu Anlatımı
 RELIGION_CONTENT = """
 ## 🕌 Din Kültürü ve Ahlak Bilgisi - Konu Anlatımı ve Özet
 <div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
@@ -121,7 +121,7 @@ tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "🧪 Fen Bilimleri",
     "🌍 Sosyal Bilgiler",
     "🗣️ İngilizce",
-    "🕌 Din Kültürü", # Yeni sekme
+    "🕌 Din Kültürü",
 ])
 
 # --- 4. TAB 1: MATEMATİK İÇERİKLERİ ---
@@ -130,11 +130,12 @@ with tab1:
     col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
     
     with col_math_btn1:
-        st.button("📄 Konu Anlatımı", type="primary")
+        # Buton etiketi benzersiz yapıldı
+        st.button("📄 Matematik Konu Anlatımı", type="primary") 
     with col_math_btn2:
-        st.button("♦️ PDF Sonuç Kontrol", type="secondary")
+        st.button("♦️ Matematik PDF Sonuç Kontrol", type="secondary")
     with col_math_btn3:
-        st.button("🔥 Deneme Sınavı", type="secondary")
+        st.button("🔥 Matematik Deneme Sınavı", type="secondary")
     
     st.markdown("---")
     st.markdown(MATH_CONTENT, unsafe_allow_html=True)
@@ -146,11 +147,12 @@ with tab2:
     col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
 
     with col_tr_btn1:
-        st.button("📄 Konu Anlatımı ve Özet", type="primary")
+        # Buton etiketi benzersiz yapıldı
+        st.button("📄 Türkçe Konu Anlatımı ve Özet", type="primary") 
     with col_tr_btn2:
-        st.button("♦️ Hikaye Analizi", type="secondary")
+        st.button("♦️ Türkçe Hikaye Analizi", type="secondary")
     with col_tr_btn3:
-        st.button("🔥 Yazım Kılavuzu", type="secondary")
+        st.button("🔥 Türkçe Yazım Kılavuzu", type="secondary")
 
     st.markdown("---")
     st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
@@ -161,56 +163,8 @@ with tab3:
     col_fen_btn1, col_fen_btn2, col_fen_btn3 = st.columns(3)
     
     with col_fen_btn1:
-        st.button("📄 Konu Anlatımı", type="primary")
+        # Buton etiketi benzersiz yapıldı
+        st.button("📄 Fen Konu Anlatımı", type="primary") 
     with col_fen_btn2:
-        st.button("🔬 Laboratuvar Deneyleri", type="secondary")
-    with col_fen_btn3:
-        st.button("🔥 Ünite Testi", type="secondary")
-    
-    st.markdown("---")
-    st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
-
-# --- 7. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
-with tab4:
-    st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
-    col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
-    
-    with col_sosyal_btn1:
-        st.button("📄 Konu Anlatımı", type="primary")
-    with col_sosyal_btn2:
-        st.button("📜 Tarihi Olaylar", type="secondary")
-    with col_sosyal_btn3:
-        st.button("🔥 Coğrafya Bilgisi", type="secondary")
-    
-    st.markdown("---")
-    st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
-
-# --- 8. TAB 5: İNGİLİZCE İÇERİKLERİ ---
-with tab5:
-    st.header("🗣️ İngilizce Dersi İçerikleri")
-    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
-    
-    with col_ing_btn1:
-        st.button("📄 Konu Anlatımı", type="primary")
-    with col_ing_btn2:
-        st.button("💬 Konuşma Alıştırması", type="secondary")
-    with col_ing_btn3:
-        st.button("🔥 Kelime Testi", type="secondary")
-    
-    st.markdown("---")
-    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
-
-# --- 9. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ (YENİ) ---
-with tab6:
-    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
-    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
-    
-    with col_din_btn1:
-        st.button("📄 Konu Anlatımı", type="primary")
-    with col_din_btn2:
-        st.button("🕋 Kavram Özetleri", type="secondary")
-    with col_din_btn3:
-        st.button("🔥 Soru Çözümü", type="secondary")
-    
-    st.markdown("---")
-    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+        st.button("🔬 Fen Laboratuvar Deneyleri", type="secondary")
+    with
