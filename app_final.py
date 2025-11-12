@@ -182,4 +182,54 @@ if st.session_state['admin_mode']:
     yeni_url = MUSIC_OPTIONS[secilen_sarki_adi]
     
     if secilen_sarki_adi == "Özel Şarkı Linki Gir":
-        custom_url_input = st.sidebar.text_input("MP3 Link
+        # Hata alınan satır: "MP3 Link" metni tırnak işaretleri ile kapatıldı.
+        custom_url_input = st.sidebar.text_input("MP3 Linkini Yapıştırın:", key="custom_music_url_input", value=st.session_state.get('music_url') if st.session_state.get('music_url') not in MUSIC_OPTIONS.values() else "")
+        if custom_url_input and custom_url_input.lower().endswith('.mp3'):
+             yeni_url = custom_url_input
+        else:
+             st.sidebar.warning("Lütfen geçerli bir MP3 linki girin. (Örn: ...mp3)")
+             yeni_url = st.session_state['music_url'] 
+    
+    if yeni_url != st.session_state['music_url']:
+        st.session_state['music_url'] = yeni_url
+        st.session_state['music_enabled'] = bool(yeni_url) 
+        st.rerun() 
+    
+    
+    # DUYURU AYARLARI
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("📢 Site Duyurusu")
+    st.session_state['announcement'] = st.sidebar.text_area("Duyuru Metni:", value=st.session_state['announcement'])
+    st.session_state['announcement_color'] = st.sidebar.selectbox("Duyuru Kutusu Rengi:", ["success", "info", "warning", "error"], index=["success", "info", "warning", "error"].index(st.session_state['announcement_color']))
+    if st.sidebar.button("Duyuruyu Güncelle", key="btn_guncelle_duyuru"):
+        st.rerun()
+
+else:
+    # ZİYARETÇİ VE ÜYE İŞLEMLERİ
+    st.sidebar.button("🔒 Yönetici Girişi", on_click=lambda: st.session_state.update({'show_admin_login': True}))
+
+    # YÖNETİCİ GİRİŞ FORMU
+    if st.session_state['show_admin_login']:
+        with st.sidebar.form("admin_login_form"):
+            admin_pass = st.text_input("Yönetici Şifresi", type="password")
+            if st.form_submit_button("Giriş Yap"):
+                if admin_pass == ADMIN_PASSWORD:
+                    st.session_state['admin_mode'] = True
+                    st.session_state['show_admin_login'] = False
+                    st.rerun()
+                else:
+                    st.error("Hatalı yönetici şifresi.") 
+    
+st.sidebar.markdown("---")
+st.sidebar.title("⭐ Yorumlar ve Geri Bildirim")
+
+# Yorum Formu korundu
+with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
+    st.sidebar.write("Site hakkındaki yorumlarınızı buraya yazın.")
+    st.selectbox("Konu:", ["Genel Yorum", "Hata Bildirimi", "Tasarım Önerisi", "Teşekkür"])
+    st.text_area("Mesajınız:")
+    if st.form_submit_button("Yorumu Gönder"):
+        st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
+
+st.sidebar.markdown("---")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.0")
