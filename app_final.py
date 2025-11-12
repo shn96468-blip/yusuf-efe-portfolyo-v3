@@ -167,4 +167,56 @@ with tab3:
         st.button("📄 Fen Konu Anlatımı", type="primary") 
     with col_fen_btn2:
         st.button("🔬 Fen Laboratuvar Deneyleri", type="secondary")
-    with
+    with col_fen_btn3:
+        st.button("🔥 Fen Ünite Testi", type="secondary")
+    
+    st.markdown("---")
+    st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
+
+# --- 7. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
+with tab4:
+    st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
+    col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
+    
+    with col_sosyal_btn1:
+        # Buton etiketi benzersiz yapıldı
+        st.button("📄 Sosyal Konu Anlatımı", type="primary") 
+    with col_sosyal_btn2:
+        st.button("📜 Sosyal Tarihi Olaylar", type="secondary")
+    with col_sosyal_btn3:
+        st.button("🔥 Sosyal Coğrafya Bilgisi", type="secondary")
+    
+    st.markdown("---")
+    st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
+
+# --- 8. TAB 5: İNGİLİZCE İÇERİKLERİ ---
+with tab5:
+    st.header("🗣️ İngilizce Dersi İçerikleri")
+    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
+    
+    with col_ing_btn1:
+        # Buton etiketi benzersiz yapıldı
+        st.button("📄 İngilizce Konu Anlatımı", type="primary") 
+    with col_ing_btn2:
+        st.button("💬 İngilizce Konuşma Alıştırması", type="secondary")
+    with col_ing_btn3:
+        st.button("🔥 İngilizce Kelime Testi", type="secondary")
+    
+    st.markdown("---")
+    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+
+# --- 9. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ ---
+with tab6:
+    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
+    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
+    
+    with col_din_btn1:
+        # Buton etiketi benzersiz yapıldı
+        st.button("📄 Din Konu Anlatımı", type="primary") 
+    with col_din_btn2:
+        st.button("🕋 Din Kavram Özetleri", type="secondary")
+    with col_din_btn3:
+        st.button("🔥 Din Soru Çözümü", type="secondary")
+    
+    st.markdown("---")
+    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
