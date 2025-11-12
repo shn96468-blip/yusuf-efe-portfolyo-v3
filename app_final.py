@@ -18,7 +18,7 @@ DEFAULT_NOTLAR = {
     "Türkçe": "Dil Bilgisi Kuralları"
 }
 
-# !!! Session State Tanımlamaları KODUN EN BAŞINDA OLMALIDIR !!!
+# !!! Session State Tanımlamaları KODUN EN BAŞINDA OLMALIDIR (Sıralama Hatalarını Önler) !!!
 if 'admin_mode' not in st.session_state:
     st.session_state['admin_mode'] = False
 if 'user_logged_in' not in st.session_state:
@@ -63,7 +63,7 @@ st.set_page_config(
     page_icon="💼" 
 )
 
-# --- PORTFOLYO İÇERİK FONKSİYONU ---
+# --- PORTFOLYO İÇERİK FONKSİYONU (Dize hataları kontrol edildi) ---
 def get_portfolyo_bilgisi(baslik):
     if baslik == "Hakkımda":
         return ("Merhaba, ben Yusuf Efe Şahin. Bu kişisel portfolyo sayfamda, teknoloji, yazılım ve tasarım alanındaki çalışmalarımı sergiliyorum. Yaratıcı projeler geliştirmeye ve sürekli öğrenmeye odaklıyım.", "👨‍💻")
@@ -101,167 +101,4 @@ def user_login(username, password):
         st.error("Kullanıcı adı veya şifre yanlış. (Demo: yusuf/y123)")
 
 def user_logout():
-    st.session_state['user_logged_in'] = False
-    st.session_state['current_user'] = None
-    st.rerun()
-
-def forgot_password_simulation(email_or_username, is_admin=False):
-    st.sidebar.warning("Sistem simülasyon modunda olduğundan, şifre sıfırlama kodu e-posta adresinize gönderilmiş gibi yapıldı.")
-    time.sleep(1)
-    if is_admin:
-        st.sidebar.success(f" Yönetici Şifresi sıfırlama maili 'admin@portfolyo.com' adresine gönderildi.")
-    else:
-        st.sidebar.success(f" Kullanıcı şifresi sıfırlama kodu '{email_or_username}@mail.com' adresine gönderildi.")
-        
-# --- MÜZİK ÇALMA MANTIĞI (Streamlit Uyumlu Kod - DÜZELTİLDİ) ---
-# DİKKAT: Bu blok, TÜM SESSION STATE TANIMLAMALARINDAN SONRA gelmelidir.
-if st.session_state['music_enabled'] and st.session_state['music_url']:
-    # Parantez hatası düzeltildi.
-    st.audio(
-        st.session_state['music_url'], 
-        format="audio/mp3", 
-        start_time=0, 
-        loop=True
-    )
-
-# --- CHAT BOT MANTIĞI (Genişletilmiş SİMÜLASYON) ---
-def general_chat_portfolyo(mesaj):
-    mesaj_lower = mesaj.lower().strip()
-    
-    # Yeni Ders Cevapları ve Genel Cevaplar
-    ders_cevaplari = {
-        "fonksiyon nedir": "Matematikte bir fonksiyon, her girdiyi tam olarak bir çıktıya eşleyen bir kuraldır.",
-        "pythonda değişken": "Python'da değişkenler, bilgileri depolamak için kullanılan bellek konumlarıdır.",
-        "osmanlı": "Osmanlı İmparatorluğu, 1299'dan 1922'ye kadar var olmuş büyük bir devlettir.",
-        "merhaba": "Selam, Portfolyo sitesine hoş geldin! Dersler hakkında veya projelerim hakkında soru sorabilirsin.",
-        "proje": "Projelerim sayfasına göz atmak ister misin?",
-        "hata": "Hata bildirimleri için Yorum alanını kullanabilirsin."
-    }
-
-    for kelime, cevap in ders_cevaplari.items():
-        if kelime in mesaj_lower:
-            return f"🤖 (Kanka): {cevap}"
-            
-    return f"🤖 (Kanka): Anladım. Ben Yusuf Efe Şahin'in AI asistanıyım. Hangi ders içeriğiyle ilgili bilgi almak istiyorsun? (Örn: 'Pythonda değişken nedir?' gibi.)"
-
-# --- BAŞLIK VE CSS AYARLARI ---
-st.markdown(f'<style>h1, h2, h3, h4, h5, h6 {{color: #FFFFFF;}}</style>', unsafe_allow_html=True)
-st.title(f"💼 Yusuf Efe Şahin Portfolyo")
-
-# --- ZİYARETÇİ MODU (Admin değilse) ---
-if not st.session_state['admin_mode']:
-
-    # --- SES KONTROLLERİ (Ana Sayfa) ---
-    col_kapat, col_ac, col_volume_slider = st.columns([1, 1, 6]) 
-
-    if st.session_state['music_enabled']:
-        with col_kapat:
-            if st.button("🔊 Kapat", key="btn_kapat_ses", use_container_width=True):
-                st.session_state['music_enabled'] = False
-                st.rerun()
-        with col_volume_slider:
-            # Ses seviyesi kaydırıcısı
-            new_volume = st.slider("Ses Seviyesi", 0.0, 1.0, st.session_state['music_volume'], step=0.1, key="music_volume_slider")
-            if new_volume != st.session_state['music_volume']:
-                st.session_state['music_volume'] = new_volume
-                st.rerun()
-    elif st.session_state['music_url']: 
-        with col_ac:
-            if st.button("🔇 Aç", key="btn_ac_ses", use_container_width=True):
-                st.session_state['music_enabled'] = True
-                st.rerun()
-    
-    st.markdown("---")
-    
-    # Duyuru Mesajı
-    if st.session_state['announcement_color'] == 'success':
-        st.success(f"📣 {st.session_state['announcement']}")
-    # ... diğer duyuru renkleri
-    
-    # --- NAVİGASYON (SAYFA SEÇİM KARTLARI) ---
-    st.header("🌐 Site Bölümleri")
-
-    SAYFALAR = ["Hakkımda", "Projelerim", "İletişim", "Kanka Chat"]
-    col_list = st.columns(len(SAYFALAR))
-
-    for i, sayfa in enumerate(SAYFALAR):
-        with col_list[i]:
-            if st.button(f"{SAYFALAR[i]}", key=f"btn_{SAYFALAR[i]}", use_container_width=True):
-                st.session_state['secilen_sayfa'] = SAYFALAR[i]
-                st.rerun()
-
-    st.markdown("---")
-    secilen_sayfa = st.session_state['secilen_sayfa']
-    st.subheader(f"✅ Seçili Sayfa: {secilen_sayfa}")
-
-    
-    # --- İÇERİK YAZDIRMA ---
-    if secilen_sayfa != "Kanka Chat":
-        icerik, simge = get_portfolyo_bilgisi(secilen_sayfa)
-
-        st.markdown(f"## {simge} {secilen_sayfa}")
-        st.markdown(f"**{icerik}**")
-        
-        if secilen_sayfa == "Projelerim":
-             st.markdown("---")
-             st.subheader("📚 Not Kartları")
-             kart_isimleri = list(st.session_state['not_kartlari'].keys())
-             
-             # Kolonları 3'erli gruplar halinde oluşturur
-             num_cols = 3
-             num_rows = (len(kart_isimleri) + num_cols - 1) // num_cols # Satır sayısını hesapla
-             
-             kart_index = 0
-             for row in range(num_rows):
-                 cols_not = st.columns(num_cols)
-                 for col_idx in range(num_cols):
-                     if kart_index < len(kart_isimleri):
-                         isim = kart_isimleri[kart_index]
-                         with cols_not[col_idx]:
-                             with st.container(border=True):
-                                 st.markdown(f"**{isim}**")
-                                 st.caption(f"Konu: {st.session_state['not_kartlari'][isim]}")
-                                 if not st.session_state['user_logged_in']:
-                                     st.warning("Giriş Yapılmalı")
-                                 else:
-                                     st.success("Notlara Erişildi (Simülasyon)")
-                         kart_index += 1
-                             
-        elif secilen_sayfa == "İletişim":
-            st.markdown("---")
-            st.markdown("### 📝 İletişim Formu")
-            with st.form("iletisim_formu"):
-                isim = st.text_input("Adınız Soyadınız")
-                email = st.text_input("E-posta Adresiniz")
-                mesaj = st.text_area("Mesajınız")
-                if st.form_submit_button("Gönder (Simülasyon)"):
-                    st.success(f"Teşekkürler, {isim}! Mesajınız başarıyla iletildi.")
-
-    else:
-        # KANKA CHAT BOT ALANI
-        with st.expander("💬 KANKA Sohbet Alanını Aç"):
-            st.header("💬 KANKA Sohbet Alanı")
-            for chat in st.session_state.chat_history:
-                with st.chat_message("user"):
-                    st.markdown(chat["user"])
-                with st.chat_message("robot"):
-                    st.markdown(chat["robot"])
-            
-            kanka_mesaji = st.chat_input("Kanka'ya mesajınızı girin:", key="kanka_chat_input")
-            if kanka_mesaji:
-                robot_cevap = general_chat_portfolyo(kanka_mesaji)
-                st.session_state.chat_history.append({"user": kanka_mesaji, "robot": robot_cevap})
-                st.rerun()
-            
-            if st.session_state.chat_history and st.button("Sohbeti Temizle"):
-                st.session_state.chat_history = []
-                st.rerun()
-
-    st.markdown("---")
-
-# --- YÖNETİCİ VE YAN PANEL (SIDEBAR) AYARLARI ---
-st.sidebar.title("Kullanıcı İşlemleri")
-
-# YÖNETİCİ MODU
-if st.session_state['admin_mode']:
-    st.sidebar.subheader("⚙️ Yönetici Ay
+    st.session_state['user_logged_in']
