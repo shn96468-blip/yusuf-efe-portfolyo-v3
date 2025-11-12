@@ -91,7 +91,7 @@ Bu konular, öğrencilerin hem okuduğunu anlama hem de doğru ve etkili yazma b
         ]
     },
     "Fen Bilimleri": {
-        "konu": "7. Sınıf Fen Bilimleri Tüm Üniteler", # Konu başlığı güncellendi
+        "konu": "7. Sınıf Fen Bilimleri Tüm Üniteler",
         "anlatim": """7. Sınıf Fen Bilimleri dersi, madde, enerji, canlılar ve uzay konularını kapsayan 7 ana üniteden oluşur:
 
 * **1. Ünite:** Güneş Sistemi ve Ötesi (Uzay Araştırmaları, Gök Cisimleri)
@@ -102,7 +102,7 @@ Bu konular, öğrencilerin hem okuduğunu anlama hem de doğru ve etkili yazma b
 * **6. Ünite:** Canlılarda Üreme, Büyüme ve Gelişme (İnsan, Bitki ve Hayvanlarda)
 * **7. Ünite:** Elektrik Devreleri (Ampullerin Bağlanma Şekilleri)
 
-Bu konular, temel bilimsel düşünme becerilerini geliştirir.""", # Anlatım güncellendi
+Bu konular, temel bilimsel düşünme becerilerini geliştirir.""",
         "sorular": [
             {"q": " Atomun çekirdeğinde bulunan pozitif yüklü parçacık hangisidir?", "a": ["Elektron", "Nötron", "Proton", "Molekül"], "c": "Proton"},
             {"q": " Periyodik sistemde elementler neye göre sıralanmıştır?", "a": ["Kütle numarası", "Yoğunluk", "Atom numarası", "Atom ağırlığı"], "c": "Atom numarası"},
@@ -143,8 +143,13 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
         ]
     },
     "İngilizce": {
-        "konu": "Appearance and Personality (Görünüş ve Kişilik)",
-        "anlatim": "İngilizce 7. sınıfın ilk konularından biri, insanların fiziksel görünümleri (tall, short, slim) ve kişilik özellikleri (generous, selfish, friendly) hakkında konuşmaktır. \n\n**Görünüş:** *He is tall and handsome.* \n**Kişilik:** *She is very kind and helpful.*",
+        "konu": "7. Sınıf İngilizce Tüm Üniteler", # Konu başlığı güncellendi
+        "anlatim": """7. Sınıf İngilizce dersi, öğrencilerin günlük hayatta ihtiyaç duyduğu temaları ve dilbilgisi yapılarını içerir:
+        
+* **1. Dönem Üniteleri:** Appearance and Personality (Görünüş ve Kişilik), Sports (Spor), Biographies (Biyografiler), Wild Animals (Vahşi Hayvanlar), Television (Televizyon).
+* **2. Dönem Üniteleri:** Television (Tekrar/Devam), Celebrations (Kutlamalar), Dreams (Rüyalar), Public Buildings (Halk Binaları), Environment (Çevre), Planets (Gezegenler).
+
+**Not:** Bu alan, yalnızca ünite başlıklarını listelemek amaçlıdır. Detaylı konu anlatımı, Konu Anlatımı özelliğimizden hariç tutulmuştur.""", # Anlatım güncellendi
         "sorular": [
             {"q": " What does 'generous' mean?", "a": ["Cimri", "Cömert", "Yorgun", "Sinirli"], "c": "Cömert"},
             {"q": " 'O çok uzun ve zayıf.' cümlesinin İngilizcesi hangisidir?", "a": ["He is short and plump.", "She is kind and helpful.", "He is tall and slim.", "She is short and handsome."], "c": "He is tall and slim."},
@@ -213,14 +218,17 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
     col_konu, col_pdf, col_test = st.columns(3)
     
     with col_konu:
+        # Konu Anlatımı Butonu
         if st.button("📖 Konu Anlatımı", key="btn_konu_anlatim", use_container_width=True):
             st.session_state['secilen_modul'] = "Konu Anlatımı"
             st.session_state['test_konusu'] = "" # Konu değişince testi sıfırla
     with col_pdf:
+        # PDF Sonuç Kontrol Butonu
         if st.button("🔶 PDF Sonuç Kontrol", key="btn_pdf_kontrol", use_container_width=True):
             st.session_state['secilen_modul'] = "PDF Kontrol"
             st.session_state['test_konusu'] = ""
     with col_test:
+        # Deneme Sınavı Butonu
         if st.button("🔥 Deneme Sınavı", key="btn_deneme_sinavi", use_container_width=True):
             st.session_state['secilen_modul'] = "Deneme Sınavı"
             # Deneme modülüne geçişte konuyu sıfırlama, kullanıcının girmesi beklenir.
