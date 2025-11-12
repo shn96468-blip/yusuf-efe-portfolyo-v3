@@ -128,4 +128,47 @@ with tab_soc:
     col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
     
     with col_sosyal_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key
+        st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
+    with col_sosyal_btn2:
+        st.button("📜 Tarihi Olaylar", type="secondary", key="sos_olay")
+    with col_sosyal_btn3:
+        st.button("🔥 Coğrafya Bilgisi", type="secondary", key="sos_cografya")
+    
+    st.markdown("---")
+    st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ ---
+# ==============================================================================
+with tab_eng:
+    st.header("🗣️ İngilizce Dersi İçerikleri")
+    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
+    
+    with col_ing_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
+    with col_ing_btn2:
+        st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
+    with col_ing_btn3:
+        st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
+    
+    st.markdown("---")
+    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 10. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ ---
+# ==============================================================================
+with tab_rel:
+    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
+    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
+    
+    with col_din_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
+    with col_din_btn2:
+        st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
+    with col_din_btn3:
+        st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
+    
+    st.markdown("---")
+    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
