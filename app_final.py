@@ -1,3 +1,126 @@
+import streamlit as st
+
+# --- 1. KOÇ MODÜLÜ İÇERİĞİ TANIMLAMA ---
+COACH_CONTENT = """
+## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🎓 Konu: Etkili Ders Çalışma Yöntemleri ve Zaman Yönetimi</p>
+</div>
+### 🗓️ Haftalık Çalışma Planı
+* **Zaman Yönetimi:** Günlük rutin oluşturma ve derslere ayrılan sürenin belirlenmesi.
+* **Pomodoro Tekniği:** 25 dakika çalışma, 5 dakika mola tekniği ile odaklanmayı artırma.
+* **Verimli Not Alma:** Anahtar kelimeler ve zihin haritası kullanarak not tutma.
+
+### 🎯 Motivasyon ve Hedef Belirleme
+* **SMART Hedefler:** (Specific, Measurable, Achievable, Relevant, Time-bound) belirleme.
+* **Motivasyon Artırma:** Başarıları takip etme ve küçük ödüllerle kendini teşvik etme.
+"""
+
+# --- 2. İÇERİK DOSYALARINI İÇE AKTARMA (IMPORT) ---
+# DİKKAT: Bu dosyaların (math_content.py, turkish_content.py vb.) app_final.py ile AYNI KLASÖRDE olması ZORUNLUDUR.
+from math_content import MATH_CONTENT
+from turkish_content import TURKISH_CONTENT
+from english_content import ENGLISH_CONTENT
+from religion_content import RELIGION_CONTENT
+from history_content import SOCIAL_CONTENT 
+
+try:
+    from science_content import SCIENCE_CONTENT 
+except ImportError:
+    # science_content.py dosyası eksikse, hata vermeden uyarı göstermesini sağlar
+    SCIENCE_CONTENT = """## ⚠️ Eksik Dosya Uyarısı
+    Fen Bilimleri içeriği, 'science_content.py' dosyasından içe aktarılamadı.
+    Lütfen bu dosyayı oluşturup içine 'SCIENCE_CONTENT' değişkenini tanımlayın.
+    """
+
+# --- 3. STREAMLIT SAYFA AYARLARI ---
+st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
+st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
+st.markdown("---")
+
+# 7 SEKME OLUŞTURULDU (Koç Modülü en başta)
+tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
+    "💡 Koç Modülü", 
+    "🔢 Matematik İçerikleri", 
+    "📝 Türkçe İçerikleri", 
+    "🧪 Fen Bilimleri",
+    "🌍 Sosyal Bilgiler",
+    "🗣️ İngilizce",
+    "🕌 Din Kültürü",
+])
+
+# ==============================================================================
+# --- 4. TAB 0: KOÇ MODÜLÜ ---
+# ==============================================================================
+with tab_coach:
+    st.header("💡 Koç Modülü - Rehberlik ve Mentorluk")
+    col_coach_btn1, col_coach_btn2, col_coach_btn3 = st.columns(3)
+    
+    with col_coach_btn1:
+        st.button("📝 Çalışma Planı Oluştur", type="primary", key="coach_plan") 
+    with col_coach_btn2:
+        st.button("🧠 Motivasyon Teknikleri", type="secondary", key="coach_motivasyon")
+    with col_coach_btn3:
+        st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
+    
+    st.markdown("---")
+    st.markdown(COACH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 5. TAB 1: MATEMATİK İÇERİKLERİ ---
+# ==============================================================================
+with tab_math:
+    st.header("🔢 Matematik Dersi İçerikleri")
+    col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
+    
+    with col_math_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="mat_konu") 
+    with col_math_btn2:
+        st.button("♦️ PDF Sonuç Kontrol", type="secondary", key="mat_pdf")
+    with col_math_btn3:
+        st.button("🔥 Deneme Sınavı", type="secondary", key="mat_deneme")
+    
+    st.markdown("---")
+    st.markdown(MATH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 6. TAB 2: TÜRKÇE İÇERİKLERİ ---
+# ==============================================================================
+with tab_tr:
+    st.header("📝 Türkçe Dersi İçerikleri")
+    col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
+
+    with col_tr_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="turk_konu") 
+    with col_tr_btn2:
+        st.button("♦️ Hikaye Analizi", type="secondary", key="turk_analiz")
+    with col_tr_btn3:
+        st.button("🔥 Yazım Kılavuzu", type="secondary", key="turk_yazim")
+
+    st.markdown("---")
+    st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ ---
+# ==============================================================================
+with tab_sci:
+    st.header("🧪 Fen Bilimleri Dersi İçerikleri")
+    col_fen_btn1, col_fen_btn2, col_fen_btn3 = st.columns(3)
+    
+    with col_fen_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="fen_konu") 
+    with col_fen_btn2:
+        st.button("🔬 Laboratuvar Deneyleri", type="secondary", key="fen_deney")
+    with col_fen_btn3:
+        st.button("🔥 Ünite Testi", type="secondary", key="fen_test")
+    
+    st.markdown("---")
+    st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
+
+
 # ==============================================================================
 # --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
 # ==============================================================================
@@ -12,5 +135,41 @@ with tab_soc:
     with col_sosyal_btn3:
         st.button("🔥 Coğrafya Bilgisi", type="secondary", key="sos_cografya")
     
-    st.markdown("---")  # <--- Hata veren satırın düzeltilmiş hali
+    st.markdown("---")
     st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ ---
+# ==============================================================================
+with tab_eng:
+    st.header("🗣️ İngilizce Dersi İçerikleri")
+    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
+    
+    with col_ing_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
+    with col_ing_btn2:
+        st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
+    with col_ing_btn3:
+        st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
+    
+    st.markdown("---")
+    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 10. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ ---
+# ==============================================================================
+with tab_rel:
+    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
+    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
+    
+    with col_din_btn1:
+        st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
+    with col_din_btn2:
+        st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
+    with col_din_btn3:
+        st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
+    
+    st.markdown("---")
+    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
