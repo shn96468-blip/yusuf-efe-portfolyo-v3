@@ -73,7 +73,8 @@ Bu konular, lise matematiği için sağlam bir temel oluşturur.""",
             {"q": " $(-5) + (+8)$ işleminin sonucu kaçtır?", "a": ["$-13$", "$+3$", "$-3$", "$+13$"], "c": "$+3$"},
             {"q": " $(-4) \\cdot (-2)$ işleminin sonucu kaçtır?", "a": ["$-8$", "$+8$", "$0$", "$+2$"], "c": "$+8$"},
             {"q": " $20 \\div (-5)$ işleminin sonucu kaçtır?", "a": ["$4$", "$-4$", "$25$", "$-25$"], "c": "$-4$"},
-        ]
+        ],
+        "koc_anlatimi": "Tam sayılarda toplama yaparken, aynı işaretli sayıları toplarken değerleri toplanır ve ortak işaret konur. Farklı işaretli sayıları toplarken, mutlak değeri büyük olandan küçük olan çıkarılır ve mutlak değeri büyük olanın işareti sonuca konur."
     },
     "Türkçe": {
         "konu": "7. Sınıf Türkçe Tüm Konular",
@@ -88,7 +89,8 @@ Bu konular, öğrencilerin hem okuduğunu anlama hem de doğru ve etkili yazma b
             {"q": " 'Zengin' kelimesinin zıt anlamlısı nedir?", "a": ["Varlıklı", "Fakir", "Varlığa", "Cimri"], "c": "Fakir"},
             {"q": " Aşağıdaki kelime çiftlerinden hangisi eş anlamlıdır?", "a": ["Gürültü - Sessiz", "Hürriyet - Özgürlük", "İleri - Geri", "Aç - Tok"], "c": "Hürriyet - Özgürlük"},
             {"q": " Aşağıdaki cümlelerin hangisinde mecaz anlamlı bir sözcük kullanılmıştır?", "a": ["Ağacın dallarını budadı.", "Bütün sınıf ona güldü.", "Dün akşam bize geldi.", "Olayın sıcaklığını koruyor."], "c": "Olayın sıcaklığını koruyor."},
-        ]
+        ],
+        "koc_anlatimi": "Dil bilgisinde fiiller (eylemler), iş, oluş, hareket bildiren kelimelerdir. Çekimli fiillerde kip ve kişi eki bulunur. Örneğin, 'geldi' fiili, geçmiş zaman kipinde çekimlenmiştir."
     },
     "Fen Bilimleri": {
         "konu": "7. Sınıf Fen Bilimleri Tüm Üniteler",
@@ -106,7 +108,8 @@ Bu konular, temel bilimsel düşünme becerilerini geliştirir.""",
         "sorular": [
             {"q": " Atomun çekirdeğinde bulunan pozitif yüklü parçacık hangisidir?", "a": ["Elektron", "Nötron", "Proton", "Molekül"], "c": "Proton"},
             {"q": " Periyodik sistemde elementler neye göre sıralanmıştır?", "a": ["Kütle numarası", "Yoğunluk", "Atom numarası", "Atom ağırlığı"], "c": "Atom numarası"},
-        ]
+        ],
+        "koc_anlatimi": "Mitoz bölünme, vücut hücrelerinde görülür ve tek hücreli canlılarda üremeyi, çok hücreli canlılarda büyüme, gelişme ve yaraların onarımını sağlar. Kromozom sayısı sabit kalır."
     },
     "Din Kültürü ve Ahlak Bilgisi": { 
         "konu": "7. Sınıf Din Kültürü Tüm Üniteler", 
@@ -122,7 +125,8 @@ Bu konular, İslam'ın temel inanç, ibadet ve ahlak prensiplerini içerir.""",
         "sorular": [
             {"q": " Vahiy meleği olarak bilinen ve peygamberlere emirleri ileten melek hangisidir?", "a": ["Mikail", "İsrafil", "Azrail", "Cebrail"], "c": "Cebrail"}, 
             {"q": " Aşağıdakilerden hangisi ahiret hayatının aşamalarından biri değildir?", "a": ["Kıyamet", "Haşir", "Tevhid", "Mizan"], "c": "Tevhid"},
-        ]
+        ],
+        "koc_anlatimi": "Melekler, nurdan yaratılmış, yemeyen, içmeyen ve sadece Allah'a itaat eden manevi varlıklardır. Dört büyük melek, Cebrail (Vahiy), Mikail (Doğa olayları), İsrafil (Sûr), Azrail (Ölüm) olarak bilinir."
     },
     "Sosyal Bilgiler": {
         "konu": "7. Sınıf Sosyal Bilgiler Tüm Üniteler", 
@@ -140,7 +144,8 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
         "sorular": [
             {"q": " Aşağıdakilerden hangisi etkili iletişimi olumsuz etkiler?", "a": ["Empati kurmak", "Göz teması kurmak", "Yargılayıcı konuşmak", "Açık ve net konuşmak"], "c": "Yargılayıcı konuşmak"},
             {"q": " 'Kızgın olduğumu anlıyorum.' cümlesi hangi iletişim diline örnektir?", "a": ["Sen dili", "Ben dili", "Emir dili", "Vücut dili"], "c": "Ben dili"},
-        ]
+        ],
+        "koc_anlatimi": "İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılması sürecidir. Etkili iletişimde empati, yani kişinin kendini karşısındakinin yerine koyması, kritik öneme sahiptir."
     },
     "İngilizce": {
         "konu": "7. Sınıf İngilizce Tüm Üniteler", 
@@ -153,7 +158,8 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
         "sorular": [
             {"q": " What does 'generous' mean?", "a": ["Cimri", "Cömert", "Yorgun", "Sinirli"], "c": "Cömert"},
             {"q": " 'O çok uzun ve zayıf.' cümlesinin İngilizcesi hangisidir?", "a": ["He is short and plump.", "She is kind and helpful.", "He is tall and slim.", "She is short and handsome."], "c": "He is tall and slim."},
-        ]
+        ],
+        "koc_anlatimi": "7. Sınıfta 'Appearance and Personality' ünitesinde, fiziksel görünüş (tall, short, slim, plump) ve kişilik özellikleri (kind, generous, selfish) tanımlanır. Örneğin, 'She is tall and kind.' cümlesi hem görünüş hem de kişiliği açıklar."
     }
 } 
 
@@ -268,7 +274,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap Simülasyonu)")
         st.info("Bu modül, sanal bir ders koçuyla etkileşim simülasyonunu içerir. Sorunuzu yazın ve alandan çıkın.")
         
-        # *** BURASI GÜNCELLENDİ: Koçun anlık cevabı için text_area ***
+        # Kullanıcıdan soruyu al
         koç_mesaj = st.text_area(
             "Koça Sorunuzu Yazın:", 
             placeholder="Örneğin: Tam sayılarla çarpma işlemi nasıl yapılır?", 
@@ -276,14 +282,13 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         )
         
         if koç_mesaj:
-            # Koçun vereceği yapay cevap
-            # Sadece girilen metni yansıtan sadeleştirilmiş cevap.
-            cevap = f"'{koç_mesaj}' konusuyla ilgili sana özel olarak hazırladığım ekstra alıştırmalar ve 7. sınıf müfredatındaki en kritik 3 bilgi notunu içeren bir özet hazırlıyorum. Unutma, pratik yapmak başarıyı getirir!"
+            # Koçun vereceği açıklayıcı (simüle edilmiş) cevap
+            koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
             
-            # Sadece cevabı gösterir, başlık ve ek metin yok.
-            st.success(f"**Koç Cevabı:** {cevap}")
+            # Cevabı sadece konu anlatımı olarak gösterir
+            st.success(f"**Koç Açıklaması:** {koç_anlatimi}")
         else:
-            st.info("Lütfen Koçunuza bir soru yazın.")
+            st.info("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
 
 
 # --- DİNAMİK TEST ALANI İŞLEVİ ---
