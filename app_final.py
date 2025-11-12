@@ -79,4 +79,28 @@ def user_login(username, password):
             st.session_state['user_logged_in'] = True
             st.session_state['current_user'] = username
             st.session_state['show_user_login'] = False
-            st.success(f"Hoş geldiniz, {username.upper
+            st.success(f"Hoş geldiniz, {username.upper()}!") # Parantez hatası düzeltildi
+            time.sleep(1)
+            st.rerun()
+            return
+    # Simülasyon Girişi
+    if len(username) > 0 and len(password) > 0:
+         st.session_state['user_logged_in'] = True
+         st.session_state['current_user'] = username
+         st.session_state['show_user_login'] = False
+         st.success(f"Hoş geldiniz, {username.upper()}! (Simülasyon Girişi Başarılı)") # Parantez hatası düzeltildi
+         time.sleep(1)
+         st.rerun()
+    else:
+        st.error("Kullanıcı adı veya şifre yanlış. (Demo: yusuf/y123)")
+
+def user_logout():
+    st.session_state['user_logged_in'] = False
+    st.session_state['current_user'] = None
+    st.rerun()
+
+def forgot_password_simulation(email_or_username, is_admin=False):
+    st.sidebar.warning("Sistem simülasyon modunda olduğundan, şifre sıfırlama kodu e-posta adresinize gönderilmiş gibi yapıldı.")
+    time.sleep(1)
+    if is_admin:
+        st.sidebar.success(f" Yönetici Şif
