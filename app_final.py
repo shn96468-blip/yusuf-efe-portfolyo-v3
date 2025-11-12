@@ -74,7 +74,27 @@ Bu konular, lise matematiği için sağlam bir temel oluşturur.""",
             {"q": " $(-4) \\cdot (-2)$ işleminin sonucu kaçtır?", "a": ["$-8$", "$+8$", "$0$", "$+2$"], "c": "$+8$"},
             {"q": " $20 \\div (-5)$ işleminin sonucu kaçtır?", "a": ["$4$", "$-4$", "$25$", "$-25$"], "c": "$-4$"},
         ],
-        "koc_anlatimi": "Tam sayılarda toplama yaparken, aynı işaretli sayıları toplarken değerleri toplanır ve ortak işaret konur. Farklı işaretli sayıları toplarken, mutlak değeri büyük olandan küçük olan çıkarılır ve mutlak değeri büyük olanın işareti sonuca konur."
+        "koc_anlatimi": """
+**Tam Sayılarda Dört İşlem (Detaylı Anlatım)**
+
+1.  **Toplama İşlemi:**
+    * **Aynı İşaretliler:** Değerler toplanır, ortak işaret sonuca konur.
+        * **Örnek 1:** $+5 + (+3) = +8$
+        * **Örnek 2:** $-5 + (-3) = -8$
+    * **Farklı İşaretliler:** Mutlak değeri büyük olandan küçük olan çıkarılır ve mutlak değeri büyük olanın işareti sonuca konur.
+        * **Örnek 3:** $+8 + (-3) = +5$ (8'den 3 çıkarıldı, büyük olan 8'in işareti +)
+        * **Örnek 4:** $-10 + (+4) = -6$ (10'dan 4 çıkarıldı, büyük olan 10'un işareti -)
+
+2.  **Çıkarma İşlemi:** Çıkarma işlemi, çıkan sayının işaretini değiştirip toplama işlemine dönüştürülür.
+    * **Örnek 5:** $7 - (-2)$ işleminde, $-2$ nin işareti $+2$ olur. Sonuç: $7 + 2 = 9$.
+    * **Örnek 6:** $-5 - (+3)$ işleminde, $+3$ ün işareti $-3$ olur. Sonuç: $-5 + (-3) = -8$.
+
+3.  **Çarpma ve Bölme İşlemi:** İşaret kuralları çok basittir:
+    * **Aynı İşaretliler:** Sonuç her zaman **Pozitiftir** ($+\cdot+=+$, $-\cdot-=+$).
+    * **Farklı İşaretliler:** Sonuç her zaman **Negatiftir** ($+\cdot-=-$, $-\cdot+=-$).
+    * **Örnek 7 (Çarpma):** $(-6) \cdot (-3) = +18$ (Aynı işaret)
+    * **Örnek 8 (Bölme):** $15 \div (-5) = -3$ (Farklı işaret)
+"""
     },
     "Türkçe": {
         "konu": "7. Sınıf Türkçe Tüm Konular",
@@ -90,7 +110,24 @@ Bu konular, öğrencilerin hem okuduğunu anlama hem de doğru ve etkili yazma b
             {"q": " Aşağıdaki kelime çiftlerinden hangisi eş anlamlıdır?", "a": ["Gürültü - Sessiz", "Hürriyet - Özgürlük", "İleri - Geri", "Aç - Tok"], "c": "Hürriyet - Özgürlük"},
             {"q": " Aşağıdaki cümlelerin hangisinde mecaz anlamlı bir sözcük kullanılmıştır?", "a": ["Ağacın dallarını budadı.", "Bütün sınıf ona güldü.", "Dün akşam bize geldi.", "Olayın sıcaklığını koruyor."], "c": "Olayın sıcaklığını koruyor."},
         ],
-        "koc_anlatimi": "Dil bilgisinde fiiller (eylemler), iş, oluş, hareket bildiren kelimelerdir. Çekimli fiillerde kip ve kişi eki bulunur. Örneğin, 'geldi' fiili, geçmiş zaman kipinde çekimlenmiştir."
+        "koc_anlatimi": """
+**Fiil (Eylem) Nedir ve Yapı Özellikleri:**
+
+Fiiller, cümlede bir işi, oluşu veya hareketi zaman ve kişiye bağlı olarak bildiren kelimelerdir. Fiillerin yapıları üç ana başlıkta incelenir:
+
+1.  **Basit Fiiller:** Yapım eki almamış, sadece çekim eki (kip ve kişi eki) almış fiillerdir.
+    * **Örnekler:** *gel-di*, *yaz-ıyor*, *oku-malıyız*. (Burada sadece zaman ve kişi eki var.)
+
+2.  **Türemiş Fiiller:** İsim veya fiil köklerine yapım eki getirilerek oluşturulan fiillerdir.
+    * **Örnek 1:** *göz (isim)* + *-le* $\rightarrow$ *gözle-* (gözlemek)
+    * **Örnek 2:** *yaz (fiil)* + *-dır* $\rightarrow$ *yazdır-* (yazdırmak)
+    * *Örnek Cümle:* Kitaplarını başkasına **yazdırdı**.
+
+3.  **Birleşik Fiiller:** İki veya daha fazla kelimenin birleşmesiyle oluşan fiillerdir. Üç çeşidi vardır:
+    * **Kurallı Birleşik Fiiller (Yeterlik, Tezlik, Sürerlik, Yaklaşma):** *gel-ebilmek*, *git-ivermek*, *bak-akalmak*.
+    * **Yardımcı Fiille Kurulanlar:** *etmek, olmak, eylemek, kılmak* gibi yardımcı fiillerle kurulur. (*hasta olmak, yardım etmek*)
+    * **Anlamca Kaynaşmış (Deyimleşmiş):** Deyimler. (*gözden düşmek, kulak vermek*)
+"""
     },
     "Fen Bilimleri": {
         "konu": "7. Sınıf Fen Bilimleri Tüm Üniteler",
@@ -109,7 +146,27 @@ Bu konular, temel bilimsel düşünme becerilerini geliştirir.""",
             {"q": " Atomun çekirdeğinde bulunan pozitif yüklü parçacık hangisidir?", "a": ["Elektron", "Nötron", "Proton", "Molekül"], "c": "Proton"},
             {"q": " Periyodik sistemde elementler neye göre sıralanmıştır?", "a": ["Kütle numarası", "Yoğunluk", "Atom numarası", "Atom ağırlığı"], "c": "Atom numarası"},
         ],
-        "koc_anlatimi": "Mitoz bölünme, vücut hücrelerinde görülür ve tek hücreli canlılarda üremeyi, çok hücreli canlılarda büyüme, gelişme ve yaraların onarımını sağlar. Kromozom sayısı sabit kalır."
+        "koc_anlatimi": """
+**Mitoz ve Mayoz Bölünme Farkları (Örneklerle)**
+
+Hücre bölünmesi, canlılarda büyüme, üreme ve onarım amaçlı gerçekleşir. İki temel tipi vardır:
+
+1.  **Mitoz Bölünme:**
+    * **Görüldüğü Yer:** Vücut (somatik) hücrelerinde (deri, karaciğer vb.).
+    * **Amaç:** Büyüme, gelişme ve yaraları onarma. Tek hücrelilerde üreme.
+    * **Kromozom Sayısı:** Sabit kalır ($2n \rightarrow 2n$ veya $n \rightarrow n$).
+    * **Oluşan Hücre Sayısı:** 2 yeni hücre oluşur.
+    * **Kalıtsal Çeşitlilik:** Oluşan hücreler **ana hücreyle aynı** kalıtsal yapıdadır (Çeşitlilik YOK).
+    * **Örnek:** Parmağınız kesildiğinde yaranın iyileşmesi.
+
+2.  **Mayoz Bölünme:**
+    * **Görüldüğü Yer:** Üreme ana hücrelerinde (erkekte sperm ana hücresi, dişide yumurta ana hücresi).
+    * **Amaç:** Eşeyli üremeyi sağlamak.
+    * **Kromozom Sayısı:** Yarıya iner ($2n \rightarrow n$).
+    * **Oluşan Hücre Sayısı:** 4 yeni hücre oluşur.
+    * **Kalıtsal Çeşitlilik:** Oluşan hücreler **farklı** kalıtsal yapıdadır (Kalıtsal Çeşitlilik VAR).
+    * **Örnek:** Bir insanın üreme hücrelerinin oluşması.
+"""
     },
     "Din Kültürü ve Ahlak Bilgisi": { 
         "konu": "7. Sınıf Din Kültürü Tüm Üniteler", 
@@ -126,7 +183,24 @@ Bu konular, İslam'ın temel inanç, ibadet ve ahlak prensiplerini içerir.""",
             {"q": " Vahiy meleği olarak bilinen ve peygamberlere emirleri ileten melek hangisidir?", "a": ["Mikail", "İsrafil", "Azrail", "Cebrail"], "c": "Cebrail"}, 
             {"q": " Aşağıdakilerden hangisi ahiret hayatının aşamalarından biri değildir?", "a": ["Kıyamet", "Haşir", "Tevhid", "Mizan"], "c": "Tevhid"},
         ],
-        "koc_anlatimi": "Melekler, nurdan yaratılmış, yemeyen, içmeyen ve sadece Allah'a itaat eden manevi varlıklardır. Dört büyük melek, Cebrail (Vahiy), Mikail (Doğa olayları), İsrafil (Sûr), Azrail (Ölüm) olarak bilinir."
+        "koc_anlatimi": """
+**Dört Büyük Melek ve Görevleri (Detaylı)**
+
+Melekler, Allah'ın emirlerini yerine getiren, nurdan yaratılmış, gözle görülmeyen manevi varlıklardır. Dört büyük meleğin temel görevleri şunlardır:
+
+1.  **Cebrail (A.S.):** **Vahiy Meleği** olarak bilinir. Peygamberlere Allah'tan gelen ayetleri ve emirleri iletmekle görevlidir.
+    * *Örnek Görev:* Kur'an-ı Kerim'in Hz. Muhammed'e (s.a.v.) parça parça indirilmesi.
+
+2.  **Mikail (A.S.):** **Tabiat Olayları Meleği** olarak bilinir. Yağmurun yağması, rüzgarın esmesi ve bitkilerin yetişmesi gibi doğa ve geçim olaylarını yönetmekle görevlidir.
+    * *Örnek Görev:* Dünya üzerindeki rızıkların ve bereketin dağıtımına nezaret etmek.
+
+3.  **İsrafil (A.S.):** **Sûr Meleği** olarak bilinir. İki kere Sûr'a üflemekle görevlidir:
+    * *Birinci Üfleme:* Kıyametin kopuşunu ve tüm canlıların yok olmasını sağlar.
+    * *İkinci Üfleme:* Yeniden dirilişi (Haşir) başlatır.
+
+4.  **Azrail (A.S.):** **Ölüm Meleği** olarak bilinir. Eceli gelen canlıların ruhunu almakla görevlidir.
+    * *Örnek Görev:* Allah'ın emriyle her canlının yaşam süresini sonlandırmak.
+"""
     },
     "Sosyal Bilgiler": {
         "konu": "7. Sınıf Sosyal Bilgiler Tüm Üniteler", 
@@ -145,7 +219,25 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
             {"q": " Aşağıdakilerden hangisi etkili iletişimi olumsuz etkiler?", "a": ["Empati kurmak", "Göz teması kurmak", "Yargılayıcı konuşmak", "Açık ve net konuşmak"], "c": "Yargılayıcı konuşmak"},
             {"q": " 'Kızgın olduğumu anlıyorum.' cümlesi hangi iletişim diline örnektir?", "a": ["Sen dili", "Ben dili", "Emir dili", "Vücut dili"], "c": "Ben dili"},
         ],
-        "koc_anlatimi": "İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılması sürecidir. Etkili iletişimde empati, yani kişinin kendini karşısındakinin yerine koyması, kritik öneme sahiptir."
+        "koc_anlatimi": """
+**İletişim Türleri ve "Ben Dili" Kullanımı (Örneklerle)**
+
+İletişim, insanların bilgi, duygu ve düşüncelerini aktarma sürecidir. Bu süreçte kullanılan dil, iletişimin kalitesini belirler.
+
+1.  **Sen Dili (Olumsuz İletişim):** Suçlayıcı, yargılayıcı ve karşıdaki kişiyi savunmaya iten bir dildir. Genellikle "sen", "siz" zamirleri veya emir kipleri içerir.
+    * **Örnek:** "Her zaman geç kalıyorsun, **sorumsuzsun**!"
+    * **Etkisi:** Karşımızdakini kırar, anlaşmazlığa yol açar.
+
+2.  **Ben Dili (Olumlu İletişim):** Kişinin kendi duygularını ve düşüncelerini karşıdakini yargılamadan ifade ettiği dildir. Genellikle "ben", "bana" gibi birinci tekil şahıs zamirleri içerir.
+    * **Örnek:** "Geç kaldığında, dersin yarısını kaçırdığım için **endişeleniyorum**."
+    * **Etkisi:** Soruna odaklanmayı sağlar, kişinin kendini açıklamasına olanak tanır ve duyguları açıklar.
+
+**Etkili İletişim İçin İpuçları:**
+
+* **Empati Kurmak:** Kendini karşındakinin yerine koymak.
+* **Göz Teması Kurmak:** Samimiyeti ve dikkati gösterir.
+* **Aktif Dinleme:** Sadece duymak değil, söylenenin anlamını kavramaya çalışmak.
+"""
     },
     "İngilizce": {
         "konu": "7. Sınıf İngilizce Tüm Üniteler", 
@@ -159,13 +251,34 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
             {"q": " What does 'generous' mean?", "a": ["Cimri", "Cömert", "Yorgun", "Sinirli"], "c": "Cömert"},
             {"q": " 'O çok uzun ve zayıf.' cümlesinin İngilizcesi hangisidir?", "a": ["He is short and plump.", "She is kind and helpful.", "He is tall and slim.", "She is short and handsome."], "c": "He is tall and slim."},
         ],
-        "koc_anlatimi": "7. Sınıfta 'Appearance and Personality' ünitesinde, fiziksel görünüş (tall, short, slim, plump) ve kişilik özellikleri (kind, generous, selfish) tanımlanır. Örneğin, 'She is tall and kind.' cümlesi hem görünüş hem de kişiliği açıklar."
+        "koc_anlatimi": """
+**Görünüş ve Kişilik Tanımlamaları (Detaylı Anlatım)**
+
+İngilizcede birini tanımlarken, fiziksel görünüşünü (Appearance) ve karakter özelliklerini (Personality) belirten sıfatları kullanırız.
+
+1.  **Görünüş (Appearance) Sıfatları:**
+    * **Boy:** *Tall* (Uzun), *Short* (Kısa), *Medium height* (Orta boylu).
+        * **Örnek:** She is **tall** and she has **long hair**.
+    * **Kilo:** *Slim* (İnce), *Plump/Overweight* (Toplu/Kilolu), *Thin* (Zayıf).
+    * **Saç:** *Long/Short hair*, *Curly/Straight hair*, *Blonde/Dark hair*.
+
+2.  **Kişilik (Personality) Sıfatları:**
+    * **Olumlu Özellikler:**
+        * *Kind* (Nazik, iyi kalpli) $\rightarrow$ She is **kind** to everyone.
+        * *Generous* (Cömert) $\rightarrow$ He is **generous** and shares his toys.
+        * *Honest* (Dürüst) $\rightarrow$ They are **honest** people.
+    * **Olumsuz Özellikler:**
+        * *Selfish* (Bencil) $\rightarrow$ He is **selfish** and never shares.
+        * *Rude* (Kaba) $\rightarrow$ Don't be **rude** to your teachers.
+        * *Lazy* (Tembel) $\rightarrow$ She is a bit **lazy** sometimes.
+"""
     }
 } 
 
 
 # GENEL ARKA PLAN MÜZİĞİ İÇİN ÖRNEK MP3 LİNKİ
 GENEL_FON_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
+SESLI_ACIKLAMA_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" # Simülasyon Ses URL'si
 
 # Session State Tanımlamaları
 if 'admin_mode' not in st.session_state:
@@ -272,7 +385,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
 
     elif modul == "Ders Koçlarımız":
         st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap ve Sesli Simülasyon)")
-        st.info("Konunuzu yazın, koç size o konuyu anlatsın ve sesli çıktı simülasyonunu dinleyin.")
+        st.info("Konunuzu yazın, koç size o konuyu **detaylı ve bol örnekli** anlatsın.")
         
         # Kullanıcıdan soruyu al
         koç_mesaj = st.text_area(
@@ -285,29 +398,23 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
             # Koçun vereceği açıklayıcı (simüle edilmiş) cevap
             koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
             
-            # 1. Metin Açıklaması
-            st.success(f"**Koç Açıklaması:** {koç_anlatimi}")
+            # 1. Metin Açıklaması (Daha detaylı hale getirildi)
+            st.success(f"**Koç Açıklaması - Konu: {koç_mesaj.capitalize()}**")
+            st.markdown(koç_anlatimi)
 
             st.markdown("---")
             
-            # 2. Sesli Robot Simülasyonu
+            # 2. Sesli Robot Simülasyonu (Autoplay kaldırıldı)
             st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
             
-            # Örnek bir ses dosyası (robot sesi simülasyonu)
-            # Not: Bu, gerçek bir robot sesi değildir, sadece Streamlit'in audio bileşenini kullanarak sesli çıktıyı simüle eder.
-            SESLI_ACIKLAMA_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" # Daha nötr bir melodi/ses için farklı bir URL
-            
-            # HTML Audio etiketi kullanarak ses çalma
-            # controls: Oynat/Durdur butonu ve ses çubuğunu gösterir.
-            # autoplay: Sayfa yenilendiğinde otomatik başlatır (Bazı tarayıcılar engeller).
-            # loop: Tekrarlamaz.
+            # HTML Audio etiketi kullanarak ses çalma. 'autoplay' özelliği kaldırıldı.
             st.markdown(f"""
-                <audio controls autoplay loop=false>
+                <audio controls loop=false>
                     <source src="{SESLI_ACIKLAMA_URL}" type="audio/mp3">
                     Tarayıcınız ses etiketini desteklemiyor.
                 </audio>
                 <div style='margin-top: 10px; font-style: italic; color: #aaa;'>
-                (Yukarıdaki ses bileşeni, konunun sesli olarak okunduğunu simüle eder.)
+                (Yukarıdaki ses bileşeni, koçun bu konuyu sesli olarak okuduğunu simüle eder. Ses otomatik başlamaz.)
                 </div>
             """, unsafe_allow_html=True)
 
