@@ -63,7 +63,6 @@ st.set_page_config(
 
 # --- PORTFOLYO İÇERİK FONKSİYONU ---
 def get_portfolyo_bilgisi(baslik):
-    # Hata Düzeltildi: dize tırnakları doğru
     if baslik == "Hakkımda":
         return ("Merhaba, ben Yusuf Efe Şahin. Bu kişisel portfolyo sayfamda, teknoloji, yazılım ve tasarım alanındaki çalışmalarımı sergiliyorum. Yaratıcı projeler geliştirmeye ve sürekli öğrenmeye odaklıyım.", "👨‍💻")
     elif baslik == "Projelerim":
@@ -106,7 +105,6 @@ def forgot_password_simulation(email_or_username, is_admin=False):
     if is_admin:
         st.sidebar.success(f" Yönetici Şifresi sıfırlama maili 'admin@portfolyo.com' adresine gönderildi.")
     else:
-        # Hata Düzeltildi: f-string kapatıldı.
         st.sidebar.success(f" Kullanıcı şifresi sıfırlama kodu '{email_or_username}@mail.com' adresine gönderildi.")
         
 # --- MÜZİK ÇALMA MANTIĞI ---
@@ -135,7 +133,6 @@ def general_chat_portfolyo(mesaj):
         if kelime in mesaj_lower:
             return f"🤖 (Kanka): {cevap}"
             
-    # Hata Düzeltildi: Kapanış tırnak işareti (") eklendi.
     return f"🤖 (Kanka): Anladım. Ben Yusuf Efe Şahin'in AI asistanıyım. Hangi ders içeriğiyle ilgili bilgi almak istiyorsun? (Örn: 'Pythonda değişken nedir?' gibi.)"
 
 # --- BAŞLIK VE CSS AYARLARI ---
@@ -233,6 +230,7 @@ if not st.session_state['admin_mode']:
                 st.session_state.chat_history.append({"user": kanka_mesaji, "robot": robot_cevap})
                 st.rerun()
             
+            # Hata Düzeltildi: Satır 343'deki koşul tamamlandı.
             if st.session_state.chat_history and st.button("Sohbeti Temizle"):
                 st.session_state.chat_history = []
                 st.rerun()
@@ -340,4 +338,26 @@ else:
     # ÜYE KAYIT
     if st.session_state['registration_allowed'] and not st.session_state['user_logged_in']:
         st.sidebar.button("📝 Kaydol", on_click=lambda: st.session_state.update({'show_user_register': not st.session_state['show_user_register'], 'show_admin_login': False, 'show_user_login': False}))
-        if st.session
+        if st.session_state['show_user_register']:
+            with st.sidebar.form("user_register_form"):
+                st.text_input("Kullanıcı Adı (Kaydol)")
+                st.text_input("E-posta Adresi")
+                st.text_input("Şifre Belirle", type="password")
+                if st.form_submit_button("Hesap Oluştur (Simülasyon)"):
+                    st.info(f"Kayıt işlemi başarıyla simüle edildi! Lütfen giriş yapın.")
+                    st.session_state['show_user_register'] = False
+                    st.rerun()
+    
+st.sidebar.markdown("---")
+st.sidebar.title("⭐ Yorumlar ve Geri Bildirim")
+
+# Yorum Formu
+with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
+    st.sidebar.write("Site hakkındaki yorumlarınızı buraya yazın.")
+    st.selectbox("Konu:", ["Genel Yorum", "Hata Bildirimi", "Tasarım Önerisi", "Teşekkür"])
+    st.text_area("Mesajınız:")
+    if st.form_submit_button("Yorumu Gönder"):
+        st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
+
+st.sidebar.markdown("---")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.0")
