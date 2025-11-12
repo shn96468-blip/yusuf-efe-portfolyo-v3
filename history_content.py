@@ -1,18 +1,31 @@
-# history_content.py dosyasında, 'atatürk' konusunun bitiminden hemen sonra ekleyin:
+# Sosyal Bilgiler Konu Anlatımı (Detaylı 7. Sınıf Ünite Listesi Eklendi)
+SOCIAL_CONTENT = """
+## 🌎 Sosyal Bilgiler - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf Sosyal Bilgiler Tüm Üniteler (Detaylı Müfredat)</p>
+</div>
+### 📄 Detaylı Konu Özeti
 
-        "soğuk savaş": """
-        **Soğuk Savaş Dönemi (1945-1991)**
-        
-        II. Dünya Savaşı sonrası ABD (Batı Bloğu) ve SSCB (Doğu Bloğu) önderliğindeki iki kutuplu dünyanın çatışmasıdır. Bu, doğrudan sıcak çatışmaya girmeksizin ideolojik, siyasi ve askeri rekabetle karakterize edilmiştir.
-        
-        **Önemli Olaylar:** Berlin Duvarı, Truman Doktrini, NATO'nun kuruluşu, Varşova Paktı.
-        
-        """,
-        "küreselleşme": """
-        **Küreselleşen Dünya ve Türkiye (20. ve 21. yy.)**
-        
-        Teknolojinin gelişimi ve iletişim ağlarının yaygınlaşmasıyla ülkeler arası ekonomik, siyasi ve kültürel etkileşimin artmasıdır. Bu dönemde Türkiye'nin AB ile ilişkileri, Körfez Savaşları ve Terörle Mücadele gibi konular öne çıkmıştır.
-        
-        * **12. Sınıf Konusu** olarak geçer.
-        
-        """
+7. Sınıf Sosyal Bilgiler dersi, yedi ana ünite ve temel kavramlardan oluşmaktadır.
+
+#### 1. ÜNİTE: BİREY VE TOPLUM
+* **Temel Konular:** İletişim ve insan ilişkileri. Olumlu ve etkili iletişim becerileri. Empati ve ön yargı.
+
+#### 2. ÜNİTE: KÜLTÜR VE MİRAS
+* **Temel Konular:** Türk tarihine yolculuk. Orta Asya Türk devletleri ve İslamiyet'in kabulü. Tarihi İpek Yolu.
+
+#### 3. ÜNİTE: İNSANLAR, YERLER VE ÇEVRELER
+* **Temel Konular:** Türkiye'de nüfusun dağılışı ve yerleşme. Göç nedenleri ve sonuçları.
+
+#### 4. ÜNİTE: BİLİM, TEKNOLOJİ VE TOPLUM
+* **Temel Konular:** Bilimsel gelişmelerin sosyal hayata etkileri. Bilgi ve teknoloji kullanımında etik değerler. İnternet ve bilgi güvenliği.
+
+#### 5. ÜNİTE: ÜRETİM, DAĞITIM VE TÜKETİM
+* **Temel Konular:** Temel ekonomik faaliyetler. Yatırım ve girişimcilik. Vergi vermenin önemi ve bütçe planlaması.
+
+#### 6. ÜNİTE: ETKİN VATANDAŞLIK
+* **Temel Konular:** Demokrasinin temel ilkeleri. İnsan hakları ve sorumluluklar. Türkiye Cumhuriyeti'nin temel nitelikleri.
+
+#### 7. ÜNİTE: KÜRESEL BAĞLANTILAR
+* **Temel Konular:** Türkiye'nin komşuları ve diğer ülkelerle ilişkileri. Türk kültürünün dünya üzerindeki etkileri. Turizm ve uluslararası ilişkiler.
+"""
