@@ -74,8 +74,8 @@ MOCK_KOCLAR = [
     {"ad": "Ders Koçu 3", "alan": "Din Kültürü & İngilizce", "bio": "Birebir takiple öğrenci başarısı odaklı. Haftalık gelişim raporu sunar."},
 ]
 
-# SESLİ DERS İÇİN ÖRNEK MP3 LİNKİ (Güvenilir Demo Sesi)
-SESLI_DERS_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" # Bu bir müzik, ancak ders simülasyonu için kullanılıyor.
+# GENEL ARKA PLAN MÜZİĞİ İÇİN ÖRNEK MP3 LİNKİ
+GENEL_FON_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" 
 
 # Session State Tanımlamaları (Mutlaka En Üstte Olmalı)
 if 'admin_mode' not in st.session_state:
@@ -91,7 +91,7 @@ if 'secilen_sayfa' not in st.session_state:
 if 'music_enabled' not in st.session_state:
     st.session_state['music_enabled'] = True 
 if 'music_url' not in st.session_state:
-    st.session_state['music_url'] = SESLI_DERS_URL
+    st.session_state['music_url'] = GENEL_FON_URL
 if 'music_volume' not in st.session_state:
     st.session_state['music_volume'] = 0.5 
 if 'show_admin_login' not in st.session_state:
@@ -213,22 +213,25 @@ st.title(f"💼 Yusuf Efe Şahin Portfolyo")
 # --- ZİYARETÇİ MODU (Admin değilse) ---
 if not st.session_state['admin_mode']:
 
-    # --- SES KONTROLLERİ ---
+    # --- GENEL FON MÜZİĞİ KONTROLLERİ ---
     col_kapat, col_ac, col_volume_slider = st.columns([1, 1, 6]) 
 
     if st.session_state['music_enabled']:
+        # Görünmez/Küçük müzik oynatıcı (Uygulamanın genelinde fon müziği çalması için)
+        st.audio(st.session_state['music_url'], format="audio/mp3", loop=True)
+        
         with col_kapat:
-            if st.button("🔊 Kapat", key="btn_kapat_ses", use_container_width=True):
+            if st.button("🔊 Müzik Kapat", key="btn_kapat_ses", use_container_width=True):
                 st.session_state['music_enabled'] = False
                 st.rerun()
         with col_volume_slider:
-            new_volume = st.slider("Ses Seviyesi", 0.0, 1.0, st.session_state['music_volume'], step=0.1, key="music_volume_slider")
+            new_volume = st.slider("Müzik Ses Seviyesi", 0.0, 1.0, st.session_state['music_volume'], step=0.1, key="music_volume_slider")
             if new_volume != st.session_state['music_volume']:
                 st.session_state['music_volume'] = new_volume
                 st.rerun()
     elif st.session_state['music_url']: 
         with col_ac:
-            if st.button("🔇 Aç", key="btn_ac_ses", use_container_width=True):
+            if st.button("🔇 Müzik Aç", key="btn_ac_ses", use_container_width=True):
                 st.session_state['music_enabled'] = True
                 st.rerun()
     
@@ -275,19 +278,16 @@ if not st.session_state['admin_mode']:
     
     # --- İÇERİK YAZDIRMA ---
     
-    # 1. DERS SAYFASI İÇERİĞİ (SESLİ DERS EKLENDİ)
+    # 1. DERS SAYFASI İÇERİĞİ (SESLİ DERS KALDIRILDI)
     if secilen_sayfa in DERS_ISIMLERI:
         st.header(f"📚 {secilen_sayfa} Dersi Notları (7. Sınıf)")
         konu = st.session_state['not_kartlari'][secilen_sayfa]
         st.info(f"👉 Ana Konu: **{konu}**")
         st.markdown("---")
         
-        # SESLİ DERS ANLATIMI SIMÜLASYONU
-        st.subheader("🔊 Koçundan Sesli Ders Anlatımı (Simülasyon)")
-        st.audio(st.session_state['music_url'], format="audio/mp3", loop=True)
-        st.caption("Koçunuz, bu dersin önemli konularını sizin için seslendiriyor. (Not: Bu bir demo ses dosyasıdır.)")
-        st.markdown("---")
-
+        st.subheader("📝 Detaylı Konu Anlatımı")
+        st.markdown(f"Koçunuz tarafından hazırlanan detaylı **{konu}** anlatım özetleri burada yer alacaktır.")
+        
         if st.session_state['user_logged_in'] and st.session_state['current_user'] != "ZİYARETÇİ":
             st.success(f"**{secilen_sayfa}** dersine ait detaylı notlara erişim izniniz var. (Simülasyon İçeriği)")
             st.markdown(f"Burada **{konu}** ile ilgili zenginleştirilmiş, gerçek içerik gösterilecektir.")
@@ -416,247 +416,4 @@ if not st.session_state['admin_mode']:
                 
                 if st.form_submit_button("Sonuçları Kontrol Et"):
                     if not cevap_anahtari_input or not cevap_anahtari_input.isalpha():
-                        st.error("Lütfen geçerli bir cevap dizisi girin (Sadece A, B, C, D harfleri olmalı).")
-                    else:
-                        girilen_cevaplar = cevap_anahtari_input.upper()
-                        dogru_cevaplar = st.session_state['pdf_cevaplari'].get(deneme_kodu, "")
-                        
-                        if not dogru_cevaplar:
-                            st.error("Seçilen dökümanın cevap anahtarı sistemde bulunamadı.")
-                        else:
-                            if len(girilen_cevaplar) != len(dogru_cevaplar):
-                                st.warning(f"Girdiğiniz cevap sayısı ({len(girilen_cevaplar)}) ile döküman sorusu sayısı ({len(dogru_cevaplar)}) uyuşmuyor. Kontrol yine de yapıldı.")
-                                
-                            dogru_sayisi = 0
-                            kontrol_limit = min(len(girilen_cevaplar), len(dogru_cevaplar))
-                            
-                            for i in range(kontrol_limit):
-                                if girilen_cevaplar[i] == dogru_cevaplar[i]:
-                                    dogru_sayisi += 1
-                                    
-                            yanlis_sayisi = kontrol_limit - dogru_sayisi
-                            bos_sayisi = len(dogru_cevaplar) - kontrol_limit if len(dogru_cevaplar) > kontrol_limit else 0
-                            
-                            st.success(f"### 🎉 Kontrol Başarılı!")
-                            st.markdown(f"**Döküman Kodu:** {deneme_kodu}")
-                            st.markdown(f"**Toplam Soru Sayısı:** {len(dogru_cevaplar)}")
-                            st.markdown(f"**Doğru Sayısı:** {dogru_sayisi}")
-                            st.markdown(f"**Yanlış Sayısı:** {yanlis_sayisi}")
-                            st.markdown(f"**Boş Sayısı (Eksik Cevap):** {bos_sayisi}")
-                            st.markdown("---")
-                            st.markdown(f"**(NOT: Net hesaplaması için 4 yanlışın 1 doğruyu götürmesi kuralı uygulanmamıştır. Simülasyon.)**")
-
-    # 7. DERS KOÇLARIMIZ SAYFASI (İSİMLER SİLİNDİ)
-    elif secilen_sayfa == "Ders Koçlarımız":
-        st.header("👨‍🏫 Ders Koçlarımız")
-        st.info("Başarıya giden yolda size destek olacak, alanında uzman koçlarımızla tanışın.")
-        
-        cols_koc = st.columns(3)
-        for i, koc in enumerate(MOCK_KOCLAR):
-            with cols_koc[i % 3]:
-                with st.container(border=True):
-                    # İSİM YERİNE SADECE GENEL TANIM KULLANILDI
-                    st.subheader(f"Koç | {koc['alan']}") 
-                    st.markdown(f"**Uzmanlık Alanı:** *{koc['alan']}*")
-                    st.caption(koc['bio'])
-                    if st.session_state['user_logged_in'] and st.session_state['current_user'] != "ZİYARETÇİ":
-                        st.button("Randevu Talep Et (Simülasyon)", key=f"koc_randevu_{i}", use_container_width=True)
-                    else:
-                        st.warning("Randevu almak için tam üye girişi yapın.")
-
-    # 8. KOÇ-ÖĞRENCİ ÇALIŞMA ALANI SAYFASI
-    elif secilen_sayfa == "Çalışma Alanı":
-        st.header("🎯 Koç-Öğrenci Çalışma Alanı")
-        
-        if st.session_state['user_logged_in'] and st.session_state['current_user'] != "ZİYARETÇİ":
-            st.success(f"Hoş geldiniz, **{st.session_state['current_user'].upper()}**. Burası Koçunuzla birlikte planlama yapabileceğiniz alan.")
-            
-            st.markdown("---")
-            st.subheader("🗓️ Haftalık Program (Demo)")
-            st.markdown("""
-            * **Pazartesi:** Rasyonel Sayılar Tekrarı (30 Soru)
-            * **Salı:** Türkçe Fiiller Konu Anlatımı
-            * **Çarşamba:** Deneme Sınavı Çözümü
-            * **Perşembe:** Koç Görüşmesi (19:00)
-            * **Cuma:** Sosyal Bilgiler Özet Çıkarma
-            """)
-            
-            st.subheader("📝 Koçunuza Mesaj Gönderin")
-            with st.form("koc_mesaj_formu", clear_on_submit=True):
-                st.text_area("Koçunuza iletmek istediğiniz mesajı buraya yazın:", height=150)
-                if st.form_submit_button("Mesajı Gönder"):
-                    st.success("Mesajınız koçunuza başarıyla iletildi. En kısa sürede geri dönüş yapılacaktır.")
-        else:
-            st.warning("Bu alana erişmek için lütfen tam üye girişi yapın.")
-
-
-    st.markdown("---")
-
-# --- YÖNETİCİ VE YAN PANEL (SIDEBAR) AYARLARI ---
-st.sidebar.title("Kullanıcı İşlemleri")
-
-# YÖNETİCİ MODU
-if st.session_state['admin_mode']:
-    st.sidebar.subheader("⚙️ Yönetici Ayarları") 
-    st.sidebar.button("🔒 YÖNETİCİ ÇIKIŞI", on_click=lambda: (st.session_state.update({'admin_mode': False}), st.rerun()))
-    
-    # TEMA RENGİ AYARI
-    new_color = st.sidebar.color_picker(
-        "Uygulama Tema Rengini Seçin:", 
-        st.session_state['app_color']
-    )
-    if new_color != st.session_state['app_color']:
-        st.session_state['app_color'] = new_color
-        st.rerun()
-    
-    # MÜZİK/SESLİ DERS KONTROLÜ
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("🎶 Müzik/Sesli Ders Ayarları")
-    
-    MUSIC_OPTIONS = {
-        "Melodi 1 (Genel Fon)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        "Piyano Melodisi (Fon)": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        "Özel Şarkı Linki Gir": "CUSTOM_URL",
-        "Müzik Kapalı": ""
-    }
-    
-    # Yönetici Ses Düzeyi
-    yeni_volume = st.sidebar.slider("Yönetici Ses Seviyesi", 0.0, 1.0, st.session_state['music_volume'], step=0.1, key="admin_music_volume_slider")
-    if yeni_volume != st.session_state['music_volume']:
-        st.session_state['music_volume'] = yeni_volume
-        st.rerun() 
-
-    secilen_sarki_adi = st.sidebar.selectbox("Çalınacak Şarkıyı Seçin:", options=list(MUSIC_OPTIONS.keys()))
-    yeni_url = MUSIC_OPTIONS[secilen_sarki_adi]
-    
-    if secilen_sarki_adi == "Özel Şarkı Linki Gir":
-        custom_url_input = st.sidebar.text_input("MP3 Linkini Yapıştırın:", key="custom_music_url_input", value=st.session_state.get('music_url') if st.session_state.get('music_url') not in MUSIC_OPTIONS.values() else "")
-        if custom_url_input and custom_url_input.lower().endswith('.mp3'):
-             yeni_url = custom_url_input
-        else:
-             st.sidebar.warning("Lütfen geçerli bir MP3 linki girin. (Örn: ...mp3)")
-             yeni_url = st.session_state['music_url'] 
-    
-    if yeni_url != st.session_state['music_url']:
-        st.session_state['music_url'] = yeni_url
-        st.session_state['music_enabled'] = bool(yeni_url) 
-        st.rerun() 
-    
-    # PDF YÖNETİMİ (YÖNETİCİ KONTROLÜ)
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("📄 PDF Cevap Yönetimi")
-    with st.sidebar.form("pdf_management_form", clear_on_submit=True):
-        st.write("Yeni PDF Cevap Anahtarı Ekle")
-        yeni_kod = st.text_input("Döküman Kodu (Örn: DENEME_3)", max_chars=15).upper()
-        yeni_cevap = st.text_input("Cevap Anahtarı (Örn: ABCDC)", max_chars=30).upper()
-        
-        col_ekle, col_sil = st.columns(2)
-        
-        with col_ekle:
-            if st.form_submit_button("Ekle/Güncelle"):
-                if yeni_kod and yeni_cevap and yeni_cevap.isalpha():
-                    st.session_state['pdf_cevaplari'][yeni_kod] = yeni_cevap
-                    st.sidebar.success(f"'{yeni_kod}' kodu {len(yeni_cevap)} soru ile eklendi/güncellendi!")
-                    time.sleep(1)
-                    st.rerun()
-                else:
-                    st.sidebar.error("Lütfen Kodu ve sadece harflerden oluşan Cevap Anahtarını girin.")
-
-    # Mevcut PDF'leri Listeleme ve Silme
-    st.sidebar.markdown("#### Mevcut Dökümanlar")
-    if st.session_state['pdf_cevaplari']:
-        pdf_sil_secim = st.sidebar.selectbox(
-            "Silinecek Dökümanı Seçin:",
-            options=["Seçiniz"] + list(st.session_state['pdf_cevaplari'].keys()),
-            key="pdf_sil_selectbox"
-        )
-        
-        if pdf_sil_secim != "Seçiniz":
-            st.sidebar.info(f"Kod: **{pdf_sil_secim}** ({len(st.session_state['pdf_cevaplari'][pdf_sil_secim])} Soru)")
-            if st.sidebar.button(f"'{pdf_sil_secim}' Sil", key="btn_pdf_sil"):
-                del st.session_state['pdf_cevaplari'][pdf_sil_secim]
-                st.sidebar.success(f"Döküman '{pdf_sil_secim}' başarıyla silindi.")
-                time.sleep(1)
-                st.rerun()
-    else:
-        st.sidebar.warning("Sistemde kayıtlı PDF cevap anahtarı yok.")
-
-    
-    # DUYURU AYARLARI
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("📢 Site Duyurusu")
-    st.session_state['announcement'] = st.sidebar.text_area("Duyuru Metni:", value=st.session_state['announcement'])
-    st.session_state['announcement_color'] = st.sidebar.selectbox("Duyuru Kutusu Rengi:", ["success", "info", "warning", "error"], index=["success", "info", "warning", "error"].index(st.session_state['announcement_color']))
-    if st.sidebar.button("Duyuruyu Güncelle", key="btn_guncelle_duyuru"):
-        st.rerun()
-    
-    # SİSTEM KONTROLLERİ
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("🚨 Sistem Kontrolleri")
-    st.session_state['registration_allowed'] = st.sidebar.checkbox("Üye Kaydı Açık", st.session_state['registration_allowed'])
-    st.session_state['user_login_allowed'] = st.sidebar.checkbox("Üye Girişi Açık", st.session_state['user_login_allowed'])
-
-else:
-    # ZİYARETÇİ VE ÜYE İŞLEMLERİ
-    st.sidebar.button("🔒 Yönetici Girişi", on_click=lambda: st.session_state.update({'show_admin_login': True, 'show_user_login': False, 'show_user_register': False}))
-
-    # YÖNETİCİ GİRİŞ FORMU
-    if st.session_state['show_admin_login']:
-        with st.sidebar.form("admin_login_form"):
-            admin_pass = st.text_input("Yönetici Şifresi", type="password")
-            if st.form_submit_button("Giriş Yap"):
-                if admin_pass == ADMIN_PASSWORD:
-                    st.session_state['admin_mode'] = True
-                    st.session_state['show_admin_login'] = False
-                    st.rerun()
-                else:
-                    st.error("Hatalı yönetici şifresi.")
-    
-    # ÜYE GİRİŞ/ÇIKIŞ VE ZİYARETÇİ GİRİŞİ 
-    if st.session_state['user_logged_in']:
-        st.sidebar.success(f"Giriş Yapıldı: {st.session_state['current_user'].upper()}")
-        st.sidebar.button("🚪 Üye Çıkışı", on_click=user_logout)
-    else:
-        # Standart Giriş Butonu
-        st.sidebar.button("👤 Üye Girişi", on_click=lambda: st.session_state.update({'show_user_login': not st.session_state['show_user_login'], 'show_admin_login': False, 'show_user_register': False}))
-        
-        # Ziyaretçi Girişi Butonu
-        st.sidebar.button("🟢 Ziyaretçi Girişi", on_click=user_login_as_guest)
-
-        if st.session_state['show_user_login']:
-            with st.sidebar.form("user_login_form"):
-                user_name = st.text_input("Kullanıcı Adı")
-                user_pass = st.text_input("Şifre", type="password")
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.form_submit_button("Giriş Yap", on_click=user_login, args=(user_name, user_pass))
-                with col2:
-                    if st.form_submit_button("Şifremi Unuttum"):
-                         forgot_password_simulation(user_name or "Bilinmiyor", is_admin=False)
-    
-    # ÜYE KAYIT
-    if st.session_state['registration_allowed'] and not st.session_state['user_logged_in']:
-        st.sidebar.button("📝 Kaydol", on_click=lambda: st.session_state.update({'show_user_register': not st.session_state['show_user_register'], 'show_admin_login': False, 'show_user_login': False}))
-        if st.session_state['show_user_register']:
-            with st.sidebar.form("user_register_form"):
-                st.text_input("Kullanıcı Adı (Kaydol)")
-                st.text_input("E-posta Adresi")
-                st.text_input("Şifre Belirle", type="password")
-                if st.form_submit_button("Hesap Oluştur (Simülasyon)"):
-                    st.info(f"Kayıt işlemi başarıyla simüle edildi! Lütfen giriş yapın.")
-                    st.session_state['show_user_register'] = False
-                    st.rerun()
-    
-st.sidebar.markdown("---")
-st.sidebar.title("⭐ Yorumlar ve Geri Bildirim")
-
-# Yorum Formu
-with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
-    st.sidebar.write("Site hakkındaki yorumlarınızı buraya yazın.")
-    st.selectbox("Konu:", ["Genel Yorum", "Hata Bildirimi", "Tasarım Önerisi", "Teşekkür"])
-    st.text_area("Mesajınız:")
-    if st.form_submit_button("Yorumu Gönder"):
-        st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
-
-st.sidebar.markdown("---")
-st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.0")
+                        st.error("
