@@ -77,4 +77,6 @@ DEFAULT_DERSLER = {
     },
      "İngilizce": {
         "konu": "Appearance and Personality (Görünüş ve Kişilik)",
-        "anlatim": "İngilizce 7. sınıfın ilk konularından biri, insanların fiziksel görünümleri (tall, short, slim) ve
+        # Hata düzeltildi: String'i üç tırnak içine alarak içindeki tek tırnakları sorunsuz kullanabiliyoruz.
+        "anlatim": """İngilizce 7. sınıfın ilk konularından biri, insanların fiziksel görünümleri (tall, short, slim) ve kişilik özellikleri (generous, selfish, friendly) hakkında konuşmaktır. 
+        \n\n**Görünüş:** *He is tall and handsome.* \n**Kişilik
