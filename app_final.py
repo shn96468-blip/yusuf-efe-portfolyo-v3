@@ -126,9 +126,10 @@ Bu konular, İslam'ın temel inanç, ibadet ve ahlak prensiplerini içerir.""",
     },
     "Sosyal Bilgiler": {
         "konu": "7. Sınıf Sosyal Bilgiler Tüm Üniteler", 
+        # Konu anlatımı görseldeki detay ile güncellendi
         "anlatim": """7. Sınıf Sosyal Bilgiler dersi 7 ana üniteden oluşmaktadır:
         
-* **1. Ünite:** Birey ve Toplum (İletişim ve insan ilişkileri)
+* **1. Ünite: Birey ve Toplum (İletişim ve İnsan İlişkileri):** İletişim, duygu, düşünce veya bilgilerin akla gelebilecek her türlü yolla bir kişiden diğerine aktarılmasıdır. Etkili iletişimde empati kurmak önemlidir. Etkili iletişim: 'Ben dili' kullanmak, göz teması kurmak.
 * **2. Ünite:** Kültürel Miras (Tarih ve kültür varlıklarımız)
 * **3. Ünite:** İnsanlar Yerler ve Çevreler (Coğrafi konum ve yaşam)
 * **4. Ünite:** Bilim, Teknoloji ve Toplum (Gelişim ve değişim)
@@ -143,13 +144,13 @@ Bu ders, bireyin toplumsal hayattaki yerini, yaşadığı çevreyi ve dünyayı 
         ]
     },
     "İngilizce": {
-        "konu": "7. Sınıf İngilizce Tüm Üniteler", # Konu başlığı güncellendi
+        "konu": "7. Sınıf İngilizce Tüm Üniteler", 
         "anlatim": """7. Sınıf İngilizce dersi, öğrencilerin günlük hayatta ihtiyaç duyduğu temaları ve dilbilgisi yapılarını içerir:
         
 * **1. Dönem Üniteleri:** Appearance and Personality (Görünüş ve Kişilik), Sports (Spor), Biographies (Biyografiler), Wild Animals (Vahşi Hayvanlar), Television (Televizyon).
 * **2. Dönem Üniteleri:** Television (Tekrar/Devam), Celebrations (Kutlamalar), Dreams (Rüyalar), Public Buildings (Halk Binaları), Environment (Çevre), Planets (Gezegenler).
 
-**Not:** Bu alan, yalnızca ünite başlıklarını listelemek amaçlıdır. Detaylı konu anlatımı, Konu Anlatımı özelliğimizden hariç tutulmuştur.""", # Anlatım güncellendi
+**Not:** Bu alan, yalnızca ünite başlıklarını listelemek amaçlıdır. Detaylı konu anlatımı, Konu Anlatımı özelliğimizden hariç tutulmuştur.""",
         "sorular": [
             {"q": " What does 'generous' mean?", "a": ["Cimri", "Cömert", "Yorgun", "Sinirli"], "c": "Cömert"},
             {"q": " 'O çok uzun ve zayıf.' cümlesinin İngilizcesi hangisidir?", "a": ["He is short and plump.", "She is kind and helpful.", "He is tall and slim.", "She is short and handsome."], "c": "He is tall and slim."},
@@ -214,24 +215,20 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
     
     st.markdown(f"## 📚 {ders_adi} Dersi İçerikleri", unsafe_allow_html=True)
     
-    # Modül Navigasyonu (Çalışma Alanı kaldırıldı)
+    # Modül Navigasyonu (Eski "Ders Koçlarımız" ve "Çalışma Alanı" butonları yerine 3 yeni modül)
     col_konu, col_pdf, col_test = st.columns(3)
     
     with col_konu:
-        # Konu Anlatımı Butonu
         if st.button("📖 Konu Anlatımı", key="btn_konu_anlatim", use_container_width=True):
             st.session_state['secilen_modul'] = "Konu Anlatımı"
             st.session_state['test_konusu'] = "" # Konu değişince testi sıfırla
     with col_pdf:
-        # PDF Sonuç Kontrol Butonu
         if st.button("🔶 PDF Sonuç Kontrol", key="btn_pdf_kontrol", use_container_width=True):
             st.session_state['secilen_modul'] = "PDF Kontrol"
             st.session_state['test_konusu'] = ""
     with col_test:
-        # Deneme Sınavı Butonu
         if st.button("🔥 Deneme Sınavı", key="btn_deneme_sinavi", use_container_width=True):
             st.session_state['secilen_modul'] = "Deneme Sınavı"
-            # Deneme modülüne geçişte konuyu sıfırlama, kullanıcının girmesi beklenir.
             
     st.markdown("---")
 
@@ -239,6 +236,7 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
     if modul == "Konu Anlatımı":
         st.header(f"📖 {ders_adi} - Konu Anlatımı ve Özet")
         
+        # Konu başlığını dinamik olarak gösteren kısım
         st.info(f"👉 **Konu:** {ders_veri['konu']}") 
         
         st.markdown("---")
