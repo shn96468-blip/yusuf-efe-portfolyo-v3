@@ -271,8 +271,8 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
         st.file_uploader("Lütfen Cevap Anahtarını Kontrol Etmek İstediğiniz PDF'i Yükleyin:")
 
     elif modul == "Ders Koçlarımız":
-        st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap Simülasyonu)")
-        st.info("Bu modül, sanal bir ders koçuyla etkileşim simülasyonunu içerir. Sorunuzu yazın ve alandan çıkın.")
+        st.header("🧑‍🏫 Ders Koçlarımız (Anında Cevap ve Sesli Simülasyon)")
+        st.info("Konunuzu yazın, koç size o konuyu anlatsın ve sesli çıktı simülasyonunu dinleyin.")
         
         # Kullanıcıdan soruyu al
         koç_mesaj = st.text_area(
@@ -285,8 +285,32 @@ def render_ders_modulu(ders_adi, ders_veri, modul):
             # Koçun vereceği açıklayıcı (simüle edilmiş) cevap
             koç_anlatimi = ders_veri.get('koc_anlatimi', f"Üzgünüm, şu an için '{ders_adi}' dersi koçunun özel bir açıklama metni tanımlanmamış. Ancak genel olarak bu ders: {ders_veri['konu']} konularını kapsar.")
             
-            # Cevabı sadece konu anlatımı olarak gösterir
+            # 1. Metin Açıklaması
             st.success(f"**Koç Açıklaması:** {koç_anlatimi}")
+
+            st.markdown("---")
+            
+            # 2. Sesli Robot Simülasyonu
+            st.subheader("🔊 Sesli Robot Çıktısı (Simülasyon)")
+            
+            # Örnek bir ses dosyası (robot sesi simülasyonu)
+            # Not: Bu, gerçek bir robot sesi değildir, sadece Streamlit'in audio bileşenini kullanarak sesli çıktıyı simüle eder.
+            SESLI_ACIKLAMA_URL = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" # Daha nötr bir melodi/ses için farklı bir URL
+            
+            # HTML Audio etiketi kullanarak ses çalma
+            # controls: Oynat/Durdur butonu ve ses çubuğunu gösterir.
+            # autoplay: Sayfa yenilendiğinde otomatik başlatır (Bazı tarayıcılar engeller).
+            # loop: Tekrarlamaz.
+            st.markdown(f"""
+                <audio controls autoplay loop=false>
+                    <source src="{SESLI_ACIKLAMA_URL}" type="audio/mp3">
+                    Tarayıcınız ses etiketini desteklemiyor.
+                </audio>
+                <div style='margin-top: 10px; font-style: italic; color: #aaa;'>
+                (Yukarıdaki ses bileşeni, konunun sesli olarak okunduğunu simüle eder.)
+                </div>
+            """, unsafe_allow_html=True)
+
         else:
             st.info("Lütfen Koçunuza açıklanmasını istediğiniz bir konu yazın.")
 
