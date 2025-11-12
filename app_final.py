@@ -1,4 +1,3 @@
-
 import streamlit as st
 import time
 
@@ -74,8 +73,21 @@ st.markdown(
 # --- OTURUM DURUMU (SESSION STATE) BAŞLANGIÇ AYARLARI ---
 ADMIN_PASSWORD = "123" 
 
-# KELİME ÇEVİRİSİ İÇİN BASİT SÖZLÜK (Simülasyon amaçlı)
+# KELİME ÇEVİRİSİ İÇİN BASİT SÖZLÜK (Tüm Sınıflar Birleştirildi)
 KELIME_SOZLUGU = {
+    # --- 2. SINIF SEVİYESİ ÖRNEKLERİ (Basit Kelimeler) ---
+    "merhaba": "hello",
+    "görüşürüz": "goodbye",
+    "kedi": "cat",
+    "köpek": "dog",
+    "sarı": "yellow",
+    "mavi": "blue",
+    "bir": "one",
+    "iki": "two",
+    "lütfen": "please",
+    "teşekkürler": "thank you",
+    
+    # --- 7. SINIF SEVİYESİ (Orta Seviye Kelimeler) ---
     "elma": "apple",
     "kitap": "book",
     "koşmak": "run",
@@ -94,7 +106,19 @@ KELIME_SOZLUGU = {
     "öğrenme": "learning",
     "çeviri": "translation",
     "kelime": "word",
-    "nazik": "kind", # image_9cbf24.png'deki kelime için ekledik
+    "nazik": "kind", 
+    "tekrar": "again", # image_9cd5e3.png'daki kelime için ekledik
+    
+    # --- 12. SINIF SEVİYESİ ÖRNEKLERİ (Akademik/Karmaşık Kelimeler) ---
+    "küreselleşme": "globalization",
+    "sürdürülebilirlik": "sustainability",
+    "yenilik": "innovation",
+    "eleştirel": "critical",
+    "perspektif": "perspective",
+    "hipotez": "hypothesis",
+    "yeterlilik": "competence",
+    "adaptasyon": "adaptation",
+    "tükenmek": "extinction",
 }
 
 
@@ -664,7 +688,7 @@ def render_kelime_ceviri():
                 "Çevrilecek Kelimeyi Girin:", 
                 key="kelime_ceviri_input_text",
                 value=st.session_state['kelime_ceviri_input'],
-                placeholder="Örn: başarı"
+                placeholder="Örn: başarı veya one"
             ).lower().strip()
             
         with col_sonuc:
@@ -699,7 +723,6 @@ def render_kelime_ceviri():
                 if turkce_karsilik:
                     sonuc = f"**🇬🇧 {kelime_input.capitalize()}** ➡️ **🇹🇷 {turkce_karsilik.capitalize()}**"
                 else:
-                    # image_9ccefc.png hatasını simüle eden mesaj
                     sonuc = f"**{kelime_input.capitalize()}** kelimesinin Türkçe karşılığı sözlüğümüzde bulunamadı. (Simülasyon)"
                     
             st.session_state['kelime_ceviri_sonuc'] = sonuc
@@ -959,4 +982,4 @@ with st.sidebar.form("geri_bildirim_formu", clear_on_submit=True):
         st.sidebar.success(f"Yorumunuz başarıyla iletildi!")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.2 (Stil ve Koç Cevabı Düzeltildi)")
+st.sidebar.caption("Geliştirici: Yusuf Efe Şahin | Portfolyo v2.3 (Tüm Sınıf Sözlüğü Eklendi)")
