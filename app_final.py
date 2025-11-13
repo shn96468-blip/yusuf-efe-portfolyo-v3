@@ -3,6 +3,7 @@ import os
 
 # --- 1. SABİT İÇERİKLER ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
+# Tonguç 7. Sınıf kanalının direkt URL'si
 TONGUC_KANAL_LINK = "https://www.youtube.com/@tonguc7"
 YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
@@ -70,7 +71,7 @@ def render_subject_tab(tab_context, subject_key):
                 "📝 Detaylı Ders Notlarını Bul", 
                 url=get_search_link(subject_data['title'], "google"),
                 type="secondary",
-                # KRİTİK: Benzersiz anahtar eklendi
+                # KRİTİK: Benzersiz anahtar
                 key=f"notes_{subject_key}",
                 help=f"Bu buton, Google'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
             )
@@ -81,7 +82,7 @@ def render_subject_tab(tab_context, subject_key):
                 "✅ Test Çöz - Yeni Nesil Sorular", 
                 url=get_search_link("", "testcoz_quiz"), 
                 type="primary", 
-                # KRİTİK: Benzersiz anahtar eklendi
+                # KRİTİK: Benzersiz anahtar
                 key=f"quiz_{subject_key}",
                 help="Doğrudan testcoz.com sitesini açar."
             )
@@ -92,7 +93,7 @@ def render_subject_tab(tab_context, subject_key):
                 "📺 Tonguç Akademi 7. Sınıf Kanalı", 
                 url=get_search_link("", "tonguc_kanal"), 
                 type="primary",
-                # KRİTİK: Benzersiz anahtar eklendi
+                # KRİTİK: Benzersiz anahtar
                 key=f"tonguc_{subject_key}",
                 help=f"YouTube'da Tonguç Akademi 7. Sınıf kanalını doğrudan açar."
             )
