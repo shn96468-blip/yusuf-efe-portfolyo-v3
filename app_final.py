@@ -5,20 +5,17 @@ import os
 # Tüm harici API bağımlılıkları kaldırılmıştır.
 
 # --- 2. İÇERİK TANIMLARI ---
-# İNGİLİZCE ve DİN KÜLTÜRÜ içerikleri ve video haritaları kaldırılmıştır.
+# Sadece kalan 4 dersin içerikleri tanımlanmıştır.
 try:
-    # Örnek içerikler (Bu metinler, ayrı content dosyalarınızın içeriğidir.)
     MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
     TURKISH_CONTENT = "## 📝 Türkçe Konu Anlatımı Detayı" 
     SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı Detayı"
     SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı"
-    HISTORY_CONTENT = "## 📜 Tarih Konu Anlatımı Detayı" 
 
     MATH_VIDEOS = {}
     TURKISH_VIDEOS = {}
     SCIENCE_VIDEOS = {}
     SOCIAL_VIDEOS = {}
-    HISTORY_VIDEOS = {}
 
 except Exception:
     pass 
@@ -35,7 +32,6 @@ CONTENT_MAP = {
     "tr_konu": TURKISH_CONTENT, 
     "sci_konu": SCIENCE_CONTENT, 
     "soc_konu": SOCIAL_CONTENT, 
-    "his_konu": HISTORY_CONTENT
 }
 COACH_CONTENT = "## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik"
 
@@ -48,9 +44,7 @@ def toggle_content(key):
     if st.session_state.content_key == key: st.session_state.content_key = None
     else: st.session_state.content_key = key
 
-# Sabit video özelliği kaldırıldığı için toggle_video fonksiyonu kaldırılmıştır.
-
-# 7. Sınıf konularına göre Akıl Asistanı mantığı güncellenmiştir.
+# Sadece kalan 4 dersin konuları için tanıma mantığı korunmuştur.
 def generate_ai_explanation(topic):
     topic_lower = topic.lower().strip()
     response = ""
@@ -80,11 +74,7 @@ def generate_ai_explanation(topic):
                                         "etkin vatandaşlık", "küresel bağlantı", "üretim", "dağıtım", "tüketim"]):
         response = f"## 🌍 Akıl Konu Anlatımı: {topic.upper()} (SOSYAL BİLGİLER) 🎉"
 
-    # İNGİLİZCE ve DİN KÜLTÜRÜ blokları kaldırılmıştır.
-    
-    # 5. TARİH
-    elif "tarih" in topic_lower or "osmanlı" in topic_lower:
-        response = f"## 📜 Akıl Konu Anlatımı: {topic.upper()} (TARİH) 🎉"
+    # İNGİLİZCE, DİN KÜLTÜRÜ ve TARİH blokları kaldırılmıştır.
         
     else:
         # Konu tanınamazsa bu uyarı verilir.
@@ -99,14 +89,13 @@ st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
 # --- 7. SEKMELERİN TANIMLANMASI ---
-# İNGİLİZCE (eng) ve DİN KÜLTÜRÜ (rel) sekmeleri kaldırılmıştır.
-tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_his = st.tabs([
+# SADECE kalan 4 dersin sekmeleri ve Koç Modülü kalmıştır.
+tab_coach, tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
     "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
     "🧪 Fen Bilimleri",
-    "🌍 Sosyal Bilgiler",
-    "📜 Tarih İçerikleri" 
+    "🌍 Sosyal Bilgiler"
 ])
 
 # --- 8. DERS SEKMELERİ İÇİN GENEL FONKSİYON ---
@@ -164,23 +153,4 @@ with tab_coach:
     st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
     st.markdown("---") 
 
-    st.header("📝 Çalışma ve Rehberlik İçerikleri")
-    col_coach_btn1, col_coach_btn2, col_coach_btn3 = st.columns(3)
-    
-    with col_coach_btn1: st.button("📝 Çalışma Planı Oluştur", type="secondary", key="coach_plan") 
-    with col_coach_btn2: st.button("🧠 Motivasyon Teknikleri", type="secondary", key="coach_motivasyon")
-    with col_coach_btn3: st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
-    
-    st.markdown("---")
-    st.markdown(COACH_CONTENT, unsafe_allow_html=True)
-
-
-# ==============================================================================
-# --- 10. DERS SEKMELERİNİN ÇAĞRILMASI ---
-# ==============================================================================
-render_subject_tab(tab_math, "🔢 Matematik", "mat")
-render_subject_tab(tab_tr, "📝 Türkçe", "tr")
-render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
-render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
-# İNGİLİZCE ve DİN KÜLTÜRÜ çağrıları kaldırılmıştır.
-render_subject_tab(tab_his, "📜 Tarih", "his")
+    st.header("📝 Çalışma ve Rehber
