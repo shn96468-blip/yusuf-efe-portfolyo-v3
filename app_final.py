@@ -3,10 +3,10 @@ import os
 
 # --- 1. SABİT İÇERİKLER ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
-YOUTUBE_LINK_BASLANGIC = "https://www.youtube.com/results?search_query="
+YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
-# Soru Çözme linkini olduğu gibi bıraktık.
-SORU_COZME_LINK = "https://www.ornek-sorucozme-sitesi.com" 
+# KRİTİK DEĞİŞİKLİK: Soru çözme linkini doğrudan verilen siteye ayarlıyoruz.
+TESTCOZ_ONLINE_LINK = "https://testcoz.online" 
 
 
 # --- 2. DERS VE KONU TANIMLARI ---
@@ -39,15 +39,25 @@ st.markdown("---")
 
 # --- 4. ARAMA FONKSİYONLARI ---
 def get_search_link(query, search_engine):
-    """Verilen sorgu için Google veya YouTube arama linki oluşturur."""
-    query = f"{query} 7. Sınıf Konu Anlatımı" # Arama sorgusuna sınıf seviyesini ekledik
-    query = query.replace(' ', '+') # URL'ye uygun hale getir
+    """Verilen sorgu için Google, YouTube veya Test Çöz linki oluşturur."""
     
-    if search_engine == "google":
-        return f"{GOOGLE_LINK_BASLANGIC}{query}"
-    elif search_engine == "youtube":
-        return f"{YOUTUBE_LINK_BASLANGIC}{query}"
-    return "#"
+    if search_engine == "youtube":
+        # Video araması: Tonguç'a yönlendir
+        search_query = f"{query} tonguç 7. sınıf konu anlatımı"
+        link_baslangic = YOUTUBE_LINK_BASLANGIS
+    
+    elif search_engine == "testcoz_quiz":
+        # Soru çözme: TESTCOZ.ONLINE linkini doğrudan döndür
+        return TESTCOZ_ONLINE_LINK
+    
+    else: # Google veya ders notu aramaları için
+        search_query = f"{query} 7. Sınıf Konu Anlatımı"
+        link_baslangic = GOOGLE_LINK_BASLANGIC
+    
+    # URL'ye uygun hale getir
+    final_query = search_query.replace(' ', '+')
+    
+    return f"{link_baslangic}{final_query}"
 
 
 # --- 5. DERS SEKMELERİNİ ÇİZME VE İÇERİK MANTIĞI ---
@@ -69,56 +79,24 @@ def render_subject_tab(tab_context, subject_key):
                 help=f"Bu buton, Google'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
             )
 
-        # --- B. SORU ÇÖZME KUTUCUĞU (HARİCİ LİNK) ---
+        # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.ONLINE) ---
         with col_quiz:
             st.link_button(
-                "❓ Soru Çözme / Deneme", 
-                url=SORU_COZME_LINK, 
+                "✅ Test Çöz - Yeni Nesil Sorular", 
+                url=get_search_link("", "testcoz_quiz"), 
                 type="secondary", 
-                help="Farklı bir sayfada Soru Çözme Platformunu açar."
+                help="TESTCOZ.ONLINE sitesinde 7. Sınıf Testlerini ve Yazılı Sorularını açar."
             )
         
-        # --- C. VİDEO İZLE KUTUCUĞU ---
+        # --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ YOUTUBE ARAMA) ---
         with col_video:
             st.link_button(
-                "📺 Tüm Videoları Gör", 
+                "📺 Tüm Tonguç Videolarını Gör", 
                 url=get_search_link(subject_data['title'], "youtube"), 
                 type="secondary",
-                help=f"Bu buton, YouTube'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
+                help=f"Bu buton, YouTube'da '{subject_data['title']} tonguç 7. sınıf konu anlatımı' araması yapar."
             )
         
         st.markdown("---")
         
-        # --- KONULARA GÖRE ÖZEL ARAMA LİNKLERİ ---
-        st.subheader("Konulara Göre Hızlı Erişim")
-        st.info("Aşağıdaki konulara tıklayarak, doğrudan o konunun ders notlarına veya videolarına ulaşabilirsiniz.")
-        
-        cols_content = st.columns(3)
-        
-        for i, topic in enumerate(subject_data['topics']):
-            col = cols_content[i % 3]
-            
-            # Google Arama Linki (Notlar için)
-            google_link = get_search_link(topic, "google")
-            # YouTube Arama Linki (Videolar için)
-            youtube_link = get_search_link(topic, "youtube")
-            
-            with col:
-                st.markdown(f"**📚 {topic}**")
-                st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
-                st.link_button("Videoyu YouTube'da Bul", url=youtube_link, type="secondary", key=f"{subject_key}_{topic}_y")
-                st.markdown("---")
-
-
-# --- 6. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI ---
-tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
-    SUBJECT_MAP["mat"]["title"], 
-    SUBJECT_MAP["tr"]["title"], 
-    SUBJECT_MAP["sci"]["title"],
-    SUBJECT_MAP["soc"]["title"]
-])
-
-render_subject_tab(tab_math, "mat")
-render_subject_tab(tab_tr, "tr")
-render_subject_tab(tab_sci, "sci")
-render_subject_tab(tab_soc, "soc")
+        # --- KONULARA GÖRE ÖZEL ARAMA LİNKLER
