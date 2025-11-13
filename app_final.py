@@ -9,10 +9,10 @@ except ImportError:
     st.warning("Gerekli 'google-api-python-client' kütüphanesi bulunamadı. Lütfen 'requirements.txt' dosyanızı kontrol edin.")
     build = None
 
-# API ANAHTARI: secrets.toml dosyasından okunur
+# API ANAHTARI: secrets.toml dosyasından okunur (EN GÜVENLİ YÖNTEM)
 YOUTUBE_API_KEY = None
 try:
-    # secrets.toml dosyasındaki adı kontrol edin: youtube_api
+    # Anahtar adının "youtube_api" olduğuna dikkat edin!
     YOUTUBE_API_KEY = st.secrets["youtube_api"] 
 except:
     pass # Anahtar bulunamazsa sessizce devam et
@@ -56,7 +56,7 @@ except Exception:
 if 'content_key' not in st.session_state: st.session_state.content_key = None 
 if 'video_key' not in st.session_state: st.session_state.video_key = None 
 if 'ai_response' not in st.session_state:
-    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYA Genel Bir Şey Sorun."
+    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYADA Genel Bir Şey Sorun."
     st.session_state.last_topic = ""
 if 'youtube_search_query' not in st.session_state: st.session_state.youtube_search_query = ""
 if 'search_results_youtube' not in st.session_state: st.session_state.search_results_youtube = None
@@ -114,7 +114,7 @@ def toggle_video(key):
 def generate_ai_explanation(topic):
     topic_lower = topic.lower().strip()
     response = ""
-    # MATEMATİK: ORAN, YÜZDE, CEBİRSEL vb. eklendi (Görüntülerdeki hatayı çözer)
+    # MATEMATİK: ORAN, YÜZDE, CEBİRSEL vb. eklendi (Görüntülerdeki hataları çözer)
     if "rasyonel" in topic_lower or "tam sayı" in topic_lower or "cebirsel" in topic_lower or "oran" in topic_lower or "yüzde" in topic_lower:
         response = f"## 🧠 Akıl Konu Anlatımı: {topic.upper()} (MATEMATİK) 🎉"
         
@@ -125,7 +125,7 @@ def generate_ai_explanation(topic):
         response = f"## 🧪 Akıl Konu Anlatımı: {topic.upper()} (FEN) 🎉"
     
     else:
-        response = f"""## ⚠️ Akıl Asistan Uyarısı: '{topic.upper()}' şu an için anlatabileceğim ana ders konuları arasında değildir."""
+        response = f"""## ⚠️ Akıl Asistanı Uyarısı: '{topic.upper()}' şu an için anlatabileceğim ana ders konuları arasında değildir."""
         
     st.session_state.ai_response = response
     st.session_state.last_topic = topic
