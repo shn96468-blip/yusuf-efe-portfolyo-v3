@@ -1,11 +1,11 @@
 import streamlit as st
 import os
 
-# --- 1. SABİT İÇERİKLER ---
+# --- 1. SABİT İÇERİKLER (APISIZ VE STABIL) ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
 YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
-# KRİTİK DEĞİŞİKLİK: Soru çözme linkini doğrudan verilen siteye ayarlıyoruz.
+# Soru çözme için TESTCOZ.ONLINE linkini doğrudan ayarlıyoruz.
 TESTCOZ_ONLINE_LINK = "https://testcoz.online" 
 
 
@@ -99,4 +99,36 @@ def render_subject_tab(tab_context, subject_key):
         
         st.markdown("---")
         
-        # --- KONULARA GÖRE ÖZEL ARAMA LİNKLER
+        # --- KONULARA GÖRE ÖZEL ARAMA LİNKLERİ ---
+        st.subheader("Konulara Göre Hızlı Erişim")
+        st.info("Aşağıdaki konulara tıklayarak, doğrudan o konunun ders notlarına veya Tonguç videolarına ulaşabilirsiniz.")
+        
+        cols_content = st.columns(3)
+        
+        for i, topic in enumerate(subject_data['topics']):
+            col = cols_content[i % 3]
+            
+            # Google Arama Linki (Notlar için)
+            google_link = get_search_link(topic, "google")
+            # YouTube Arama Linki (Tonguç Videoları için)
+            youtube_link = get_search_link(topic, "youtube")
+            
+            with col:
+                st.markdown(f"**📚 {topic}**")
+                st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
+                st.link_button("Videoyu Tonguç ile Bul", url=youtube_link, type="secondary", key=f"{subject_key}_{topic}_y")
+                st.markdown("---")
+
+
+# --- 6. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI ---
+tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
+    SUBJECT_MAP["mat"]["title"], 
+    SUBJECT_MAP["tr"]["title"], 
+    SUBJECT_MAP["sci"]["title"],
+    SUBJECT_MAP["soc"]["title"]
+])
+
+render_subject_tab(tab_math, "mat")
+render_subject_tab(tab_tr, "tr")
+render_subject_tab(tab_sci, "sci")
+render_subject_tab(tab_soc, "soc")
