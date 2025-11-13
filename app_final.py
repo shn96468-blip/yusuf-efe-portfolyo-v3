@@ -2,7 +2,7 @@ import streamlit as st
 import os
 
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
-# API bağımlılığı tamamen kaldırıldı. Uygulama stabil çalışacaktır.
+# API bağımlılığı tamamen kaldırılmıştır. Uygulama stabil çalışacaktır.
 
 # --- 2. İÇERİK TANIMLARI ---
 # İçerikler manuel olarak girilmelidir. (Türkçe içeriği örnek olarak dolduruldu)
@@ -31,10 +31,7 @@ SOCIAL_VIDEOS = {}
 
 # --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
 if 'content_key' not in st.session_state: st.session_state.content_key = None 
-if 'ai_response' not in st.session_state:
-    # Akıl Öğretmen bölümü için yer tutucu mesajı
-    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYA Genel Bir Şey Sorun."
-    st.session_state.last_topic = ""
+# Bu kodda Akıl Öğretmen (AI) bölümü olmadığı için 'ai_response' ve 'last_topic' kaldırıldı.
 
 # --- HARİTALAR VE SABİTLER ---
 CONTENT_MAP = {
@@ -44,28 +41,10 @@ CONTENT_MAP = {
     "soc_konu": SOCIAL_CONTENT, 
 }
 
-# --- 5. BUTON VE AI MANTIĞI ---
+# --- 5. BUTON MANTIĞI ---
 def toggle_content(key):
     if st.session_state.content_key == key: st.session_state.content_key = None
     else: st.session_state.content_key = key
-
-# AKIL ASİSTANININ SADECE YER TUTUCU GÖSTEREN FONKSİYONU
-def generate_ai_explanation(topic):
-    topic_clean = topic.strip().upper()
-    
-    if not topic_clean:
-        st.session_state.ai_response = f"## ⚠️ Akıl Asistanı Uyarısı: Lütfen bir konu adı veya soru yazınız."
-        return
-
-    st.session_state.last_topic = topic
-    
-    # API yok, bu yüzden manuel giriş için yer tutucu gösterilir.
-    st.session_state.ai_response = f"""
-## 👨‍🏫 Akıl Öğretmen: {topic_clean} Konu Anlatımı ✨
-
-**Konu Anlatımı Detayı:** Lütfen **{topic_clean}** konusunun detaylı içeriğini bu alana giriniz. (Markdown formatını kullanabilirsiniz.)
-
-"""
 
 
 # --- 6. SAYFA AYARLARI ---
@@ -73,9 +52,8 @@ st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eği
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# --- 7. SEKMELERİN TANIMLANMASI ---
-tab_ai, tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
-    "🤖 Konu Anlatımı Asistanı", 
+# --- 7. SEKMELERİN TANIMLANMASI (SADECE 4 DERS SEKMESİ) ---
+tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
     "🧪 Fen Bilimleri",
@@ -128,35 +106,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
             st.info(f"Yukarıdaki butona tıklayarak {subject_title} dersi içeriğini görebilirsiniz.")
 
 # ==============================================================================
-# --- 9. KONU ANLATIMI ASİSTANI (MANUEL YER TUTUCU) ---
-# ==============================================================================
-with tab_ai: 
-    st.header("🤖 Akıl Öğretmen Asistanı - Konu Anlatımı")
-    
-    st.info("Bu asistan, API kullanmaz. Manuel içerik girişi yapmanız için bir arayüz sağlar.")
-    st.markdown("---")
-
-    st.subheader("❓ Akıl Öğretmen'e Sor")
-    
-    input_topic = st.text_input(
-        "Konu Adını veya Sorunuzu Yazınız (Örn: Rasyonel Sayılar, Söz Sanatları, Mitoz)", 
-        value=st.session_state.last_topic, key="topic_input"
-    )
-    
-    st.button(
-        "Akıl'dan Konuyu Anlatmasını İsteyin", 
-        type="secondary", key="ai_generate",
-        on_click=generate_ai_explanation, args=(input_topic,)
-    )
-    
-    st.markdown("---")
-    # Akıl Öğretmen cevabı (sadece yer tutucu mesajı)
-    st.markdown(st.session_state.ai_response, unsafe_allow_html=True) 
-    st.markdown("---") 
-
-
-# ==============================================================================
-# --- 10. DERS SEKMELERİNİN ÇAĞRILMASI ---
+# --- 9. DERS SEKMELERİNİN ÇAĞRILMASI ---
 # ==============================================================================
 render_subject_tab(tab_math, "🔢 Matematik", "mat")
 render_subject_tab(tab_tr, "📝 Türkçe", "tr")
