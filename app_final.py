@@ -1,24 +1,44 @@
-# YAPAY ZEKA (AKIL) FONKSİYONU - METİN BLOKLARI UZATILDI
+import streamlit as st
+
+# --- 1. STREAMLIT DURUM YÖNETİMİ (Session State) ---
+if 'content_key' not in st.session_state:
+    st.session_state.content_key = None 
+
+# AI asistanı (Akıl) için durum yönetimi.
+if 'ai_response' not in st.session_state:
+    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel Sayılar, Söz Sanatları, Mitoz)"
+    st.session_state.last_topic = ""
+
+# --- BUTON TIKLAMA İŞLEVLERİ ---
+
+def toggle_content(key):
+    # Manuel Konu Anlatımı Butonları için
+    if st.session_state.content_key == key:
+        st.session_state.content_key = None
+    else:
+        st.session_state.content_key = key
+
+# YAPAY ZEKA (AKIL) FONKSİYONU - ÖĞRETMEN GİBİ DETAYLI VE UZUN METİNLER
 def generate_ai_explanation(topic):
     topic_lower = topic.lower().strip()
     response = ""
 
     # ===============================================
-    # 7. SINIF MATEMATİK KONULARI (DAHA DA UZUN CEVAPLAR)
+    # 7. SINIF MATEMATİK KONULARI (DAHA DA UZUN VE DETAYLI)
     # ===============================================
     if "rasyonel sayılar" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Rasyonel Sayılar (Öğretmen Detayında!)
         
-        **Tanım ve Kavramlar:** Rasyonel sayılar, $a$ bir tam sayı ve $b$ sıfırdan farklı bir tam sayı olmak üzere, $\\frac{a}{b}$ şeklinde yazılabilen sayılar kümesidir ($\\mathbb{Q}$). Unutmayın, her tam sayı, paydası 1 olan bir rasyonel sayıdır. Kesir, ondalık gösterim ve devirli ondalık gösterimler rasyonel sayıları ifade etmenin farklı yollarıdır.
+        **Tanım ve Kavramlar:** Rasyonel sayılar, $a$ bir tam sayı ve $b$ sıfırdan farklı bir tam sayı olmak üzere, $\\frac{a}{b}$ şeklinde yazılabilen sayılar kümesidir ($\\mathbb{Q}$). Her tam sayı (örneğin 5) paydası 1 olan bir rasyonel sayıdır (5/1). Ondalık gösterim ve devirli ondalık gösterimler de rasyonel sayıları ifade etmenin farklı yollarıdır.
 
         **Toplama ve Çıkarma İşlemleri:** Rasyonel sayılarda toplama ve çıkarma yapmanın temel kuralı, **paydaların eşit olmasıdır**. Paydalar eşitlendikten sonra, sadece paylar toplanır veya çıkarılır. Payda aynen yazılır.
         * **Örnek 1 (Eşitleme):** $\\frac{1}{2} + \\frac{1}{4}$ işleminde paydalar 4'te eşitlenir. $\\frac{1 \\cdot 2}{2 \\cdot 2} + \\frac{1}{4} = \\frac{2}{4} + \\frac{1}{4} = \\mathbf{\\frac{3}{4}}$
-        * **Örnek 2 (Tam Sayılarla):** $3 + \\frac{1}{5}$ işleminde $3 = \\frac{15}{5}$ kabul edilir. $\\frac{15}{5} + \\frac{1}{5} = \\mathbf{\\frac{16}{5}}$
+        * **Örnek 2 (Tam Sayılarla):** $3 - \\frac{1}{5}$ işleminde $3 = \\frac{15}{5}$ kabul edilir. $\\frac{15}{5} - \\frac{1}{5} = \\mathbf{\\frac{14}{5}}$
 
         **Çarpma ve Bölme İşlemleri:**
-        * **Çarpma:** İşlem çok basittir! **Paylar kendi arasında**, **paydalar kendi arasında** çarpılır. $\\frac{2}{3} \\cdot \\frac{5}{7} = \\mathbf{\\frac{10}{21}}$
-        * **Bölme:** **Birinci rasyonel sayı aynen yazılır**, **ikinci rasyonel sayı ters çevrilir** ve çarpma işlemi yapılır. $\\frac{1}{2} : \\frac{3}{4} \\rightarrow \\frac{1}{2} \\cdot \\frac{4}{3} = \\mathbf{\\frac{4}{6}} = \\mathbf{\\frac{2}{3}}$
+        * **Çarpma:** Paylar kendi arasında, paydalar kendi arasında çarpılır. **İşaret kuralını unutmayın!** $\\frac{2}{3} \\cdot (-\\frac{5}{7}) = \\mathbf{-\\frac{10}{21}}$
+        * **Bölme:** Birinci rasyonel sayı aynen yazılır, ikinci rasyonel sayı ters çevrilir ve çarpma işlemi yapılır. $\\frac{1}{2} : \\frac{3}{4} \\rightarrow \\frac{1}{2} \\cdot \\frac{4}{3} = \\mathbf{\\frac{4}{6}} = \\mathbf{\\frac{2}{3}}$
         """
     elif "tam sayılar" in topic_lower:
         response = """
@@ -26,10 +46,9 @@ def generate_ai_explanation(topic):
         
         **Kümeler ve Gösterim:** Tam sayılar kümesi ($\\mathbb{Z}$), doğal sayılar kümesini ($\\mathbb{N}$) de içine alan daha geniş bir kümedir. Negatif sayılar ($-1, -2, -3, ...$), pozitif sayılar ($1, 2, 3, ...$) ve nötr olan sıfır (0) tam sayıları oluşturur. Sayı doğrusunun sağ tarafı pozitif, sol tarafı negatiftir.
         
-        **Çarpma ve Bölmede İşaret Kuralları (Kritik Nokta):**
-        * **Aynı İşaretlilerin Çarpımı/Bölümü:** Sonuç **her zaman POZİTİFTİR**. $(-5) \\cdot (-3) = +15$ ve $(-10) : (-2) = +5$
-        * **Farklı İşaretlilerin Çarpımı/Bölümü:** Sonuç **her zaman NEGATİFTİR**. $(+4) \\cdot (-2) = -8$ ve $(+15) : (-3) = -5$
-
+        **Çıkarma İşlemi (Kural):** Çıkarma işlemi toplama işlemine dönüştürülür ve çıkan sayının işareti ters çevrilir.
+        * **Örnek:** $(-7) - (-3) \\rightarrow (-7) + (+3) = \\mathbf{-4}$ (Büyük sayıdan küçük sayı çıkarılır, büyüğün işareti alınır).
+        
         **Tam Sayıların Kuvveti:**
         * **Kural:** Negatif bir tam sayının **çift kuvvetleri pozitif** olurken, **tek kuvvetleri negatif** olur. Bu kural parantezli kullanımlarda geçerlidir.
         * **Örnek:** $(-5)^2 = +25$, $(-5)^3 = -125$. **DİKKAT:** Parantezsiz durumda $-2^4 = -16$ (çünkü eksi işareti etkilenmez).
@@ -38,122 +57,8 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Cebirsel İfadeler (Öğretmen Detayında!)
         
-        **Tanım ve Yapı:** Cebirsel ifadeler, en az bir değişken (bilinmeyen) ve en az bir işlem içeren matematiksel ifadelerdir. Örneğin, 'Bir sayının 3 katının 5 fazlası' ifadesi $\\mathbf{3x + 5}$ şeklinde gösterilir. Cebirsel ifadelerde toplama ve çıkarma yapılırken sadece **benzer terimler** (değişkeni ve üssü aynı olanlar) toplanıp çıkarılabilir.
+        **Tanım ve Yapı:** Cebirsel ifadeler, en az bir değişken (bilinmeyen) ve en az bir işlem içeren matematiksel ifadelerdir. Örneğin, 'Bir sayının 3 katının 5 fazlası' ifadesi $\\mathbf{3x + 5}$ şeklinde gösterilir. Toplama ve çıkarma yapılırken sadece **benzer terimler** (değişkeni ve üssü aynı olanlar) toplanıp çıkarılabilir.
 
         **Temel Kavramların Ayrımı:** Cebirsel ifadeleri anlamak için bu terimleri çok iyi bilmelisiniz:
-        1.  **Değişken (Bilinmeyen):** $x, y, a, k$ gibi harflerle gösterilen ve değeri değişebilen semboldür.
-        2.  **Katsayı:** Değişkenin önündeki çarpım durumunda olan sayıdır. ($\mathbf{4}x - 7$'de $x$'in katsayısı $4$'tür.)
-        3.  **Sabit Terim:** Yanında değişken bulunmayan sayıdır. ($\mathbf{4x - 7}$'de sabit terim $\mathbf{-7}$'dir.)
-        4.  **Terim:** Bir cebirsel ifadede artı (+) veya eksi (-) işaretleriyle ayrılmış her bir kısım bir terimdir. ($4x - 7$ ifadesi iki terimlidir: $4x$ ve $-7$.)
-        """
-    
-    # ===============================================
-    # 7. SINIF TÜRKÇE KONULARI (DAHA DA UZUN CEVAPLAR)
-    # ===============================================
-    elif "fiiller" in topic_lower or "eylem" in topic_lower or "ek fiil" in topic_lower or "zarflar" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Fiiller, Ek Fiil ve Zarflar (Öğretmen Detayında!)
-        
-        **Fiiller (Eylemler):** Bir iş, oluş veya durum bildiren kelimelerdir. Fiiller anlamlarına göre:
-        1.  **İş (Kılış) Fiilleri:** Öznenin iradesiyle gerçekleşir ve nesne alabilirler. (Neyi, Kimi?) $\rightarrow$ **Okumak** (Kitabı okumak).
-        2.  **Oluş Fiilleri:** Öznenin iradesi dışında, kendiliğinden zamanla gerçekleşir. $\rightarrow$ **Büyümek**, **Paslanmak**.
-        3.  **Durum Fiilleri:** Öznenin içinde bulunduğu durumu bildirir, nesne almazlar. $\rightarrow$ **Uyumak**, **Gülmek**.
-        
-        **Ek Fiil (Ek Eylem):** 'İmek' fiilidir. İki hayati görevi vardır:
-        1.  **İsimleri Yüklem Yapmak:** 'Burası dünkü maçın **yeriydi**.' (yer-i-idi)
-        2.  **Basit Zamanlı Fiili Birleşik Zamanlı Yapmak:** 'Güneş her gün **doğuyormuş**.' (Şimdiki zamanın rivayeti)
-        
-        **Zarflar (Belirteçler):** Fiilin nasıl, ne zaman, ne kadar ve nereye yapıldığını belirten sözcüklerdir.
-        * **Durum (Hal) Zarfları (Nasıl?):** 'Çocuk **hızlı** koşuyor.'
-        * **Zaman Zarfları (Ne zaman?):** 'Misafirler **az önce** geldi.'
-        * **Yer-Yön Zarfları (Nereye?):** 'Dışarı **çık**.'
-        """
-    elif "söz sanatları" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Söz Sanatları (Öğretmen Detayında!)
-        
-        Anlatıma güzellik, çekicilik ve etki gücü katan sanatlardır.
-        
-        **1. Benzetme (Teşbih):** Zayıf bir varlığın, ortak özellik bakımından güçlü bir varlığa benzetilmesidir. Dört temel ögesi vardır: benzeyen, benzetilen, benzetme yönü, benzetme edatı.
-        * **Örnek:** 'Çocuğun dişleri **inci gibi** parlıyordu.' (Benzeyen: diş, Benzetilen: inci, Benzetme Yönü: parlaklık, Benzetme Edatı: gibi)
-        
-        **2. Kişileştirme (Teşhis):** İnsan dışındaki varlıklara insan özellikleri yüklenmesidir.
-        * **Örnek:** 'Kış gelince **ağaçlar** uykusuna **daldı**.' (Uyumak insana ait bir özelliktir.)
-        
-        **3. Abartma (Mübalağa):** Bir durumu, inandırıcı olmayacak derecede büyütmek veya küçültmek.
-        * **Örnek:** 'Sana dünyalar kadar **ödev** verdim.' (Çokluk abartılmıştır.)
-        """
-
-    # ===============================================
-    # 7. SINIF FEN BİLİMLERİ KONULARI (DAHA DA UZUN CEVAPLAR)
-    # ===============================================
-    elif "hücre" in topic_lower or "mitoz" in topic_lower or "mayoz" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Hücre ve Bölünmeler (Öğretmen Detayında!)
-        
-        **Hücre:** Canlıların en küçük yapısal ve işlevsel birimidir. Hayvan hücresi ve bitki hücresi arasında organel farkları vardır (Bitkide hücre duvarı, kloroplast, büyük koful bulunur).
-        
-        **1. Mitoz Bölünme:**
-        * **Amaç:** Büyüme, gelişme, yıpranan doku ve organların onarımı. Tek hücrelilerde üremeyi sağlar.
-        * **Sonuç:** Ana hücre ile **aynı** kromozom sayısına ve genetik yapıya sahip **2 yeni hücre** oluşur ($2n \\rightarrow 2n$).
-        
-        **2. Mayoz Bölünme:**
-        * **Amaç:** Eşeyli üreme için **üreme hücrelerini (gamet)** oluşturmak.
-        * **Sonuç:** Kromozom sayısı **yarıya iner** ve genetik yapısı farklı **4 yeni hücre** oluşur ($2n \\rightarrow n$). Mayoz, krossing over (parça değişimi) ile **tür içi çeşitliliği** sağlar.
-        """
-    elif "kütle ve ağırlık" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Kütle ve Ağırlık İlişkisi (Öğretmen Detayında!)
-        
-        Bu iki fiziksel kavram arasındaki ayrımı netleştirelim. Aralarındaki fark, kütlenin değişmez, ağırlığın ise kuvvete bağlı olarak değişir olmasıdır.
-        
-        * **Kütle (m):** Bir cisimdeki madde miktarıdır. Evrenin neresine giderseniz gidin **değişmez**. Ölçüm aracı **eşit kollu terazi**dir. Birimi kilogramdır (kg).
-        * **Ağırlık (G):** Kütleye etki eden **yer çekimi kuvvetidir**. Bu kuvvet, gezegenlere göre değişir. Ölçüm aracı **dinamometre**dir. Birimi Newton (N)'dur.
-        
-        **Örnek:** Kütlesi 70 kg olan bir öğrencinin Dünya'daki kütlesi de 70 kg, Ay'daki kütlesi de 70 kg'dır. Ancak Dünya'daki ağırlığı $\\approx 700$ N iken, Ay'daki ağırlığı $\\approx 117$ N'dur (çünkü Ay'ın çekimi Dünya'nın $\\frac{1}{6}$'sı kadardır).
-        """
-        
-    # ===============================================
-    # 7. SINIF SOSYAL BİLGİLER KONULARI (DAHA DA UZUN CEVAPLAR)
-    # ===============================================
-    elif "kültür ve miras" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Kültür ve Miras (Öğretmen Detayında!)
-        
-        **Kültür:** Bir toplumun tarih boyunca ürettiği maddi (somut) ve manevi (soyut) tüm değerlerin bütünüdür. Bir toplumun yaşam tarzını, inançlarını, sanatını ve geleneklerini kapsar.
-        
-        **Kültürel Mirasın Unsurları:**
-        1.  **Somut Miras (Maddi):** Gözle görülebilen, elle tutulabilen eserlerdir. Mimari yapılar (cami, saray), kıyafetler, yemekler, aletler ve tarihi eserler bu gruba girer. **Örnek:** Ayasofya Cami, Türk kahvesi.
-        2.  **Soyut Miras (Manevi):** Gelenekler, sözlü anlatımlar, dil, inançlar, halk oyunları ve törenlerdir. **Örnek:** Hacivat ve Karagöz gölge oyunu, Alevi-Bektaşi semahı.
-        
-        Bu mirasları korumak, bir milleti millet yapan değerleri geleceğe taşımaktır.
-        """
-    elif "birey ve toplum" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Birey ve Toplum (Rol ve Statü)
-        
-        Bireyler, toplum içinde doğar ve toplumun bir parçası olur. Toplum içindeki yerimizi ve görevlerimizi **Statü** ve **Rol** kavramları belirler.
-        
-        **Statü:** Bireyin toplum içindeki pozisyonudur. Statü, kazanılmış (çalışarak elde edilen, Örn: Doktor) veya doğuştan (cinsiyet, ırk, Örn: Evlat) olabilir.
-        
-        **Rol:** Bireyin sahip olduğu statü gereği sergilemesi beklenen davranışlardır. Her statünün bir rolü vardır.
-        * **Örnek:** Yusuf Efe'nin Statüsü: **Öğrenci** $\\rightarrow$ Rolü: **Ders çalışmak, okula gitmek, saygılı olmak.**
-        * **Örnek:** Annenizin/Babanızın Statüsü: **Ebeveyn** $\rightarrow$ Rolü: **Çocuğuna bakmak, eğitim vermek, rehberlik etmek.**
-        
-        Rollerinizi doğru oynamak, toplumun düzenini sağlamak için önemlidir.
-        """
-        
-    # ===============================================
-    # DİĞER TÜM KONULAR REDDEDİLİR (Sohbet Yasağı)
-    # ===============================================
-    else:
-        response = f"""
-        ## ⚠️ Akıl Asistan Uyarısı
-        
-        **'{topic[:20].upper() + ('...' if len(topic) > 20 else '')}'** şu an için anlatabileceğim konular arasında değildir. 
-        
-        Ben sadece 7. Sınıf **Matematik (1. Dönem), Türkçe Dil Bilgisi, Fen (Mitoz/Mayoz/Kütle-Ağırlık) ve Sosyal Bilgiler (Kültür/Birey-Toplum)** ana konularını **detaylı** anlatmak üzere programlanmış bir öğrenci asistanıyım ve **sohbet özelliğim kapalıdır.**
-        """
-        
-    st.session_state.ai_response = response
-    st.session_state.last_topic = topic
+        1.  **Değişken (Bilinmeyen):** $x, y, a$ gibi harflerle gösterilen ve değeri değişebilen semboldür.
+        2.  **Katsayı:** Değişkenin önünd
