@@ -1,103 +1,93 @@
+# -*- coding: utf-8 -*-
+# Kodlama sorununu aşmak için UTF-8 formatı korunmuştur.
+
 import streamlit as st
 import os
+from google import genai
+from google.genai.errors import APIError 
 
-# --- 1. API BAĞIMLILIĞI YOK ---
-# Tüm API bağımlılıkları ve kodlama hatasına neden olan özellikler (Otomatik Konu Anlatımı) kaldırılmıştır.
+# --- 1. KÜTÜPHANE VE API KURULUMU ---
 
-# --- 2. İÇERİK TANIMLARI (MANUEL İÇERİK ALANI) ---
-# Detaylı Konu Anlatımı için bu değişkenlerin içini doldurmalısınız.
+try:
+    if 'GEMINI_API_KEY' not in st.secrets:
+        st.error("⚠️ GEMINI_API_KEY bulunamadı. Lütfen Streamlit Cloud Secrets paneline ekleyin.")
+        st.stop()
+    
+    # Gemini istemcisini API anahtarıyla başlat
+    client = genai.Client(api_key=st.secrets['GEMINI_API_KEY'])
+    MODEL = 'gemini-2.5-flash' 
 
-TURKISH_CONTENT = """
-## 📝 Türkçe Konu Anlatımı Detayı (Lütfen Detaylı İçeriği Buraya Ekleyin)
-Bu alana kendi hazırladığınız detaylı metni Markdown formatında yapıştırın.
-"""
-
-MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
-SCIENCE_CONTENT = "## 🧪 Fen Bilimleri Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
-SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
-
-
-# --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
-if 'content_key' not in st.session_state: st.session_state.content_key = None 
-
-# --- HARİTALAR VE SABİTLER ---
-CONTENT_MAP = {
-    "mat_konu": MATH_CONTENT, 
-    "tr_konu": TURKISH_CONTENT, 
-    "sci_konu": SCIENCE_CONTENT, 
-    "soc_konu": SOCIAL_CONTENT, 
-}
-
-# --- 5. BUTON MANTIĞI ---
-def toggle_content(key):
-    # Konu anlatımı butonuna basıldığında içeriği açıp kapama
-    if st.session_state.content_key == key: st.session_state.content_key = None
-    else: st.session_state.content_key = key
+except Exception as e:
+    st.error(f"API İstemcisi Başlatılamadı: {e}")
+    st.stop()
 
 
-# --- 6. SAYFA AYARLARI ---
-st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
-st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
+# --- 2. SESSION STATE (DURUM YÖNETİMİ) ---
+if 'last_topic' not in st.session_state: st.session_state.last_topic = ""
+if 'ai_response' not in st.session_state: st.session_state.ai_response = ""
+
+
+# --- 3. API ÇAĞRISI FONKSİYONU ---
+def generate_content_with_ai(topic_name):
+    """Konu anlatımını API'den otomatik olarak çeken fonksiyon."""
+    
+    # PROMPT GÜNCELLENDİ: TÜRKÇE KARAKTER KULLANMAMA TALİMATI
+    prompt = f"""
+    Sen 7. sınıf öğrencilerine ders veren Akıl Öğretmensin. '{topic_name}' konusunu detaylı ve öğretici bir dille anlat. Cevabını Türkçe kelimeler kullanarak (Örn: sinif, ders, konular), ancak **sadece İngilizce harflerle (ı, ş, ç, ü, ö, ğ harflerini kullanmadan)** yaz. Cevabını mutlaka başlıklar ve madde işaretleri kullanarak formatla.
+    """
+
+    with st.spinner(f"👨‍🏫 Akıl Öğretmen, '{topic_name}' konusu için içeriği otomatik olarak hazırlıyor..."):
+        try:
+            # API çağrısı
+            response = client.models.generate_content(
+                model=MODEL,
+                contents=prompt
+            )
+            
+            # Kodlama hatasını atlamak için düzeltme tekrar uygulanır.
+            clean_text = response.text.encode('utf-8', errors='ignore').decode('utf-8')
+            
+            # Cevabı session state'e kaydet
+            st.session_state.ai_response = f"## 👨‍🏫 Akıl Ogretmen: {topic_name.upper()} Konu Anlatimi ✨\n\n" + clean_text.strip()
+            st.session_state.last_topic = topic_name
+
+        except APIError as e:
+            st.session_state.ai_response = f"""
+            ## ❌ API Hatası
+            Akıl Ogretmen su an baglanti kuramiyor. Lutfen anahtarinizi kontrol edin. Hata Detayi: {e}
+            """
+        except Exception as e:
+             st.session_state.ai_response = f"## ❌ Bir Hata Olustu: {e}"
+
+# --- 4. SAYFA AYARLARI ---
+st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | Akıl Öğretmen")
+st.title("🎓 Yusuf Efe Şahin | Yapay Zeka Asistanı (Akıl Ogretmen)")
 st.markdown("---")
 
-# --- 7. SEKMELERİN TANIMLANMASI (SADECE 4 DERS SEKMESİ) ---
-tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
-    "🔢 Matematik İçerikleri", 
-    "📝 Türkçe İçerikleri", 
-    "🧪 Fen Bilimleri",
-    "🌍 Sosyal Bilgiler"
-])
+# --- 5. ANA SAYFA KODU ---
 
-# --- 8. DERS SEKMELERİ İÇİN GENEL FONKSİYON ---
-def render_subject_tab(tab_context, subject_title, key_prefix):
-    konu_key = f"{key_prefix}_konu"
-    pdf_key = f"{key_prefix}_pdf"
-    
-    # Konu Listeleri
-    if key_prefix == "tr":
-        konu_listesi = ["Sözcükte Anlam", "Cümlede Anlam", "Parçada Anlam", "Fiiller", "Ek Fiil", "Zarflar", "Yazım Kuralları"]
-    elif key_prefix == "mat":
-        konu_listesi = ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler", "Oran Orantı", "Doğrular ve Açılar"]
-    elif key_prefix == "sci":
-        konu_listesi = ["Güneş Sistemi", "Hücre ve Bölünmeler", "Kuvvet ve Enerji", "Saf Madde ve Karışımlar"]
-    elif key_prefix == "soc":
-        konu_listesi = ["Birey ve Toplum", "Kültür ve Miras", "İnsanlar, Yerler ve Çevreler", "Bilim ve Teknoloji"]
+st.header("❓ Akıl Ogretmen'e Sor")
+st.markdown("Asagidaki kutucuga herhangi bir 7. sinif konusu yazin ve Akil Ogretmen'den detayli anlatim isteyin.")
+
+# Konu adı girişi
+topic_input = st.text_input(
+    label="Konu Adini Yaziniz (Orn: Rasyonel Sayilar, Fiiller, Mitokondri)",
+    placeholder="Konu Adi",
+    label_visibility="collapsed"
+)
+
+# Buton
+if st.button("Akil'dan Konuyu Anlatmasini İsteyin", type="primary"):
+    if topic_input:
+        generate_content_with_ai(topic_input)
     else:
-        konu_listesi = [f"Bu derse ait Konu Listesi Henüz Eklenmedi."]
+        st.warning("Lutfen anlatilacak konunun adini yaziniz.")
 
+st.markdown("---")
+
+# Sonuç alanı
+if st.session_state.ai_response:
+    st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
+else:
+    st.info("Konu anlatimini gormek icin yukariya bir konu yazip butona tiklayin.")
     
-    with tab_context:
-        st.header(f"{subject_title} Dersi İçerikleri")
-        
-        # Sadece Konu Anlatımı ve PDF butonu kaldı.
-        col_btn1, col_btn2 = st.columns(2) 
-        
-        with col_btn1:
-            button_label = "⬆️ Konuyu Gizle" if st.session_state.content_key == konu_key else "📄 Detaylı Konu Anlatımı"
-            st.button(button_label, type="primary", key=konu_key, on_click=toggle_content, args=(konu_key,)) 
-                      
-        with col_btn2: 
-            st.button("♦️ PDF Sonuç Kontrol (MANUEL)", type="secondary", key=pdf_key)
-            
-        st.markdown("---")
-        
-        if st.session_state.content_key == konu_key:
-            st.subheader(f"✨ {subject_title} Dersi Konu Listesi") 
-            for konu in konu_listesi: st.markdown(f"* **{konu}**")
-            st.markdown("---")
-
-            # MANUEL OLARAK GİRİLEN İÇERİK BURADA GÖRÜNÜR
-            st.subheader("📘 Konu Anlatımı Detay")
-            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen app_final.py dosyasındaki CONTENT_MAP'i doldurun."), unsafe_allow_html=True)
-            st.markdown("---")
-            
-        else:
-            st.info(f"Yukarıdaki butona tıklayarak {subject_title} dersi detaylı içeriğini görebilirsiniz.")
-
-# ==============================================================================
-# --- 9. DERS SEKMELERİNİN ÇAĞRILMASI ---
-# ==============================================================================
-render_subject_tab(tab_math, "🔢 Matematik", "mat")
-render_subject_tab(tab_tr, "📝 Türkçe", "tr")
-render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
-render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
