@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Kodlama sorununu çözmek için dosyanın en üstüne UTF-8 ayarı eklenmiştir.
 
 import streamlit as st
 import os
@@ -24,7 +23,6 @@ except Exception as e:
 
 
 # --- 2. İÇERİK TANIMLARI ---
-# Yapay Zeka tarafından doldurulacak içerikler için başlangıç mesajı.
 INITIAL_MESSAGE = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak. Lütfen butona tıklayın."
 TURKISH_CONTENT = INITIAL_MESSAGE
 MATH_CONTENT = INITIAL_MESSAGE
@@ -35,7 +33,6 @@ SOCIAL_CONTENT = INITIAL_MESSAGE
 # --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
 if 'content_key' not in st.session_state: st.session_state.content_key = None 
 if 'ai_contents' not in st.session_state:
-    # Yapay Zeka tarafından üretilen içerikleri depolamak için bir sözlük
     st.session_state.ai_contents = {
         "tr_konu": TURKISH_CONTENT,
         "mat_konu": MATH_CONTENT,
@@ -51,7 +48,6 @@ CONTENT_MAP = st.session_state.ai_contents
 def generate_content_with_ai(subject_title, content_key):
     """Konu anlatımını API'den otomatik olarak çeken fonksiyon."""
     
-    # Eğer içerik daha önce üretilmemişse 
     if st.session_state.ai_contents.get(content_key) == INITIAL_MESSAGE:
         
         prompt = f"""
@@ -65,9 +61,13 @@ def generate_content_with_ai(subject_title, content_key):
                     model=MODEL,
                     contents=prompt
                 )
+                
+                # Hata veren satır burasıydı. Şimdi kodlama hatasını atlayacak şekilde güncellendi.
+                # encode('utf-8', errors='ignore').decode('utf-8') kullanarak Türkçe karakter sorunları çözülür.
+                clean_text = response.text.encode('utf-8', errors='ignore').decode('utf-8')
+                
                 # Cevabı session state'e kaydet
-                # UTF-8 sorunu için tüm cevaplarda strip() kullanarak temizleme yapılır.
-                st.session_state.ai_contents[content_key] = f"## 👨‍🏫 {subject_title} Detaylı Konu Anlatımı ✨\n\n" + response.text.strip()
+                st.session_state.ai_contents[content_key] = f"## 👨‍🏫 {subject_title} Detaylı Konu Anlatımı ✨\n\n" + clean_text.strip()
 
             except APIError as e:
                 st.session_state.ai_contents[content_key] = f"""
