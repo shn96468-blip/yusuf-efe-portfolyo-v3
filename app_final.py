@@ -4,23 +4,20 @@ import os
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
 # API bağımlılığı tamamen kaldırılmıştır. Uygulama stabil çalışacaktır.
 
-# --- 2. İÇERİK TANIMLARI ---
-# İçerikler manuel olarak girilmelidir. (Türkçe içeriği örnek olarak dolduruldu)
+# --- 2. İÇERİK TANIMLARI (MANUEL İÇERİK ALANI) ---
+# Detaylı konu anlatımı için bu değişkenlerin içini doldurmalısınız.
 
 TURKISH_CONTENT = """
 ## 📝 Fiiller (Eylemler) Konu Anlatımı ✨
 
-Sevgili öğrencim, Fiiller (Eylemler), bir cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Bir eylemin gerçekleştiği zamanı ve eylemi kimin yaptığını (kişi) gösteren ekler alırlar.
+Bu alana Türkçe dersi için hazırladığınız **detaylı konuyu** (Markdown kullanarak) yapıştırabilirsiniz. 
 
-### 1. Fiillerin Anlam Özellikleri
-* **Kılış (İş) Fiilleri:** Nesne alabilen fiillerdir. Örnek: "Yazmak", "Okumak".
-* **Durum Fiilleri:** Nesne almayan, öznenin durumunu bildiren fiillerdir. Örnek: "Uyumak", "Gülmek".
-* **Oluş Fiilleri:** Zamanla kendiliğinden gerçekleşen değişikliklerdir. Örnek: "Sararmak", "Büyümek".
+Örnek (Fiiller): Fiiller, bir cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Bir eylemin gerçekleştiği zamanı ve eylemi kimin yaptığını (kişi) gösteren ekler alırlar.
 """
 
-MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
-SCIENCE_CONTENT = "## 🧪 Fen Bilimleri Konu Anlatımı Detayı"
-SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı"
+MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
+SCIENCE_CONTENT = "## 🧪 Fen Bilimleri Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
+SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
 
 
 MATH_VIDEOS = {} 
@@ -31,7 +28,7 @@ SOCIAL_VIDEOS = {}
 
 # --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
 if 'content_key' not in st.session_state: st.session_state.content_key = None 
-# Bu kodda Akıl Öğretmen (AI) bölümü olmadığı için 'ai_response' ve 'last_topic' kaldırıldı.
+# Bu kodda AI bölümü olmadığı için yapay zeka değişkenleri kaldırılmıştır.
 
 # --- HARİTALAR VE SABİTLER ---
 CONTENT_MAP = {
@@ -81,6 +78,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
     with tab_context:
         st.header(f"{subject_title} Dersi İçerikleri")
         
+        # Soru çözümü, deneme butonu gibi özellikler burada manuel olarak içerik eklenerek kullanılabilir.
         col_btn1, col_btn2, col_btn3 = st.columns(3) 
         
         with col_btn1:
@@ -99,7 +97,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
 
             # Manuel olarak girilen detaylı konu içeriği burada görünür
             st.subheader("📘 Konu Anlatımı Detay (Manuel İçerik)")
-            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen ilgili içerik dosyanızı kontrol edin."), unsafe_allow_html=True)
+            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen app_final.py dosyasındaki CONTENT_MAP'i doldurun."), unsafe_allow_html=True)
             st.markdown("---")
             
         else:
