@@ -1,69 +1,91 @@
 import streamlit as st
+import os
+
 # HATA ÇÖZÜMÜ: Gerekli kütüphaneler doğruca tanımlanmalı
 try:
+    # Bu kütüphane YouTube API ile konuşmak için GEREKLİDİR
     from googleapiclient.discovery import build 
 except ImportError:
-    st.error("Gerekli 'google-api-python-client' kütüphanesi bulunamadı. Lütfen 'requirements.txt' dosyasını kontrol edin ve kütüphaneyi kurun.")
-    build = None # Hata durumunda build'i None yapıyoruz
+    st.warning("Gerekli 'google-api-python-client' kütüphanesi bulunamadı. Lütfen 'requirements.txt' dosyasını kontrol edin ve yükleyin.")
+    build = None
 
-# --- API AYARLARI ---
+# --- 1. API AYARLARI ---
 # BURAYI KENDİ ALDIĞINIZ YOUTUBE API ANAHTARINIZ İLE DEĞİŞTİRİN
 YOUTUBE_API_KEY = "BURAYA_ALDIĞINIZ_YOUTUBE_API_ANAHTARINI_YAZIN" 
 
+YOUTUBE_SERVICE = None
 if build:
     try:
-        YOUTUBE_SERVICE = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
+        # API anahtarı boş değilse servisi başlat
+        if YOUTUBE_API_KEY and YOUTUBE_API_KEY != "BURAYA_ALDIĞINIZ_YOUTUBE_API_ANAHTARINI_YAZIN":
+            YOUTUBE_SERVICE = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
+        else:
+            # API anahtarı ayarlanmadıysa uyarı ver
+            st.info("YouTube API Anahtarı AYARLANMADI. YouTube arama özelliği çalışmayacaktır.")
     except Exception:
-        st.warning("YouTube servisi başlatılamadı. API anahtarınızı kontrol edin.")
+        st.error("YouTube servisi başlatılırken bir hata oluştu. API kotanızı kontrol edin.")
         YOUTUBE_SERVICE = None
-else:
-    YOUTUBE_SERVICE = None
 
-# --- 1. STREAMLIT DURUM YÖNETİMİ (Session State) ---
+# --- 2. STREAMLIT DURUM YÖNETİMİ (Session State) ---
 if 'content_key' not in st.session_state:
     st.session_state.content_key = None 
 if 'video_key' not in st.session_state: 
     st.session_state.video_key = None 
-
-# AI asistanı (Akıl) için durum yönetimi.
 if 'ai_response' not in st.session_state:
     st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYA Genel Bir Şey Sorun."
     st.session_state.last_topic = ""
-    
-# YouTube Arama Durumu
 if 'youtube_search_query' not in st.session_state:
     st.session_state.youtube_search_query = ""
 if 'search_results_youtube' not in st.session_state:
     st.session_state.search_results_youtube = None
 
-# --- VİDEO URL TANIMLARI (Dersler İçin Sabit Linkler) ---
-# ... (Önceki kodunuzdaki tüm ders videoları buraya kopyalanmalıdır) ...
-MATH_VIDEOS = {
-    "Rasyonel Sayılar": "https://www.youtube.com/watch?v=k-D5xQ6U6fA",
-    "Tam Sayılarla İşlemler": "https://www.youtube.com/watch?v=J3-gC-B0zV8",
-    "Cebirsel İfadeler": "https://www.youtube.com/watch?v=e_n0WvU7N0Q",
-}
-TURKISH_VIDEOS = {
-    "Fiiller ve Ek Fiil": "https://www.youtube.com/watch?v=iM0E8uA_4kM",
-    "Söz Sanatları": "https://www.youtube.com/watch?v=Xz7K9qN7fEw",
-}
-# Diğer derslerin video sözlükleri buraya kopyalanmalı
+# --- 3. MODÜLER İÇERİKLERİ İÇE AKTARMA (Örnek Data) ---
+# DİKKAT: Bu kısmı kendi modül dosyalarınıza göre düzenlemelisiniz.
+try:
+    # Bu değişkenlerin modüler dosyalarınızda (math_content.py vb.) tanımlandığını varsayıyoruz
+    # Eğer bu değişkenler tanımlı değilse, uygulamanızda "İçerik Bulunamadı" hatası alırsınız.
+    
+    # Örnek İçerikler (Eğer modülleriniz çalışmıyorsa bunları kullanabilirsiniz):
+    MATH_CONTENT = "## 📘 Matematik Konu Anlatımı ve Özet"
+    TURKISH_CONTENT = "## 📝 Türkçe Konu Anlatımı ve Özet"
+    SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı ve Özet"
+    RELIGION_CONTENT = "## 🕌 Din Kültürü Konu Anlatımı ve Özet"
+    ENGLISH_CONTENT = "## 🗣️ İngilizce Konu Anlatımı ve Özet"
+    SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı ve Özet"
 
+    MATH_VIDEOS = {"Rasyonel Sayılar": "https://www.youtube.com/watch?v=k-D5xQ6U6fA"}
+    TURKISH_VIDEOS = {"Fiiller": "https://www.youtube.com/watch?v=iM0E8uA_4kM"}
+    SCIENCE_VIDEOS = {"Mitoz Bölünme": "https://www.youtube.com/watch?v=Kz6pZ7kH3qQ"}
+    ENGLISH_VIDEOS = {}
+    RELIGION_VIDEOS = {}
+    SOCIAL_VIDEOS = {}
+
+except Exception:
+    pass # Hata olsa bile uygulama çökmeyecek şekilde ayarladık
+
+# --- 4. SABİT LİNK HARİTALARI ---
 ALL_VIDEOS_MAP = {
-    "mat": MATH_VIDEOS,
-    "tr": TURKISH_VIDEOS,
-    # Diğer derslerin kısaltmaları ve video sözlükleri buraya eklenmeli
+    "mat": MATH_VIDEOS, "tr": TURKISH_VIDEOS, "sci": SCIENCE_VIDEOS,
+    "soc": SOCIAL_VIDEOS, "eng": ENGLISH_VIDEOS, "rel": RELIGION_VIDEOS,
 }
+CONTENT_MAP = {
+    "mat_konu": MATH_CONTENT, "tr_konu": TURKISH_CONTENT, "sci_konu": SCIENCE_CONTENT, 
+    "soc_konu": SOCIAL_CONTENT, "eng_konu": ENGLISH_CONTENT, "rel_konu": RELIGION_CONTENT,
+}
+COACH_CONTENT = """
+## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
+* **Zaman Yönetimi:** Günlük rutin oluşturma.
+"""
 
-# --- YENİ İŞLEV: GERÇEK YOUTUBE ARAMASI ---
+# --- 5. YENİ İŞLEV: GERÇEK YOUTUBE ARAMASI ---
 def search_youtube_videos(query, max_results=5):
     """YouTube API'yi kullanarak video araması yapar."""
     if not YOUTUBE_SERVICE:
-        return None # Servis yoksa arama yapma
+        return None 
         
     try:
         search_response = YOUTUBE_SERVICE.search().list(
-            q=query,
+            q=query + " ders konu anlatımı",
             part='snippet',
             type='video',
             maxResults=max_results
@@ -80,8 +102,7 @@ def search_youtube_videos(query, max_results=5):
         return videos
         
     except Exception as e:
-        # API hatasını terminalde göstermek için st.error kullanıyoruz
-        st.error(f"YouTube Arama Hatası: API Anahtarınızı kontrol edin (veya kotanız bitmiş olabilir). Detay: {e}")
+        st.error(f"YouTube Arama Hatası: API kotanız bitmiş olabilir veya anahtarınız yanlış. Detay: {e}")
         return None
 
 def perform_youtube_search():
@@ -95,7 +116,7 @@ def perform_youtube_search():
     results = search_youtube_videos(query, max_results=5) 
     st.session_state.search_results_youtube = results
 
-# --- BUTON TIKLAMA İŞLEVLERİ (Aynı Kaldı) ---
+# --- 6. BUTON TIKLAMA İŞLEVLERİ ve AI MANTIĞI ---
 
 def toggle_content(key):
     if st.session_state.content_key == key:
@@ -111,50 +132,34 @@ def toggle_video(key):
         st.session_state.video_key = key
         st.session_state.content_key = None 
 
-# YAPAY ZEKANIN ÇOK UZUN OLDUĞU İÇİN BURADA KISALTILMIŞ HALİ VARDIR.
+# YAPAY ZEKANIN KISALTILMIŞ KONU ANLATIM FONKSİYONU
 def generate_ai_explanation(topic):
     topic_lower = topic.lower().strip()
     response = ""
-
-    if "rasyonel" in topic_lower:
-        response = """
-        ## 🧠 Akıl Konu Anlatımı: Rasyonel Sayılar
-        Rasyonel sayılar, a/b şeklinde yazılabilen sayılar kümesidir.
-        ***💡 İpucu:*** Bu konuyla ilgili sabit videolar için **"Matematik İçerikleri"** sekmesine gidin. YouTube'da arama yapmak için yukarıdaki arama çubuğunu kullanın!
-        """
-    # ... (Diğer tüm ders konu anlatım kodları buraya kopyalanmalı) ...
+    # Sizin istediğiniz tüm konu eşleştirmeleri buraya eklendi (Görüntülere göre)
+    if "rasyonel" in topic_lower or "tam sayı" in topic_lower or "cebirsel" in topic_lower or "oran" in topic_lower or "yüzde" in topic_lower:
+        response = f"## 🧠 Akıl Konu Anlatımı: {topic.upper()} (MATEMATİK)"
+    elif "fiil" in topic_lower or "ek eylem" in topic_lower or "söz sanatları" in topic_lower:
+        response = f"## 💻 Akıl Konu Anlatımı: {topic.upper()} (TÜRKÇE)"
+    elif "kütle" in topic_lower or "mitoz" in topic_lower or "mayoz" in topic_lower:
+        response = f"## 🧪 Akıl Konu Anlatımı: {topic.upper()} (FEN)"
     
-    # Genel Sohbet Alanı
     else:
-        response = f"## 💬 Genel Bilgi Modülü (Sohbet): '{topic}'. Ders konuları dışındaki sorularınız için Akıl Asistanı size genel yanıtlar verebilir."
+        response = f"""
+        ## ⚠️ Akıl Asistan Uyarısı
+        '{topic.upper()}' şu an için anlatabileceğim ana ders konuları arasında değildir. 
+        """
         
     st.session_state.ai_response = response
     st.session_state.last_topic = topic
 
-# --- 2. TÜM İÇERİKLERİN TANIMI (Kısaltılmış) ---
-COACH_CONTENT = """
-## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
-### 🗓️ Rehberlik Konuları
-* **Zaman Yönetimi:** Günlük rutin oluşturma.
-"""
-MATH_CONTENT = "## 📘 Matematik - Konu Anlatımı ve Özet: Tam Sayılar, Rasyonel Sayılar..."
-TURKISH_CONTENT = "## 📝 Türkçe - Konu Anlatımı ve Özet: Fiiller, Söz Sanatları..."
-SCIENCE_CONTENT = "## 🧪 Fen Bilimleri - Konu Anlatımı ve Özet: Hücre, Kuvvet, Saf Madde..."
-SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler - Konu Anlatımı ve Özet: Birey, Kültür, Üretim..."
-ENGLISH_CONTENT = "## 🗣️ İngilizce - Konu Anlatımı ve Özet: Appearance, Personality, Sports..."
-RELIGION_CONTENT = "## 🕌 Din Kültürü ve Ahlak Bilgisi - Konu Anlatımı ve Özet: Melekler, Hac, Ahlak..."
 
-CONTENT_MAP = {
-    "mat_konu": MATH_CONTENT, "tr_konu": TURKISH_CONTENT, "sci_konu": SCIENCE_CONTENT, 
-    "soc_konu": SOCIAL_CONTENT, "eng_konu": ENGLISH_CONTENT, "rel_konu": RELIGION_CONTENT,
-}
-
-# --- 3. STREAMLIT SAYFA AYARLARI ---
+# --- 7. STREAMLIT SAYFA AYARLARI ---
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# 4. SEKMELERİN TANIMLANMASI (NameError çözümü için doğru sıralama ve tanım)
+# 8. SEKMELERİN TANIMLANMASI (NameError'ı çözen kısım)
 tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
     "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
@@ -163,7 +168,7 @@ tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
     "🌍 Sosyal Bilgiler",
     "🗣️ İngilizce",
     "🕌 Din Kültürü",
-]) # <<< NameError çözümü: Tüm sekmeler burada doğru ve eksiksiz tanımlanmıştır.
+])
 
 # --- DERS SEKMELERİ İÇİN GENEL FONKSİYON ---
 def render_subject_tab(tab_context, subject_title, key_prefix):
@@ -187,7 +192,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
             
         with col_btn2:
             video_button_label = "⬇️ Videoları Gizle" if st.session_state.video_key == video_key else "▶️ Sabit Video İzle"
-            btn_type = "primary" if video_list else "secondary" 
+            btn_type = "secondary" # Sabit videoları öne çıkarmıyoruz
             st.button(video_button_label, type=btn_type, key=video_key,
                       on_click=toggle_video, args=(video_key,))
                       
@@ -199,4 +204,113 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
         st.markdown("---")
         
         if st.session_state.content_key == konu_key:
-            st.subheader(f
+            st.subheader(f"✨ {subject_title} Konu Anlatımı Detay") 
+            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı."), unsafe_allow_html=True)
+            st.markdown("---")
+            
+        elif st.session_state.video_key == video_key and video_list: 
+            st.subheader(f"▶️ {subject_title} Dersi Sabit Video Listesi")
+            
+            for topic, url in video_list.items():
+                st.markdown(f"**📚 Konu:** {topic}")
+                st.video(url, format="video/mp4") 
+                st.markdown("---")
+            
+            st.caption("Not: Bu listedeki videolar önceden belirlenmiştir. Tüm YouTube kanallarında arama yapmak için Koç Modülü'ne gidin.")
+            
+        elif st.session_state.video_key == video_key and not video_list:
+            st.warning(f"{subject_title} dersi için henüz bir sabit video listesi eklenmemiştir.")
+        
+        else:
+            st.info(f"Yukarıdaki butonlara tıklayarak {subject_title} dersi içeriğini ve sabit videolarını görebilirsiniz.")
+
+# ==============================================================================
+# --- 9. TAB 0: KOÇ MODÜLÜ (YouTube Arama Alanı) ---
+# ==============================================================================
+with tab_coach: 
+    st.header("💡 Koç Modülü - Rehberlik ve Mentorluk")
+    
+    # ----------------------------------------------------
+    # GERÇEK YOUTUBE ARAMA ALANI
+    # ----------------------------------------------------
+    st.subheader("📺 Ders Videosu Ara (Tüm YouTube Kanalları)")
+    
+    if not YOUTUBE_SERVICE:
+         st.warning("YouTube Arama Motoru şu anda devre dışı. Lütfen API anahtarınızı kodda doğru ayarlayın.")
+    else:
+        col_search, col_button = st.columns([4, 1])
+        
+        with col_search:
+            st.text_input(
+                "YouTube'da ders videosu arayın (Örn: Rasyonel sayılar konu anlatımı)",
+                key="youtube_search_query", 
+                placeholder="Arama terimini buraya girin...",
+            )
+        with col_button:
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.button("YouTube Ara", type="primary", on_click=perform_youtube_search)
+
+        # ARAMA SONUÇLARINI GÖSTERME
+        if st.session_state.search_results_youtube is not None:
+            if st.session_state.search_results_youtube:
+                st.success(f"'{st.session_state.youtube_search_query}' için {len(st.session_state.search_results_youtube)} sonuç bulundu:")
+                st.markdown("---")
+                
+                for video in st.session_state.search_results_youtube:
+                    st.subheader(video['title'])
+                    col_thumb, col_player = st.columns([1, 2])
+                    with col_thumb:
+                        st.image(video['thumbnail'], caption="Küçük Resim")
+                    with col_player:
+                        st.video(video['url'], format="video/mp4") 
+                    st.markdown(f"**Link:** [YouTube'da Aç]({video['url']})")
+                    st.markdown("---")
+            else:
+                st.warning(f"'{st.session_state.youtube_search_query}' terimiyle eşleşen bir video bulunamadı.")
+            
+    st.markdown("---")
+    # ----------------------------------------------------
+
+    st.subheader("🤖 Yapay Zeka Asistanı (Akıl)")
+    
+    input_topic = st.text_input(
+        "Konu Adını Yazınız (Örn: Rasyonel Sayılar, Söz Sanatları, Mitoz)", 
+        value=st.session_state.last_topic,
+        key="topic_input"
+    )
+    
+    ai_button = st.button(
+        "Akıl'dan Konuyu Anlatmasını İsteyin", 
+        type="secondary", 
+        key="ai_generate",
+        on_click=generate_ai_explanation,
+        args=(input_topic,)
+    )
+    
+    st.markdown("---")
+    st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
+    st.markdown("---") 
+
+    st.header("📝 Çalışma ve Rehberlik İçerikleri")
+    col_coach_btn1, col_coach_btn2, col_coach_btn3 = st.columns(3)
+    
+    with col_coach_btn1:
+        st.button("📝 Çalışma Planı Oluştur", type="secondary", key="coach_plan") 
+    with col_coach_btn2:
+        st.button("🧠 Motivasyon Teknikleri", type="secondary", key="coach_motivasyon")
+    with col_coach_btn3:
+        st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
+    
+    st.markdown("---")
+    st.markdown(COACH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 10. DERS SEKMELERİNİN ÇAĞRILMASI (Tüm Dersler) ---
+# ==============================================================================
+render_subject_tab(tab_math, "🔢 Matematik", "mat")
+render_subject_tab(tab_tr, "📝 Türkçe", "tr")
+render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
+render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
+render_subject_tab(tab_eng, "🗣️ İngilizce", "eng")
+render_subject_tab(tab_rel, "🕌 Din Kültürü", "rel")
