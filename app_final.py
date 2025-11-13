@@ -1,21 +1,71 @@
 import streamlit as st
-# Google API kütüphanesini buraya ekleyeceğiz
-from googleapiclient.discovery import build # <--- Gerekli Kütüphane
+# HATA ÇÖZÜMÜ: Gerekli kütüphaneler doğruca tanımlanmalı
+try:
+    from googleapiclient.discovery import build 
+except ImportError:
+    st.error("Gerekli 'google-api-python-client' kütüphanesi bulunamadı. Lütfen 'requirements.txt' dosyasını kontrol edin ve kütüphaneyi kurun.")
+    build = None # Hata durumunda build'i None yapıyoruz
 
-# API anahtarınızı buraya yapıştırmalısınız
-YOUTUBE_API_KEY = "BURAYA_ALDIĞINIZ_YOUTUBE_API_ANAHTARINI_YAZIN"
-# Servisi başlatıyoruz
-YOUTUBE_SERVICE = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY) 
+# --- API AYARLARI ---
+# BURAYI KENDİ ALDIĞINIZ YOUTUBE API ANAHTARINIZ İLE DEĞİŞTİRİN
+YOUTUBE_API_KEY = "BURAYA_ALDIĞINIZ_YOUTUBE_API_ANAHTARINI_YAZIN" 
 
-# --- GEREKLİ YENİ FONKSİYON ---
+if build:
+    try:
+        YOUTUBE_SERVICE = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
+    except Exception:
+        st.warning("YouTube servisi başlatılamadı. API anahtarınızı kontrol edin.")
+        YOUTUBE_SERVICE = None
+else:
+    YOUTUBE_SERVICE = None
+
+# --- 1. STREAMLIT DURUM YÖNETİMİ (Session State) ---
+if 'content_key' not in st.session_state:
+    st.session_state.content_key = None 
+if 'video_key' not in st.session_state: 
+    st.session_state.video_key = None 
+
+# AI asistanı (Akıl) için durum yönetimi.
+if 'ai_response' not in st.session_state:
+    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYA Genel Bir Şey Sorun."
+    st.session_state.last_topic = ""
+    
+# YouTube Arama Durumu
+if 'youtube_search_query' not in st.session_state:
+    st.session_state.youtube_search_query = ""
+if 'search_results_youtube' not in st.session_state:
+    st.session_state.search_results_youtube = None
+
+# --- VİDEO URL TANIMLARI (Dersler İçin Sabit Linkler) ---
+# ... (Önceki kodunuzdaki tüm ders videoları buraya kopyalanmalıdır) ...
+MATH_VIDEOS = {
+    "Rasyonel Sayılar": "https://www.youtube.com/watch?v=k-D5xQ6U6fA",
+    "Tam Sayılarla İşlemler": "https://www.youtube.com/watch?v=J3-gC-B0zV8",
+    "Cebirsel İfadeler": "https://www.youtube.com/watch?v=e_n0WvU7N0Q",
+}
+TURKISH_VIDEOS = {
+    "Fiiller ve Ek Fiil": "https://www.youtube.com/watch?v=iM0E8uA_4kM",
+    "Söz Sanatları": "https://www.youtube.com/watch?v=Xz7K9qN7fEw",
+}
+# Diğer derslerin video sözlükleri buraya kopyalanmalı
+
+ALL_VIDEOS_MAP = {
+    "mat": MATH_VIDEOS,
+    "tr": TURKISH_VIDEOS,
+    # Diğer derslerin kısaltmaları ve video sözlükleri buraya eklenmeli
+}
+
+# --- YENİ İŞLEV: GERÇEK YOUTUBE ARAMASI ---
 def search_youtube_videos(query, max_results=5):
     """YouTube API'yi kullanarak video araması yapar."""
+    if not YOUTUBE_SERVICE:
+        return None # Servis yoksa arama yapma
+        
     try:
-        # YouTube Arama İsteği
         search_response = YOUTUBE_SERVICE.search().list(
             q=query,
             part='snippet',
-            type='video', # Sadece video sonuçlarını getir
+            type='video',
             maxResults=max_results
         ).execute()
 
@@ -30,86 +80,123 @@ def search_youtube_videos(query, max_results=5):
         return videos
         
     except Exception as e:
-        st.error(f"YouTube Arama Hatası: API anahtarınızı kontrol edin veya günlük kotanız bitmiş olabilir. Hata: {e}")
+        # API hatasını terminalde göstermek için st.error kullanıyoruz
+        st.error(f"YouTube Arama Hatası: API Anahtarınızı kontrol edin (veya kotanız bitmiş olabilir). Detay: {e}")
         return None
 
-# --- YENİ ARAMA İŞLEVİ ---
 def perform_youtube_search():
     """Arama çubuğundaki terimle YouTube'da arama yapar ve sonuçları kaydeder."""
     query = st.session_state.youtube_search_query
     
     if not query:
-        st.session_state.search_results_youtube = None
+        st.session_state.search_results_youtube = []
         return
 
-    # YouTube API'sini kullanarak gerçek arama yap
-    results = search_youtube_videos(query, max_results=5) # 5 sonuç getirsin
+    results = search_youtube_videos(query, max_results=5) 
     st.session_state.search_results_youtube = results
 
-# --- DURUM YÖNETİMİ GÜNCELLEMELERİ ---
-if 'youtube_search_query' not in st.session_state:
-    st.session_state.youtube_search_query = ""
-if 'search_results_youtube' not in st.session_state:
-    st.session_state.search_results_youtube = None
+# --- BUTON TIKLAMA İŞLEVLERİ (Aynı Kaldı) ---
+
+def toggle_content(key):
+    if st.session_state.content_key == key:
+        st.session_state.content_key = None
+    else:
+        st.session_state.content_key = key
+        st.session_state.video_key = None 
+
+def toggle_video(key):
+    if st.session_state.video_key == key:
+        st.session_state.video_key = None
+    else:
+        st.session_state.video_key = key
+        st.session_state.content_key = None 
+
+# YAPAY ZEKANIN ÇOK UZUN OLDUĞU İÇİN BURADA KISALTILMIŞ HALİ VARDIR.
+def generate_ai_explanation(topic):
+    topic_lower = topic.lower().strip()
+    response = ""
+
+    if "rasyonel" in topic_lower:
+        response = """
+        ## 🧠 Akıl Konu Anlatımı: Rasyonel Sayılar
+        Rasyonel sayılar, a/b şeklinde yazılabilen sayılar kümesidir.
+        ***💡 İpucu:*** Bu konuyla ilgili sabit videolar için **"Matematik İçerikleri"** sekmesine gidin. YouTube'da arama yapmak için yukarıdaki arama çubuğunu kullanın!
+        """
+    # ... (Diğer tüm ders konu anlatım kodları buraya kopyalanmalı) ...
     
-# ... (toggle_content, toggle_video, generate_ai_explanation gibi diğer tüm fonksiyonlar burada kalacak) ...
+    # Genel Sohbet Alanı
+    else:
+        response = f"## 💬 Genel Bilgi Modülü (Sohbet): '{topic}'. Ders konuları dışındaki sorularınız için Akıl Asistanı size genel yanıtlar verebilir."
+        
+    st.session_state.ai_response = response
+    st.session_state.last_topic = topic
 
-# ... (Tüm ders içerikleri ve diğer sabitler burada kalacak) ...
+# --- 2. TÜM İÇERİKLERİN TANIMI (Kısaltılmış) ---
+COACH_CONTENT = """
+## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
+### 🗓️ Rehberlik Konuları
+* **Zaman Yönetimi:** Günlük rutin oluşturma.
+"""
+MATH_CONTENT = "## 📘 Matematik - Konu Anlatımı ve Özet: Tam Sayılar, Rasyonel Sayılar..."
+TURKISH_CONTENT = "## 📝 Türkçe - Konu Anlatımı ve Özet: Fiiller, Söz Sanatları..."
+SCIENCE_CONTENT = "## 🧪 Fen Bilimleri - Konu Anlatımı ve Özet: Hücre, Kuvvet, Saf Madde..."
+SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler - Konu Anlatımı ve Özet: Birey, Kültür, Üretim..."
+ENGLISH_CONTENT = "## 🗣️ İngilizce - Konu Anlatımı ve Özet: Appearance, Personality, Sports..."
+RELIGION_CONTENT = "## 🕌 Din Kültürü ve Ahlak Bilgisi - Konu Anlatımı ve Özet: Melekler, Hac, Ahlak..."
 
+CONTENT_MAP = {
+    "mat_konu": MATH_CONTENT, "tr_konu": TURKISH_CONTENT, "sci_konu": SCIENCE_CONTENT, 
+    "soc_konu": SOCIAL_CONTENT, "eng_konu": ENGLISH_CONTENT, "rel_konu": RELIGION_CONTENT,
+}
 
-# ==============================================================================
-# --- 5. TAB 0: KOÇ MODÜLÜ (YouTube Arama Alanı) ---
-# ==============================================================================
-with tab_coach:
-    st.header("💡 Koç Modülü - Rehberlik ve Mentorluk")
+# --- 3. STREAMLIT SAYFA AYARLARI ---
+st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
+st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
+st.markdown("---")
+
+# 4. SEKMELERİN TANIMLANMASI (NameError çözümü için doğru sıralama ve tanım)
+tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
+    "💡 Koç Modülü", 
+    "🔢 Matematik İçerikleri", 
+    "📝 Türkçe İçerikleri", 
+    "🧪 Fen Bilimleri",
+    "🌍 Sosyal Bilgiler",
+    "🗣️ İngilizce",
+    "🕌 Din Kültürü",
+]) # <<< NameError çözümü: Tüm sekmeler burada doğru ve eksiksiz tanımlanmıştır.
+
+# --- DERS SEKMELERİ İÇİN GENEL FONKSİYON ---
+def render_subject_tab(tab_context, subject_title, key_prefix):
+    """Her ders sekmesini tek bir yapıda oluşturur."""
     
-    # ----------------------------------------------------
-    # GERÇEK YOUTUBE ARAMA ALANI (YENİ VE GÜNCELLENMİŞ)
-    # ----------------------------------------------------
-    st.subheader("📺 Ders Videosu Ara (YouTube Desteği)")
-    col_search, col_button = st.columns([4, 1])
+    konu_key = f"{key_prefix}_konu"
+    video_key = f"{key_prefix}_video"
+    pdf_key = f"{key_prefix}_pdf"
+    deneme_key = f"{key_prefix}_deneme"
     
-    with col_search:
-        st.text_input(
-            "YouTube'da ders videosu arayın (Örn: Rasyonel sayılar konu anlatımı)",
-            key="youtube_search_query", # Yeni anahtar
-            placeholder="Arama terimini buraya girin...",
-        )
-    with col_button:
-        st.markdown("<br>", unsafe_allow_html=True)
-        # Gerçek arama fonksiyonunu çağırıyoruz
-        st.button("YouTube Ara", type="primary", on_click=perform_youtube_search)
-
-    # ARAMA SONUÇLARINI GÖSTERME
-    if st.session_state.search_results_youtube is not None:
-        if st.session_state.search_results_youtube:
-            st.success(f"'{st.session_state.youtube_search_query}' için {len(st.session_state.search_results_youtube)} sonuç bulundu:")
-            st.markdown("---")
+    video_list = ALL_VIDEOS_MAP.get(key_prefix, {})
+    
+    with tab_context:
+        st.header(f"{subject_title} Dersi İçerikleri")
+        col_btn1, col_btn2, col_btn3, col_btn4 = st.columns(4) 
+        
+        with col_btn1:
+            button_label = "⬆️ Konuyu Gizle" if st.session_state.content_key == konu_key else "📄 Konu Anlatımı"
+            st.button(button_label, type="primary", key=konu_key,
+                      on_click=toggle_content, args=(konu_key,)) 
             
-            # Her bir sonucu döngü ile göster
-            for video in st.session_state.search_results_youtube:
-                st.subheader(video['title'])
-                
-                # Küçük resmi ve video oynatıcısını yan yana gösterelim
-                col_thumb, col_player = st.columns([1, 2])
-                with col_thumb:
-                    st.image(video['thumbnail'], caption="Küçük Resim")
-                with col_player:
-                    # Video ID'sini kullanarak st.video ile oynat
-                    # Not: st.video, video URL'si yerine direkt ID ile çalışmak daha güvenilir olabilir.
-                    st.video(video['url'], format="video/mp4") 
-                
-                # Video linkini de ekleyelim
-                st.markdown(f"**Link:** [YouTube'da Aç]({video['url']})")
-                st.markdown("---")
-        else:
-            st.warning(f"'{st.session_state.youtube_search_query}' terimiyle eşleşen bir video bulunamadı.")
-            
-    st.markdown("---")
-    # ----------------------------------------------------
-
-    st.subheader("🤖 Yapay Zeka Asistanı (Akıl)")
-    # ... (Akıl Asistanı kodunun geri kalanı) ...
-
-
-# ... (Diğer tüm ders sekmeleri burada kalacak) ...
+        with col_btn2:
+            video_button_label = "⬇️ Videoları Gizle" if st.session_state.video_key == video_key else "▶️ Sabit Video İzle"
+            btn_type = "primary" if video_list else "secondary" 
+            st.button(video_button_label, type=btn_type, key=video_key,
+                      on_click=toggle_video, args=(video_key,))
+                      
+        with col_btn3:
+            st.button("♦️ PDF Sonuç Kontrol", type="secondary", key=pdf_key)
+        with col_btn4:
+            st.button("🔥 Deneme Sınavı", type="secondary", key=deneme_key)
+        
+        st.markdown("---")
+        
+        if st.session_state.content_key == konu_key:
+            st.subheader(f
