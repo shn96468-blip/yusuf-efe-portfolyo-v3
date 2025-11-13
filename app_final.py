@@ -2,19 +2,19 @@ import streamlit as st
 import os
 
 # --- 1. KÜTÜPHANE VE API KURULUMU (Temizlenmiş) ---
-# YouTube API bağımlılığı ve hatalı importlar bu versiyondan çıkarılmıştır.
+# YouTube API bağımlılığı kaldırıldığı için bu bölüm basitleştirilmiştir.
 
 # --- 2. İÇERİK TANIMLARI ---
-# DİKKAT: Bu değişkenlerin ilgili dosyalarda (math_content.py, turkish_content.py vb.) doğru tanımlandığından emin olun.
+# DİKKAT: Bu değişkenler ilgili içerik dosyalarınızdan (turkish_content.py, math_content.py vb.) çekilmelidir.
 try:
-    # Örnek içerikler (Hata vermemesi için geçici değerler)
-    MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı (Modülden Okundu)"
-    TURKISH_CONTENT = "## 📝 Türkçe Konu Anlatımı Detayı (Modülden Okundu)"
-    SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı Detayı (Modülden Okundu)"
-    RELIGION_CONTENT = "## 🕌 Din Kültürü Konu Anlatımı Detayı (Modülden Okundu)"
-    ENGLISH_CONTENT = "## 🗣️ İngilizce Konu Anlatımı Detayı (Modülden Okundu)"
-    SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı (Modülden Okundu)"
-    HISTORY_CONTENT = "## 📜 Tarih Konu Anlatımı Detayı (Modülden Okundu)" # Yeni eklenen dosya için
+    # Örnek içerikler (Bu metinler, ayrı content dosyalarınızın içeriğidir.)
+    MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
+    TURKISH_CONTENT = "## 📝 Türkçe Konu Anlatımı Detayı" # -> Bu metin türkçe_content.py'dan gelmeli
+    SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı Detayı"
+    RELIGION_CONTENT = "## 🕌 Din Kültürü Konu Anlatımı Detayı"
+    ENGLISH_CONTENT = "## 🗣️ İngilizce Konu Anlatımı Detayı"
+    SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı"
+    HISTORY_CONTENT = "## 📜 Tarih Konu Anlatımı Detayı" 
 
     MATH_VIDEOS = {"Rasyonel Sayılar": "https://www.youtube.com/watch?v=k-D5xQ6U6fA"}
     TURKISH_VIDEOS = {}
@@ -85,7 +85,7 @@ def generate_ai_explanation(topic):
     # 4. SOSYAL BİLGİLER
     elif any(k in topic_lower for k in ["birey ve toplum", "kültür ve miras", "insanlar yerler çevreler", 
                                         "bilim teknoloji toplum", "üretim dağıtım tüketim", 
-                                        "etkin vatandaşlık", "küresel bağlantı", "atatürk", "üretim", "dağıtım", "tüketim"]):
+                                        "etkin vatandaşlık", "küresel bağlantı", "üretim", "dağıtım", "tüketim"]):
         response = f"## 🌍 Akıl Konu Anlatımı: {topic.upper()} (SOSYAL BİLGİLER) 🎉"
 
     # 5. İNGİLİZCE
@@ -125,7 +125,7 @@ tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel, tab_his = st.ta
     "🌍 Sosyal Bilgiler",
     "🗣️ İngilizce",
     "🕌 Din Kültürü",
-    "📜 Tarih İçerikleri" # Yeni sekme
+    "📜 Tarih İçerikleri" 
 ])
 
 # --- 8. DERS SEKMELERİ İÇİN GENEL FONKSİYON ---
@@ -153,6 +153,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
         
         if st.session_state.content_key == konu_key:
             st.subheader(f"✨ {subject_title} Konu Anlatımı Detay") 
+            # İçeriği çekerken kullanılan CONTENT_MAP
             st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen ilgili içerik dosyanızı kontrol edin."), unsafe_allow_html=True)
             st.markdown("---")
             
@@ -217,4 +218,4 @@ render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
 render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
 render_subject_tab(tab_eng, "🗣️ İngilizce", "eng")
 render_subject_tab(tab_rel, "🕌 Din Kültürü", "rel")
-render_subject_tab(tab_his, "📜 Tarih", "his") # Yeni eklenen sekme
+render_subject_tab(tab_his, "📜 Tarih", "his")
