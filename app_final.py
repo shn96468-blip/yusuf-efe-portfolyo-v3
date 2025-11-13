@@ -2,17 +2,17 @@ import streamlit as st
 import os
 
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
-# Tüm harici API bağımlılıkları kaldırılmıştır.
 
 # --- 2. İÇERİK TANIMLARI ---
 # Sadece kalan 4 dersin içerikleri tanımlanmıştır.
 try:
+    # Dikkat: Bu metinler content dosyalarınızın içinde tanımlı olmalıdır.
     MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
     TURKISH_CONTENT = "## 📝 Türkçe Konu Anlatımı Detayı" 
     SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı Detayı"
     SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı"
 
-    MATH_VIDEOS = {}
+    MATH_VIDEOS = {} # Video haritaları tutulsa da kullanılmayacaktır.
     TURKISH_VIDEOS = {}
     SCIENCE_VIDEOS = {}
     SOCIAL_VIDEOS = {}
@@ -34,9 +34,6 @@ CONTENT_MAP = {
     "soc_konu": SOCIAL_CONTENT, 
 }
 COACH_CONTENT = "## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik"
-
-
-# --- 4. YOUTUBE ARAMA FONKSİYONLARI (Kaldırılmıştır) ---
 
 
 # --- 5. BUTON VE AI MANTIĞI ---
@@ -73,11 +70,8 @@ def generate_ai_explanation(topic):
                                         "bilim teknoloji toplum", "üretim dağıtım tüketim", 
                                         "etkin vatandaşlık", "küresel bağlantı", "üretim", "dağıtım", "tüketim"]):
         response = f"## 🌍 Akıl Konu Anlatımı: {topic.upper()} (SOSYAL BİLGİLER) 🎉"
-
-    # İNGİLİZCE, DİN KÜLTÜRÜ ve TARİH blokları kaldırılmıştır.
         
     else:
-        # Konu tanınamazsa bu uyarı verilir.
         response = f"""## ⚠️ Akıl Asistanı Uyarısı: '{topic.upper()}' şu an için anlatabileceğim ana ders konuları arasında değildir."""
         
     st.session_state.ai_response = response
@@ -89,7 +83,6 @@ st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
 # --- 7. SEKMELERİN TANIMLANMASI ---
-# SADECE kalan 4 dersin sekmeleri ve Koç Modülü kalmıştır.
 tab_coach, tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
     "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
@@ -153,4 +146,21 @@ with tab_coach:
     st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
     st.markdown("---") 
 
-    st.header("📝 Çalışma ve Rehber
+    st.header("📝 Çalışma ve Rehberlik İçerikleri")
+    col_coach_btn1, col_coach_btn2, col_coach_btn3 = st.columns(3)
+    
+    with col_coach_btn1: st.button("📝 Çalışma Planı Oluştur", type="secondary", key="coach_plan") 
+    with col_coach_btn2: st.button("🧠 Motivasyon Teknikleri", type="secondary", key="coach_motivasyon")
+    with col_coach_btn3: st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
+    
+    st.markdown("---")
+    st.markdown(COACH_CONTENT, unsafe_allow_html=True)
+
+
+# ==============================================================================
+# --- 10. DERS SEKMELERİNİN ÇAĞRILMASI ---
+# ==============================================================================
+render_subject_tab(tab_math, "🔢 Matematik", "mat")
+render_subject_tab(tab_tr, "📝 Türkçe", "tr")
+render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
+render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
