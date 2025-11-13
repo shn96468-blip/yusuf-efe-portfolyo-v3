@@ -1,6 +1,6 @@
 import streamlit as st
 
-# --- 1. TÜM İÇERİKLERİN TANIMI ---
+# --- 1. TÜM İÇERİKLERİN TANIMI (Tek dosyada toplandı) ---
 
 # KOÇ MODÜLÜ İÇERİĞİ
 COACH_CONTENT = """
@@ -87,27 +87,23 @@ SOCIAL_CONTENT = """
 """
 
 # İNGİLİZCE İÇERİĞİ
-# ==============================================================================
-# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (İşlevsel) ---
-# ==============================================================================
-with tab_eng:
-    st.header("🗣️ İngilizce Dersi İçerikleri")
-    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
-    
-    with col_ing_btn1:
-        st.button("📄 Konu Anlatımını Aç", type="primary", key="ing_konu") 
-    with col_ing_btn2:
-        st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
-    with col_ing_btn3:
-        st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
-    
-    st.markdown("---")
-    
-    with st.expander("💬 7. Sınıf İngilizce Konularına Göz Atın"):
-        # Hata veren satırın düzeltilmiş hali:
-        st.info("Aşağıda 7. Sınıf İngilizce Ünitelerine ait genel bir özet listelenmiştir. Kelime bilginizi güçlendirin.")
-        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
-        st.markdown("**💡 Koç Önerisi:** 'Appearance and Personality' ünitesindeki sıfatları ezberlemek önemlidir.")
+ENGLISH_CONTENT = """
+## 🗣️ İngilizce - Konu Anlatımı ve Özet
+<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
+    <p>🔑 Konu: 7. Sınıf İngilizce Üniteleri</p>
+</div>
+### 📄 Detaylı Konu Özeti
+* Appearance and Personality (Dış Görünüş ve Karakter)
+* Sports (Spor)
+* Biographies (Biyografiler)
+* Wild Animals (Vahşi Hayvanlar)
+* Television (Televizyon)
+* Parties (Partiler)
+* Superstitions (Batıl İnançlar)
+* Public Buildings (Halk Binaları)
+* Environment (Çevre)
+* Planets (Gezegenler)
+"""
 
 # DİN KÜLTÜRÜ İÇERİĞİ
 RELIGION_CONTENT = """
@@ -202,7 +198,7 @@ with tab_tr:
 
 
 # ==============================================================================
-# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ (Şimdi İşlevsel) ---
+# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_sci:
     st.header("🧪 Fen Bilimleri Dersi İçerikleri")
@@ -224,7 +220,7 @@ with tab_sci:
 
 
 # ==============================================================================
-# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ (Şimdi İşlevsel) ---
+# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_soc:
     st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
@@ -246,7 +242,7 @@ with tab_soc:
 
 
 # ==============================================================================
-# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (Şimdi İşlevsel) ---
+# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_eng:
     st.header("🗣️ İngilizce Dersi İçerikleri")
@@ -262,5 +258,28 @@ with tab_eng:
     st.markdown("---")
     
     with st.expander("💬 7. Sınıf İngilizce Konularına Göz Atın"):
-        st.info("Aşağıda 7. Sınıf İngilizce Ünitelerine ait genel bir özet listelenmiştir. Kel
+        st.info("Aşağıda 7. Sınıf İngilizce Ünitelerine ait genel bir özet listelenmiştir. Kelime bilginizi güçlendirin.")
+        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+        st.markdown("**💡 Koç Önerisi:** 'Appearance and Personality' ünitesindeki sıfatları ezberlemek önemlidir.")
 
+
+# ==============================================================================
+# --- 10. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ (İşlevsel) ---
+# ==============================================================================
+with tab_rel:
+    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
+    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
+    
+    with col_din_btn1:
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="din_konu") 
+    with col_din_btn2:
+        st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
+    with col_din_btn3:
+        st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
+    
+    st.markdown("---")
+    
+    with st.expander("🕋 7. Sınıf Din Kültürü Konularına Göz Atın"):
+        st.info("Aşağıda 7. Sınıf Din Kültürü Müfredatına ait genel bir özet listelenmiştir. Kavramlara odaklanın.")
+        st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+        st.markdown("**💡 Koç Önerisi:** Hac ve Kurban ibadetlerinin temel şartlarını ve anlamlarını tekrar edin.")
