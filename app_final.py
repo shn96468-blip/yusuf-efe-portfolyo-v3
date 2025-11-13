@@ -8,24 +8,12 @@ YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 # KRİTİK: Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
 TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
 
-# --- 2. DERS VE KONU TANIMLARI ---
+# --- 2. DERS VE KONU TANIMLARI (Sadece Matematik tutuldu) ---
 
 SUBJECT_MAP = {
-    "tr": {
-        "title": "📝 Türkçe",
-        "topics": ["Fiiller", "Zarflar", "Cümlede Anlam"],
-    },
     "mat": {
         "title": "🔢 Matematik",
         "topics": ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler"],
-    },
-    "sci": {
-        "title": "🧪 Fen Bilimleri",
-        "topics": ["Güneş Sistemi", "Hücre ve Bölünmeler", "Kuvvet ve Enerji"],
-    },
-    "soc": {
-        "title": "🌍 Sosyal Bilgiler",
-        "topics": ["Birey ve Toplum", "Kültür ve Miras", "Bilim ve Teknoloji"],
     }
 }
 
@@ -114,15 +102,11 @@ def render_subject_tab(tab_context, subject_key):
                 st.markdown("---")
 
 
-# --- 6. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI ---
-tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
-    SUBJECT_MAP["mat"]["title"], 
-    SUBJECT_MAP["tr"]["title"], 
-    SUBJECT_MAP["sci"]["title"],
-    SUBJECT_MAP["soc"]["title"]
-])
+# --- 6. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI (SADECE MATEMATİK) ---
+
+# Sadece Matematik sekmesi tanımlandı.
+tab_math = st.tabs([
+    SUBJECT_MAP["mat"]["title"]
+])[0] 
 
 render_subject_tab(tab_math, "mat")
-render_subject_tab(tab_tr, "tr")
-render_subject_tab(tab_sci, "sci")
-render_subject_tab(tab_soc, "soc")
