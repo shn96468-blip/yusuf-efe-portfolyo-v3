@@ -1,50 +1,39 @@
 import streamlit as st
 import os
-from google import genai
-from google.genai.errors import APIError 
 
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
-
-# secrets.toml dosyasından API anahtarını yükler. Bu anahtar Streamlit Secrets'ta olmalıdır.
-try:
-    if 'GEMINI_API_KEY' not in st.secrets:
-        st.error("⚠️ GEMINI_API_KEY bulunamadı. Lütfen secrets.toml dosyanıza ekleyin.")
-        st.stop()
-    
-    # Gemini istemcisini API anahtarıyla başlat
-    client = genai.Client(api_key=st.secrets['GEMINI_API_KEY'])
-    MODEL = 'gemini-2.5-flash' # Kullanılacak model
-
-except Exception as e:
-    st.error(f"API İstemcisi Başlatılamadı: {e}")
-    st.stop()
-
+# API bağımlılığı tamamen kaldırıldı. Uygulama stabil çalışacaktır.
 
 # --- 2. İÇERİK TANIMLARI ---
-# Bu içerikler, Konu Anlatımı butonuna basıldığında görünecektir.
+# İçerikler manuel olarak girilmelidir. (Türkçe içeriği örnek olarak dolduruldu)
 
 TURKISH_CONTENT = """
 ## 📝 Fiiller (Eylemler) Konu Anlatımı ✨
-Fiiller (Eylemler), bir cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Bir eylemin gerçekleştiği zamanı ve eylemi kimin yaptığını (kişi) gösteren ekler alırlar.
+
+Sevgili öğrencim, Fiiller (Eylemler), bir cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Bir eylemin gerçekleştiği zamanı ve eylemi kimin yaptığını (kişi) gösteren ekler alırlar.
 
 ### 1. Fiillerin Anlam Özellikleri
 * **Kılış (İş) Fiilleri:** Nesne alabilen fiillerdir. Örnek: "Yazmak", "Okumak".
 * **Durum Fiilleri:** Nesne almayan, öznenin durumunu bildiren fiillerdir. Örnek: "Uyumak", "Gülmek".
 * **Oluş Fiilleri:** Zamanla kendiliğinden gerçekleşen değişikliklerdir. Örnek: "Sararmak", "Büyümek".
 """
+
 MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
 SCIENCE_CONTENT = "## 🧪 Fen Bilimleri Konu Anlatımı Detayı"
 SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı"
+
 
 MATH_VIDEOS = {} 
 TURKISH_VIDEOS = {}
 SCIENCE_VIDEOS = {}
 SOCIAL_VIDEOS = {}
 
+
 # --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
 if 'content_key' not in st.session_state: st.session_state.content_key = None 
 if 'ai_response' not in st.session_state:
-    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. VEYA Genel Bir Şey Sorun."
+    # Akıl Öğretmen bölümü için yer tutucu mesajı
+    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYA Genel Bir Şey Sorun."
     st.session_state.last_topic = ""
 
 # --- HARİTALAR VE SABİTLER ---
@@ -60,9 +49,9 @@ def toggle_content(key):
     if st.session_state.content_key == key: st.session_state.content_key = None
     else: st.session_state.content_key = key
 
-# AKIL ASİSTANININ API KULLANARAK CEVAP ÜRETEN ESNEK FONKSİYONU
+# AKIL ASİSTANININ SADECE YER TUTUCU GÖSTEREN FONKSİYONU
 def generate_ai_explanation(topic):
-    topic_clean = topic.strip()
+    topic_clean = topic.strip().upper()
     
     if not topic_clean:
         st.session_state.ai_response = f"## ⚠️ Akıl Asistanı Uyarısı: Lütfen bir konu adı veya soru yazınız."
@@ -70,33 +59,13 @@ def generate_ai_explanation(topic):
 
     st.session_state.last_topic = topic
     
-    # Yükleme (spinner) animasyonu göster
-    with st.spinner(f"👨‍🏫 Akıl Öğretmen, '{topic_clean}' konusunu hazırlıyor... Lütfen bekleyin."):
-        
-        # API Prompu: 7. Sınıf öğrencisine uygun bir cevap istenir.
-        prompt = f"""
-        Sen 7. sınıf öğrencilerine ders veren Akıl Öğretmensin. Konuyu/soruyu sade, net ve öğretici bir dille anlat. 
-        Cevabını Markdown formatında (Başlıklar, kalınlaştırmalar, madde işaretleri kullanarak) formatla. 
-        Konu: {topic_clean}
-        """
+    # API yok, bu yüzden manuel giriş için yer tutucu gösterilir.
+    st.session_state.ai_response = f"""
+## 👨‍🏫 Akıl Öğretmen: {topic_clean} Konu Anlatımı ✨
 
-        try:
-            # API çağrısı
-            response = client.models.generate_content(
-                model=MODEL,
-                contents=prompt
-            )
-            # Cevabı session state'e kaydet
-            st.session_state.ai_response = f"## 👨‍🏫 Akıl Öğretmen: {topic_clean.upper()} Konu Anlatımı ✨\n\n" + response.text
+**Konu Anlatımı Detayı:** Lütfen **{topic_clean}** konusunun detaylı içeriğini bu alana giriniz. (Markdown formatını kullanabilirsiniz.)
 
-        except APIError as e:
-            st.session_state.ai_response = f"""
-            ## ❌ API Hatası
-            Akıl Öğretmen şu an bağlantı kuramıyor. Lütfen API anahtarınızı ve Streamlit logs'u kontrol edin.
-            Hata Detayı: {e}
-            """
-        except Exception as e:
-             st.session_state.ai_response = f"## ❌ Bir Hata Oluştu: {e}"
+"""
 
 
 # --- 6. SAYFA AYARLARI ---
@@ -120,12 +89,15 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
     
     # Konu Listeleri
     if key_prefix == "tr":
-        konu_listesi = ["Sözcükte Anlam", "Fiiller", "Ek Fiil", "Zarflar", "Yazım Kuralları"]
+        konu_listesi = ["Sözcükte Anlam", "Cümlede Anlam", "Parçada Anlam", "Fiiller", "Ek Fiil", "Zarflar", "Yazım Kuralları"]
     elif key_prefix == "mat":
-        konu_listesi = ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler", "Oran Orantı"]
-    # ... diğer listeler (kısa tutuldu)
+        konu_listesi = ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler", "Oran Orantı", "Doğrular ve Açılar"]
+    elif key_prefix == "sci":
+        konu_listesi = ["Güneş Sistemi", "Hücre ve Bölünmeler", "Kuvvet ve Enerji", "Saf Madde ve Karışımlar"]
+    elif key_prefix == "soc":
+        konu_listesi = ["Birey ve Toplum", "Kültür ve Miras", "İnsanlar, Yerler ve Çevreler", "Bilim ve Teknoloji"]
     else:
-        konu_listesi = [f"Bu derse ait Konu Listesi Henüz Eklenmedi. (Derin içerik: {subject_title})"]
+        konu_listesi = [f"Bu derse ait Konu Listesi Henüz Eklenmedi."]
 
     
     with tab_context:
@@ -147,31 +119,30 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
             for konu in konu_listesi: st.markdown(f"* **{konu}**")
             st.markdown("---")
 
+            # Manuel olarak girilen detaylı konu içeriği burada görünür
             st.subheader("📘 Konu Anlatımı Detay (Manuel İçerik)")
-            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı."), unsafe_allow_html=True)
+            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen ilgili içerik dosyanızı kontrol edin."), unsafe_allow_html=True)
             st.markdown("---")
             
         else:
             st.info(f"Yukarıdaki butona tıklayarak {subject_title} dersi içeriğini görebilirsiniz.")
 
 # ==============================================================================
-# --- 9. KONU ANLATIMI ASİSTANI (ESNEK AI) ---
+# --- 9. KONU ANLATIMI ASİSTANI (MANUEL YER TUTUCU) ---
 # ==============================================================================
 with tab_ai: 
-    st.header("🤖 Akıl Öğretmen Asistanı - Her Konuya Cevap Verir")
+    st.header("🤖 Akıl Öğretmen Asistanı - Konu Anlatımı")
     
-    st.info("Bu asistan, API kullanarak her türlü konuya (Rasyonel, Söz Sanatları, Biyoloji vb.) cevap verebilir.")
+    st.info("Bu asistan, API kullanmaz. Manuel içerik girişi yapmanız için bir arayüz sağlar.")
     st.markdown("---")
 
     st.subheader("❓ Akıl Öğretmen'e Sor")
     
-    # Kullanıcıdan giriş al
     input_topic = st.text_input(
         "Konu Adını veya Sorunuzu Yazınız (Örn: Rasyonel Sayılar, Söz Sanatları, Mitoz)", 
         value=st.session_state.last_topic, key="topic_input"
     )
     
-    # Butona basıldığında API fonksiyonunu çağır
     st.button(
         "Akıl'dan Konuyu Anlatmasını İsteyin", 
         type="secondary", key="ai_generate",
@@ -179,7 +150,7 @@ with tab_ai:
     )
     
     st.markdown("---")
-    # AI'dan gelen cevabı görüntüle
+    # Akıl Öğretmen cevabı (sadece yer tutucu mesajı)
     st.markdown(st.session_state.ai_response, unsafe_allow_html=True) 
     st.markdown("---") 
 
