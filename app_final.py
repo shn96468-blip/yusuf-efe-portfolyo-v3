@@ -3,13 +3,14 @@ import os
 
 # --- 1. SABİT İÇERİKLER ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
+# KRİTİK DEĞİŞİKLİK: Tonguç 7. Sınıf kanalının direkt URL'si
+TONGUC_KANAL_LINK = "https://www.youtube.com/@tonguc7"
 YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
-# KRİTİK: Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
+# Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
 TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
 
-# --- 2. DERS VE KONU TANIMLARI (Tüm dersler geri getirildi) ---
-# NOT: Manuel ders notları (büyük metin blokları) tamamen kaldırılmıştır.
+# --- 2. DERS VE KONU TANIMLARI ---
 
 SUBJECT_MAP = {
     "tr": {
@@ -46,13 +47,11 @@ def get_search_link(query, search_engine):
         # TESTCOZ.COM DİREKT LİNKİ
         return TESTCOZ_ONLINE_LINK
     
-    elif search_engine == "tonguc_video_search":
-        # TONGUÇ 7. SINIF VİDEO ARAMA SORGUSU
-        search_query = f"{query} tonguç akademi 7. sınıf konu anlatımı"
-        final_query = search_query.replace(' ', '+')
-        return f"{YOUTUBE_LINK_BASLANGIS}{final_query}"
+    elif search_engine == "tonguc_kanal":
+        # TONGUÇ 7. SINIF KANAL DİREKT LİNKİ
+        return TONGUC_KANAL_LINK
 
-    else: # Google araması (Ders Notları veya Hızlı Erişim için)
+    else: # Google araması (Hızlı Erişim için)
         search_query = f"{query} 7. Sınıf Konu Anlatımı"
         final_query = search_query.replace(' ', '+')
         return f"{GOOGLE_LINK_BASLANGIC}{final_query}"
@@ -65,34 +64,25 @@ def render_subject_tab(tab_context, subject_key):
     with tab_context:
         st.header(f"✨ {subject_data['title']} Dersi")
         
-        # 3 KUTUCUK (Buton) Oluşturma
-        col_notes, col_quiz, col_video = st.columns(3)
+        # Sadece Test ve Video Düğmeleri (2 KUTUCUK) Oluşturma
+        col_quiz, col_video = st.columns(2)
 
-        # --- A. DERS NOTLARI KUTUCUĞU (GOOGLE LİNKİ) ---
-        with col_notes:
-            st.link_button(
-                "📝 Detaylı Ders Notlarını Bul", 
-                url=get_search_link(subject_data['title'], "google"),
-                type="primary", 
-                help=f"Bu buton, Google'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
-            )
-
-        # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
+        # --- A. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
         with col_quiz:
             st.link_button(
                 "✅ Test Çöz - Yeni Nesil Sorular", 
                 url=get_search_link("", "testcoz_quiz"), 
-                type="secondary", 
+                type="primary", 
                 help="Doğrudan testcoz.com sitesini açar."
             )
         
-        # --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ YOUTUBE ARAMASI) ---
+        # --- B. VİDEO İZLE KUTUCUĞU (TONGUÇ KANAL DİREKT LİNK) ---
         with col_video:
             st.link_button(
-                "📺 Tonguç Akademi 7. Sınıf Videoları", 
-                url=get_search_link(subject_data['title'], "tonguc_video_search"), 
-                type="secondary",
-                help=f"YouTube'da '{subject_data['title']} tonguç akademi 7. sınıf konu anlatımı' araması yapar."
+                "📺 Tonguç Akademi 7. Sınıf Kanalı", 
+                url=get_search_link("", "tonguc_kanal"), 
+                type="primary",
+                help=f"YouTube'da Tonguç Akademi 7. Sınıf kanalını doğrudan açar."
             )
         
         st.markdown("---")
@@ -101,18 +91,19 @@ def render_subject_tab(tab_context, subject_key):
         st.subheader("Konulara Göre Hızlı Erişim (Google Arama)")
         st.info("Aşağıdaki konulara tıklayarak, ders notlarını Google'da hızla bulabilirsiniz.")
         
+        # Hızlı erişim için 3 düğme
         cols_content = st.columns(3)
         
         for i, topic in enumerate(subject_data.get('topics', [])):
             col = cols_content[i % 3]
             
-            # Google Arama Linki (Notlar için)
+            # Google Arama Linki
             google_link = get_search_link(topic, "google")
             
             with col:
                 st.markdown(f"**📚 {topic}**")
                 # Key parametresi, Streamlit'in butonları ayırt etmesini sağlar.
-                st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
+                st.link_button("Notları Google'da Bul", url=google_link, type="secondary", key=f"{subject_key}_{topic}_g")
                 st.markdown("---")
 
 
