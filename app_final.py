@@ -3,7 +3,6 @@ import os
 
 # --- 1. SABİT İÇERİKLER ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
-# Tonguç 7. Sınıf kanalının direkt URL'si
 TONGUC_KANAL_LINK = "https://www.youtube.com/@tonguc7"
 YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
