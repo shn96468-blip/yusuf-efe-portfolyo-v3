@@ -1,38 +1,89 @@
 import streamlit as st
 import os
+from google import genai
+from google.genai.errors import APIError 
 
-# --- 2. İÇERİK TANIMLARI (MANUEL İÇERİK ALANI) ---
+# --- 1. KÜTÜPHANE VE API KURULUMU ---
 
-# 1. DETAYLI KONU ANLATIMI İÇİN İÇERİK
-TURKISH_CONTENT = """
-## 📝 TÜRKÇE DERSİ DETAYLI KONU ANLATIM BAŞLIĞI
-Bu alana Türkçe dersi için hazırladığınız **detaylı konuyu** (Markdown kullanarak) yapıştırmalısınız.
-"""
+# secrets.toml dosyasından API anahtarını güvenli şekilde yükler.
+try:
+    if 'GEMINI_API_KEY' not in st.secrets:
+        # API anahtarı yoksa hatayı gösterir ve uygulamanın devam etmesini durdurur.
+        st.error("⚠️ GEMINI_API_KEY bulunamadı. Lütfen Streamlit Cloud Secrets paneline ekleyin.")
+        st.stop()
+    
+    # Gemini istemcisini API anahtarıyla başlat
+    client = genai.Client(api_key=st.secrets['GEMINI_API_KEY'])
+    MODEL = 'gemini-2.5-flash' # Kullanılacak model
 
-MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı (Lütfen içeriği buraya ekleyin.)"
-SCIENCE_CONTENT = "## 🧪 FEN BİLİMLERİ KONU ANLATIM BAŞLIĞI (Detaylı içeriği buraya ekleyin.)"
-SOCIAL_CONTENT = "## 🌍 SOSYAL BİLGİLER KONU ANLATIM BAŞLIĞI (Detaylı içeriği buraya ekleyin.)"
+except Exception as e:
+    st.error(f"API İstemcisi Başlatılamadı: {e}")
+    st.stop()
 
-# Deneme değişkenleri ve haritası tamamen kaldırıldı.
+
+# --- 2. İÇERİK TANIMLARI ---
+# Bu değişkenler artık manuel içerik yerine, Yapay Zeka tarafından doldurulacaktır.
+# Her dersin içeriği, butona basıldığında Yapay Zeka tarafından oluşturulup bu değişkenlere kaydedilecektir.
+TURKISH_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
+MATH_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
+SCIENCE_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
+SOCIAL_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
 
 
 # --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
 if 'content_key' not in st.session_state: st.session_state.content_key = None 
-# 'test_active' değişkeni kaldırıldı.
+if 'ai_contents' not in st.session_state:
+    # Yapay Zeka tarafından üretilen içerikleri depolamak için bir sözlük
+    st.session_state.ai_contents = {
+        "tr_konu": TURKISH_CONTENT,
+        "mat_konu": MATH_CONTENT,
+        "sci_konu": SCIENCE_CONTENT,
+        "soc_konu": SOCIAL_CONTENT,
+    }
 
 # --- HARİTALAR VE SABİTLER ---
-CONTENT_MAP = {
-    "mat_konu": MATH_CONTENT, 
-    "tr_konu": TURKISH_CONTENT, 
-    "sci_konu": SCIENCE_CONTENT, 
-    "soc_konu": SOCIAL_CONTENT, 
-}
+# CONTENT_MAP artık sadece session state'deki AI içeriklerini işaret ediyor.
+CONTENT_MAP = st.session_state.ai_contents
 
-# --- 5. BUTON MANTIĞI ---
-def toggle_content(key):
-    # Bu fonksiyon sadece Konu Anlatımı butonunu yönetir
-    if st.session_state.content_key == key: st.session_state.content_key = None
-    else: st.session_state.content_key = key
+
+# --- 5. BUTON MANTIĞI VE API ÇAĞRISI ---
+def generate_content_with_ai(subject_title, content_key):
+    """Konu anlatımını API'den otomatik olarak çeken fonksiyon."""
+    
+    # Eğer içerik daha önce üretilmemişse (veya hala varsayılan mesajdaysa)
+    if st.session_state.ai_contents.get(content_key) == "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak.":
+        
+        prompt = f"""
+        Sen 7. sınıf öğrencilerine ders veren bir öğretmensin. {subject_title} dersinin 1. dönem temel konularını (Konu Listesi dahil) sade, detaylı, net, öğretici bir dille anlat. Cevabını mutlaka başlıklar, kalınlaştırmalar ve madde işaretleri kullanarak formatla. 
+        """
+
+        with st.spinner(f"👨‍🏫 Akıl Öğretmen, '{subject_title}' dersi içeriğini otomatik olarak hazırlıyor..."):
+            try:
+                # API çağrısı
+                response = client.models.generate_content(
+                    model=MODEL,
+                    contents=prompt
+                )
+                # Cevabı session state'e kaydet
+                st.session_state.ai_contents[content_key] = f"## 👨‍🏫 {subject_title} Detaylı Konu Anlatımı ✨\n\n" + response.text
+
+            except APIError as e:
+                st.session_state.ai_contents[content_key] = f"""
+                ## ❌ API Hatası
+                Akıl Öğretmen şu an bağlantı kuramıyor. Lütfen anahtarınızı kontrol edin. Hata Detayı: {e}
+                """
+            except Exception as e:
+                 st.session_state.ai_contents[content_key] = f"## ❌ Bir Hata Oluştu: {e}"
+
+
+def toggle_content(key, subject_title):
+    # Eğer buton gizleniyorsa, sadece gizle
+    if st.session_state.content_key == key: 
+        st.session_state.content_key = None
+    else:
+        # Eğer butona ilk kez basılıyorsa, içeriği üret
+        generate_content_with_ai(subject_title, key)
+        st.session_state.content_key = key
 
 
 # --- 6. SAYFA AYARLARI ---
@@ -52,7 +103,7 @@ tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
 def render_subject_tab(tab_context, subject_title, key_prefix):
     konu_key = f"{key_prefix}_konu"
     
-    # Konu Listeleri GÜNCELLENDİ
+    # Konu Listeleri (Artık sadece listedir, içerik AI'dan gelecek)
     if key_prefix == "tr":
         konu_listesi = ["Sözcükte Anlam", "Cümlede Anlam", "Parçada Anlam", "Fiiller", "Ek Fiil", "Zarflar", "Yazım Kuralları"]
     elif key_prefix == "mat":
@@ -68,15 +119,15 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
     with tab_context:
         st.header(f"{subject_title} Dersi İçerikleri")
         
-        # Deneme butonu kaldırıldı, sadece Konu Anlatımı ve PDF Kontrol kaldı.
+        # Deneme butonu kaldırıldı.
         col_btn1, col_btn2 = st.columns(2) 
         
         with col_btn1:
-            button_label = "⬆️ Konuyu Gizle" if st.session_state.content_key == konu_key else "📄 Detaylı Konu Anlatımı"
-            st.button(button_label, type="primary", key=konu_key, on_click=toggle_content, args=(konu_key,)) 
+            button_label = "⬆️ Konuyu Gizle" if st.session_state.content_key == konu_key else "📄 Detaylı Konu Anlatımı (OTOMATİK)"
+            st.button(button_label, type="primary", key=konu_key, on_click=toggle_content, args=(konu_key, subject_title)) 
                       
         with col_btn2: 
-            st.button("♦️ PDF Sonuç Kontrol", type="secondary", key=f"{key_prefix}_pdf_kontrol")
+            st.button("♦️ PDF Sonuç Kontrol (MANUEL)", type="secondary", key=f"{key_prefix}_pdf_kontrol")
             
         st.markdown("---")
         
@@ -86,19 +137,18 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
             for konu in konu_listesi: st.markdown(f"* **{konu}**")
             st.markdown("---")
 
-            # MANUEL DETAYLI KONU İÇERİĞİ BURADA GÖRÜNÜR
-            st.subheader("📘 Detaylı Konu Anlatımı")
-            # Konu anlatım özelliği burada çalışıyor.
-            st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen app_final.py dosyasındaki içerik değişkenlerini doldurun."), unsafe_allow_html=True)
+            # OTOMATİK ÜRETİLEN KONU İÇERİĞİ BURADA GÖRÜNÜR
+            st.subheader("📘 Otomatik Detaylı Konu Anlatımı")
+            st.markdown(st.session_state.ai_contents.get(konu_key), unsafe_allow_html=True)
             st.markdown("---")
             
         else:
-            st.info(f"Yukarıdaki butona tıklayarak {subject_title} dersi detaylı konu anlatımını görebilirsiniz.")
+            st.info(f"Yukarıdaki butona tıklayarak {subject_title} dersi detaylı konu anlatımını otomatik olarak görebilirsiniz.")
 
 # ==============================================================================
 # --- 9. DERS SEKMELERİNİN ÇAĞRILMASI ---
 # ==============================================================================
-render_subject_tab(tab_math, "🔢 Matematik", "mat")
-render_subject_tab(tab_tr, "📝 Türkçe", "tr")
-render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
-render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
+render_subject_tab(tab_math, "Matematik", "mat")
+render_subject_tab(tab_tr, "Türkçe", "tr")
+render_subject_tab(tab_sci, "Fen Bilimleri", "sci")
+render_subject_tab(tab_soc, "Sosyal Bilgiler", "soc")
