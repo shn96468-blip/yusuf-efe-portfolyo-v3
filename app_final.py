@@ -1,12 +1,25 @@
 import streamlit as st
 import os
+from google import genai
+from google.genai import types
 
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
 
-# --- 2. İÇERİK TANIMLARI ---
-# Sadece kalan 4 dersin içerikleri tanımlanmıştır.
+# API Anahtarını Streamlit secrets dosyasından yükle
+API_KEY = None
+client = None
 try:
-    # Dikkat: Bu metinler content dosyalarınızın içinde tanımlı olmalıdır.
+    if "GEMINI_API_KEY" in st.secrets:
+        API_KEY = st.secrets["GEMINI_API_KEY"]
+        client = genai.Client(api_key=API_KEY)
+    else:
+        st.error("API anahtarı 'secrets.toml' dosyasında tanımlanmadı. Akıl Öğretmen çalışmayacaktır.")
+except Exception as e:
+    st.error(f"API kurulum hatası: {e}")
+
+# --- 2. İÇERİK TANIMLARI ---
+# Bu içerikler artık konu anlatımına girmeyecek, sadece Konu Anlatımı sekmesinde listelenecek.
+try:
     MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
     TURKISH_CONTENT = "## 📝 Türkçe Konu Anlatımı Detayı" 
     SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı Detayı"
@@ -41,23 +54,49 @@ def toggle_content(key):
     if st.session_state.content_key == key: st.session_state.content_key = None
     else: st.session_state.content_key = key
 
-# AKIL ASİSTANININ SADECE KONUYU ANLATMASI İÇİN EN SON GÜNCELLEME
+# AKIL ASİSTANININ GEMINI ILE KONUYU OTOMATİK ANLATMASI İÇİN GÜNCELLENMİŞ FONKSİYON
 def generate_ai_explanation(topic):
     topic_clean = topic.strip().upper()
-    response = ""
     
-    if topic_clean:
-        response = f"""
-## 👨‍🏫 Akıl Öğretmen: {topic_clean} Konu Anlatımı ✨
-        
-**Konu Anlatımı Detayı:** Lütfen **{topic_clean}** konusunun detaylı içeriğini bu alana giriniz. (Markdown formatını kullanabilirsiniz.)
+    if not client or not API_KEY:
+        st.session_state.ai_response = f"## ⚠️ API Hatası: Lütfen API anahtarınızı '.streamlit/secrets.toml' dosyasına girin."
+        st.session_state.last_topic = topic
+        return
 
-"""
-    else:
-        response = f"""## ⚠️ Akıl Asistanı Uyarısı: Lütfen bir konu adı veya soru yazınız."""
-        
-    st.session_state.ai_response = response
     st.session_state.last_topic = topic
+    
+    if not topic_clean:
+        st.session_state.ai_response = f"## ⚠️ Akıl Asistanı Uyarısı: Lütfen bir konu adı veya soru yazınız."
+        return
+
+    # Kullanıcıya yükleme (loading) mesajı göster
+    with st.spinner(f"👨‍🏫 Akıl Öğretmen: **{topic_clean}** konusunu hazırlıyor..."):
+        try:
+            # Öğretmen talimatı (Prompt)
+            prompt = f"""
+            Sen 7. sınıf öğrencilerine ders anlatan tecrübeli ve motive edici bir öğretmensin. 
+            'Öğretmen Tonu'nu kullanarak ve konuyu basit, anlaşılır adımlarla açıklayarak,
+            '{topic}' konusunu en az 300 kelime olacak şekilde detaylıca anlat. 
+            Cevabını doğrudan konu anlatımıyla başlat, giriş veya selamlama yapma.
+            Önemli yerleri kalın (bold) yaparak ve kısa başlıklar (Markdown ##, ###) kullanarak formatla.
+            """
+            
+            ai_response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt
+            ).text
+
+            # Final cevap formatı
+            st.session_state.ai_response = f"""
+## 👨‍🏫 Akıl Öğretmen: {topic_clean} Konu Anlatımı ✨
+
+{ai_response}
+"""
+        except Exception as e:
+            st.session_state.ai_response = f"""
+## 🚨 Hata: Akıl Öğretmen Cevap Veremedi
+Yapay zeka servisine bağlanırken bir sorun oluştu. API kota/anahtar hatası olabilir.
+"""
 
 
 # --- 6. SAYFA AYARLARI ---
@@ -137,6 +176,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
 
             # KONU ANLATIMI DETAY METNİNİ GÖSTER
             st.subheader("📘 Konu Anlatımı Detay")
+            # BU BÖLÜM ARTIK SADECE MANUAL İÇERİK İÇİN KALDI
             st.markdown(CONTENT_MAP.get(konu_key, "İçerik Bulunamadı. Lütfen ilgili içerik dosyanızı kontrol edin."), unsafe_allow_html=True)
             st.markdown("---")
             
