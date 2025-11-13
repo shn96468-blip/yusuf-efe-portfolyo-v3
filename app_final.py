@@ -3,21 +3,20 @@ import os
 
 # --- 1. SABİT İÇERİKLER (APISIZ VE STABIL) ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
-TONGUC_CHANNEL_LINK = "https://www.youtube.com/@tongucakademi" 
+YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
-# TEST ÇÖZME İÇİN GÜVENİLİR ARAMA SORGUSU (Google'da TESTCOZ'u arasın)
-TESTCOZ_SEARCH_QUERY = "testcoz.online 7. sınıf test çöz" 
+# KRİTİK DEĞİŞİKLİK: Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
+TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
 
 # --- KRİTİK MANUEL İÇERİK BÖLÜMÜ ---
 # LÜTFEN İÇERİKLERİ AŞAĞIDAKİ ALANLARA YAPIŞTIRIN!
 
-# Not: Matematik notları örneği düzeltildi ve temizlendi.
 MATH_NOTES = """
 ## 📘 7. Sınıf Matematik Ana Konu Anlatımı
 
 ### Tam Sayılarla Toplama ve Çıkarma İşlemi
-* Pozitif iki tam sayı toplanırken sayıların işareti dikkate alınmadan toplanır. Sonuca artı (+) işareti yazılır. Örn: (+5) + (+2) = (+7)
-* Negatif iki tam sayı toplanırken sayılar, işaretler dikkate alınmadan toplanır. Sonuca (-) işareti yazılır. Örn: (-5) + (-2) = (-7)
+* Pozitif iki tam sayı toplanırken sayıların işareti dikkate alınmadan toplanır. Sonuca artı (+) işareti yazılır. Örn: (+5) + (+2) = (+7).
+* Negatif iki tam sayı toplanırken sayılar, işaretler dikkate alınmadan toplanır. Sonuca (-) işareti yazılır. Örn: (-5) + (-2) = (-7).
 * Ters (zıt) işaretli iki tam sayı toplanırken... (Lütfen geri kalan içeriği buradan devam ettirin)
 """
 
@@ -65,7 +64,6 @@ SUBJECT_MAP = {
 
 
 # --- 3. SESSION STATE VE SAYFA AYARLARI ---
-# Not: Hata çözümü için st.session_state'in kontrolü baştan yapılıyor.
 if 'active_content' not in st.session_state: st.session_state.active_content = None 
 
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Portal")
@@ -73,7 +71,6 @@ st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Ders Portalı")
 st.markdown("---")
 
 def set_active_content(content_type):
-    # Bu fonksiyon, tıklandığında içeriği açıp kapamaya yarar.
     if st.session_state.active_content == content_type: st.session_state.active_content = None
     else: st.session_state.active_content = content_type
 
@@ -83,13 +80,14 @@ def get_search_link(query, search_engine):
     """Verilen sorgu için arama linki oluşturur."""
     
     if search_engine == "testcoz_quiz":
-        # TESTCOZ.ONLINE için Google Arama linki
-        query = TESTCOZ_SEARCH_QUERY.replace(' ', '+')
-        return f"{GOOGLE_LINK_BASLANGIC}{query}"
+        # TESTCOZ.COM DİREKT LİNKİ
+        return TESTCOZ_ONLINE_LINK
     
-    elif search_engine == "tonguc_channel":
-        # TONGUÇ KANAL LİNKİ
-        return TONGUC_CHANNEL_LINK
+    elif search_engine == "tonguc_video_search":
+        # TONGUÇ 7. SINIF VİDEO ARAMA SORGUSU
+        search_query = f"{query} tonguç akademi 7. sınıf konu anlatımı"
+        final_query = search_query.replace(' ', '+')
+        return f"{YOUTUBE_LINK_BASLANGIS}{final_query}"
 
     else: # Google araması (Hızlı Erişim/Notlar için)
         search_query = f"{query} 7. Sınıf Konu Anlatımı"
@@ -120,22 +118,22 @@ def render_subject_tab(tab_context, subject_key):
                 help="Koda manuel eklenmiş detaylı ders notlarını gösterir."
             )
 
-        # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.ONLINE GOOGLE ARAMASI) ---
+        # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
         with col_quiz:
             st.link_button(
                 "✅ Test Çöz - Yeni Nesil Sorular", 
                 url=get_search_link("", "testcoz_quiz"), 
                 type="secondary", 
-                help="Google'da 'testcoz.online 7. sınıf test çöz' araması yapar."
+                help="Doğrudan testcoz.com sitesini açar."
             )
         
-        # --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ KANAL LİNKİ) ---
+        # --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ YOUTUBE ARAMASI) ---
         with col_video:
             st.link_button(
-                "📺 Tonguç Akademi Kanalı", 
-                url=get_search_link("", "tonguc_channel"), 
+                "📺 Tonguç Akademi 7. Sınıf Videoları", 
+                url=get_search_link(subject_data['title'], "tonguc_video_search"), 
                 type="secondary",
-                help="Doğrudan Tonguç Akademi YouTube kanalını açar."
+                help=f"YouTube'da '{subject_data['title']} tonguç akademi 7. sınıf konu anlatımı' araması yapar."
             )
         
         st.markdown("---")
