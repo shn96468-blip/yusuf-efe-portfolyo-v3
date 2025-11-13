@@ -87,23 +87,27 @@ SOCIAL_CONTENT = """
 """
 
 # İNGİLİZCE İÇERİĞİ
-ENGLISH_CONTENT = """
-## 🗣️ İngilizce - Konu Anlatımı ve Özet
-<div style='background-color: #26292e; padding: 10px; border-radius: 5px;'>
-    <p>🔑 Konu: 7. Sınıf İngilizce Üniteleri</p>
-</div>
-### 📄 Detaylı Konu Özeti
-* Appearance and Personality (Dış Görünüş ve Karakter)
-* Sports (Spor)
-* Biographies (Biyografiler)
-* Wild Animals (Vahşi Hayvanlar)
-* Television (Televizyon)
-* Parties (Partiler)
-* Superstitions (Batıl İnançlar)
-* Public Buildings (Halk Binaları)
-* Environment (Çevre)
-* Planets (Gezegenler)
-"""
+# ==============================================================================
+# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (İşlevsel) ---
+# ==============================================================================
+with tab_eng:
+    st.header("🗣️ İngilizce Dersi İçerikleri")
+    col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
+    
+    with col_ing_btn1:
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="ing_konu") 
+    with col_ing_btn2:
+        st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
+    with col_ing_btn3:
+        st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
+    
+    st.markdown("---")
+    
+    with st.expander("💬 7. Sınıf İngilizce Konularına Göz Atın"):
+        # Hata veren satırın düzeltilmiş hali:
+        st.info("Aşağıda 7. Sınıf İngilizce Ünitelerine ait genel bir özet listelenmiştir. Kelime bilginizi güçlendirin.")
+        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+        st.markdown("**💡 Koç Önerisi:** 'Appearance and Personality' ünitesindeki sıfatları ezberlemek önemlidir.")
 
 # DİN KÜLTÜRÜ İÇERİĞİ
 RELIGION_CONTENT = """
@@ -259,3 +263,4 @@ with tab_eng:
     
     with st.expander("💬 7. Sınıf İngilizce Konularına Göz Atın"):
         st.info("Aşağıda 7. Sınıf İngilizce Ünitelerine ait genel bir özet listelenmiştir. Kel
+
