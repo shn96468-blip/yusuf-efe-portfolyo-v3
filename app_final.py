@@ -1,6 +1,6 @@
 import streamlit as st
 
-# --- 1. TÜM İÇERİKLERİN TANIMI (Hata veren import'lar kaldırıldı, tüm içerik buraya taşındı) ---
+# --- 1. TÜM İÇERİKLERİN TANIMI (Dosya bulma hatasını önlemek için tek dosyada) ---
 
 # KOÇ MODÜLÜ İÇERİĞİ
 COACH_CONTENT = """
@@ -124,7 +124,7 @@ st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eği
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# 3. SEKMELERİN TANIMLANMASI (Tüm with tab_... komutlarından önce gelmelidir)
+# 3. SEKMELERİN TANIMLANMASI
 tab_coach, tab_math, tab_tr, tab_sci, tab_soc, tab_eng, tab_rel = st.tabs([
     "💡 Koç Modülü", 
     "🔢 Matematik İçerikleri", 
@@ -150,18 +150,18 @@ with tab_coach:
         st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
     
     st.markdown("---")
+    # Koç Modülü varsayılan içeriğini gösterir
     st.markdown(COACH_CONTENT, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# --- 5. TAB 1: MATEMATİK İÇERİKLERİ (Buton İşlevi Eklendi) ---
+# --- 5. TAB 1: MATEMATİK İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_math:
     st.header("🔢 Matematik Dersi İçerikleri")
     col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
     
     with col_math_btn1:
-        # Buton tıklandığında içeriği göstermek için değişken atıyoruz
         konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="mat_konu") 
     with col_math_btn2:
         st.button("♦️ PDF Sonuç Kontrol", type="secondary", key="mat_pdf")
@@ -170,101 +170,123 @@ with tab_math:
     
     st.markdown("---")
     
-    # Buton tıklandıysa, sadece içeriği gösterir.
     if konu_anlatimi_clicked:
-        st.markdown("### 📘 Matematik Konu Anlatımı Detayı:")
+        st.info("Matematik Konu Anlatımı Detayı:")
         st.markdown(MATH_CONTENT, unsafe_allow_html=True)
     else:
-        # Butona tıklanmadıysa, sadece temel bir karşılama mesajı gösterilebilir.
-        st.info("Yukarıdaki '📄 Konu Anlatımı' butonuna tıklayarak ders içeriğini görebilirsiniz.")
-        st.markdown(MATH_CONTENT, unsafe_allow_html=True) # Varsayılan içeriği de gösterebiliriz
+        st.markdown(MATH_CONTENT, unsafe_allow_html=True) 
 
 
 # ==============================================================================
-# --- 6. TAB 2: TÜRKÇE İÇERİKLERİ ---
+# --- 6. TAB 2: TÜRKÇE İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_tr:
     st.header("📝 Türkçe Dersi İçerikleri")
     col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
 
     with col_tr_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="turk_konu") 
+        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="turk_konu") 
     with col_tr_btn2:
         st.button("♦️ Hikaye Analizi", type="secondary", key="turk_analiz")
     with col_tr_btn3:
         st.button("🔥 Yazım Kılavuzu", type="secondary", key="turk_yazim")
 
     st.markdown("---")
-    st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
+    
+    if konu_anlatimi_clicked:
+        st.info("Türkçe Konu Anlatımı Detayı:")
+        st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
+    else:
+        st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ ---
+# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_sci:
     st.header("🧪 Fen Bilimleri Dersi İçerikleri")
     col_fen_btn1, col_fen_btn2, col_fen_btn3 = st.columns(3)
     
     with col_fen_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="fen_konu") 
+        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="fen_konu") 
     with col_fen_btn2:
         st.button("🔬 Laboratuvar Deneyleri", type="secondary", key="fen_deney")
     with col_fen_btn3:
         st.button("🔥 Ünite Testi", type="secondary", key="fen_test")
     
     st.markdown("---")
-    st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
+    
+    if konu_anlatimi_clicked:
+        st.info("Fen Bilimleri Konu Anlatımı Detayı:")
+        st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
+    else:
+        st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ ---
+# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_soc:
     st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
     col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
     
     with col_sosyal_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
+        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
     with col_sosyal_btn2:
         st.button("📜 Tarihi Olaylar", type="secondary", key="sos_olay")
     with col_sosyal_btn3:
         st.button("🔥 Coğrafya Bilgisi", type="secondary", key="sos_cografya")
     
     st.markdown("---")
-    st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
+    
+    if konu_anlatimi_clicked:
+        st.info("Sosyal Bilgiler Konu Anlatımı Detayı:")
+        st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
+    else:
+        st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ ---
+# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_eng:
     st.header("🗣️ İngilizce Dersi İçerikleri")
     col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
     
     with col_ing_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
+        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
     with col_ing_btn2:
         st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
     with col_ing_btn3:
         st.button("🔥 Kelime Testi", type="secondary", key="ing_test")
     
     st.markdown("---")
-    st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+    
+    if konu_anlatimi_clicked:
+        st.info("İngilizce Konu Anlatımı Detayı:")
+        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
+    else:
+        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
 
 
 # ==============================================================================
-# --- 10. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ ---
+# --- 10. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ (İşlevsel) ---
 # ==============================================================================
 with tab_rel:
     st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
     col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
     
     with col_din_btn1:
-        st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
+        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
     with col_din_btn2:
         st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
     with col_din_btn3:
         st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
     
     st.markdown("---")
-    st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+    
+    if konu_anlatimi_clicked:
+        st.info("Din Kültürü Konu Anlatımı Detayı:")
+        st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+    else:
+        st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
