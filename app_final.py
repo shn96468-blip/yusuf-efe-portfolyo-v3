@@ -2,12 +2,13 @@ import streamlit as st
 import os
 
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
-# API bağımlılığı kaldırıldı.
+# API bağımlılığı tamamen kaldırıldı.
 
 # --- 2. İÇERİK TANIMLARI ---
-# Bu içerikler artık try/except bloğu olmadan, doğrudan tanımlanmıştır.
+# Artık try/except bloğu kullanılmıyor, bu da SyntaxError hatasını önler.
+# İçerikler manuel olarak girilmelidir.
 
-# Fiiller konusunun içeriğini buraya yapıştırın. (Örnek içerik eklendi)
+# Türkçe içeriğine örnek Fiiller konusu eklendi.
 TURKISH_CONTENT = """
 ## 📝 Türkçe Konu Anlatımı Detayı: Fiiller (Örnek İçerik)
 Fiiller, cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Fiiller, zaman ve kişi ekleri alarak çekimlenir.
@@ -21,7 +22,6 @@ Fiiller, cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Fiille
 Fiiller, haber kipleri (geçmiş, şimdiki, gelecek, geniş zaman) ve dilek kipleri (gereklilik, şart, istek, emir) ile çekimlenir.
 """
 
-# Diğer dersler
 MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
 SCIENCE_CONTENT = "## 🧪 Fen Konu Anlatımı Detayı"
 SOCIAL_CONTENT = "## 🌍 Sosyal Bilgiler Konu Anlatımı Detayı"
@@ -54,7 +54,7 @@ def toggle_content(key):
     if st.session_state.content_key == key: st.session_state.content_key = None
     else: st.session_state.content_key = key
 
-# AKIL ASİSTANININ API'SİZ, SADECE YER TUTUCU GÖSTEREN FONKSİYONU
+# AKIL ASİSTANININ SADECE YER TUTUCU GÖSTEREN FONKSİYONU
 def generate_ai_explanation(topic):
     topic_clean = topic.strip().upper()
     
@@ -179,7 +179,8 @@ with tab_coach:
     )
     
     st.markdown("---")
-    st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
+    # Geleneksel yer tutucu mesajı görüntülenir
+    st.markdown(st.session_state.ai_response, unsafe_allow_html=True) 
     st.markdown("---") 
 
     st.header("📝 Çalışma ve Rehberlik İçerikleri") 
