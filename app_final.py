@@ -2,24 +2,21 @@ import streamlit as st
 import os
 
 # --- 1. KÜTÜPHANE VE API KURULUMU ---
-# API bağımlılığı tamamen kaldırıldı.
+# API bağımlılığı tamamen kaldırıldı. Uygulama stabil çalışacaktır.
 
 # --- 2. İÇERİK TANIMLARI ---
-# Artık try/except bloğu kullanılmıyor, bu da SyntaxError hatasını önler.
+# İçerikler manuel olarak girilmelidir.
 
-# Türkçe içeriği DOLU HALE GETİRİLDİ (Fiiller Konusu).
+# Türkçe içeriği (Fiiller Konusu)
 TURKISH_CONTENT = """
 ## 📝 Fiiller (Eylemler) Konu Anlatımı ✨
 
 Sevgili öğrencim, Fiiller (Eylemler), bir cümlede iş, oluş, hareket veya durum bildiren sözcüklerdir. Bir eylemin gerçekleştiği zamanı ve eylemi kimin yaptığını (kişi) gösteren ekler alırlar.
 
 ### 1. Fiillerin Anlam Özellikleri
-* **Kılış (İş) Fiilleri:** Öznenin yaptığı eylemden başka bir nesnenin etkilendiği fiillerdir. Bu fiillere **"ne?"** veya **"kimi?"** soruları sorulduğunda cevap alabiliriz.
-    * *Örnek:* "Yazmak", "Okumak"
-* **Durum Fiilleri:** Öznenin içinde bulunduğu bir durumu anlatan fiillerdir. Bu fiiller **nesne almazlar**.
-    * *Örnek:* "Uyumak", "Gülmek"
-* **Oluş Fiilleri:** Öznenin iradesi dışında, zamanla kendiliğinden gerçekleşen değişiklikleri ifade eden fiillerdir.
-    * *Örnek:* "Sararmak", "Büyümek"
+* **Kılış (İş) Fiilleri:** Öznenin yaptığı eylemden başka bir nesnenin etkilendiği fiillerdir. Örnek: "Yazmak", "Okumak".
+* **Durum Fiilleri:** Öznenin içinde bulunduğu bir durumu anlatan fiillerdir. Örnek: "Uyumak", "Gülmek".
+* **Oluş Fiilleri:** Öznenin iradesi dışında, zamanla kendiliğinden gerçekleşen değişiklikleri ifade eden fiillerdir. Örnek: "Sararmak", "Büyümek".
 """
 
 MATH_CONTENT = "## 📘 Matematik Konu Anlatımı Detayı"
@@ -46,8 +43,6 @@ CONTENT_MAP = {
     "sci_konu": SCIENCE_CONTENT, 
     "soc_konu": SOCIAL_CONTENT, 
 }
-COACH_CONTENT = "## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik"
-
 
 # --- 5. BUTON VE AI MANTIĞI ---
 def toggle_content(key):
@@ -78,9 +73,9 @@ st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Eği
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Eğitim Portalı")
 st.markdown("---")
 
-# --- 7. SEKMELERİN TANIMLANMASI ---
-tab_coach, tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
-    "💡 Koç Modülü", 
+# --- 7. SEKMELERİN TANIMLANMASI (KOÇ MODÜLÜ KALDIRILDI) ---
+tab_ai, tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
+    "🤖 Konu Anlatımı Asistanı", # Yeni Sekme
     "🔢 Matematik İçerikleri", 
     "📝 Türkçe İçerikleri", 
     "🧪 Fen Bilimleri",
@@ -157,15 +152,14 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
             st.info(f"Yukarıdaki butona tıklayarak {subject_title} dersi içeriğini görebilirsiniz.")
 
 # ==============================================================================
-# --- 9. KOÇ MODÜLÜ ---
+# --- 9. KONU ANLATIMI ASİSTANI (KOÇ MODÜLÜ YERİNE) ---
 # ==============================================================================
-with tab_coach: 
-    st.header("💡 Koç Modülü - Rehberlik ve Mentorluk")
+with tab_ai: 
+    st.header("🤖 Konu Anlatımı Asistanı - Sorunuzu Buraya Yazın")
     
-    st.info("YouTube video arama motoru, uygulama kararlılığı için kaldırılmıştır.")
     st.markdown("---")
 
-    st.subheader("🤖 Yapay Zeka Asistanı (Akıl)")
+    st.subheader("❓ Akıl Öğretmen'e Sor")
     
     input_topic = st.text_input(
         "Konu Adını Yazınız (Örn: Rasyonel Sayılar, Söz Sanatları, Mitoz)", 
@@ -182,16 +176,6 @@ with tab_coach:
     # Geleneksel yer tutucu mesajı görüntülenir
     st.markdown(st.session_state.ai_response, unsafe_allow_html=True) 
     st.markdown("---") 
-
-    st.header("📝 Çalışma ve Rehberlik İçerikleri") 
-    col_coach_btn1, col_coach_btn2, col_coach_btn3 = st.columns(3)
-    
-    with col_coach_btn1: st.button("📝 Çalışma Planı Oluştur", type="secondary", key="coach_plan") 
-    with col_coach_btn2: st.button("🧠 Motivasyon Teknikleri", type="secondary", key="coach_motivasyon")
-    with col_coach_btn3: st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
-    
-    st.markdown("---")
-    st.markdown(COACH_CONTENT, unsafe_allow_html=True)
 
 
 # ==============================================================================
