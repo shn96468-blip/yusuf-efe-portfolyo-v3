@@ -1,6 +1,6 @@
 import streamlit as st
 
-# --- 1. TÜM İÇERİKLERİN TANIMI (Dosya bulma hatasını önlemek için tek dosyada) ---
+# --- 1. TÜM İÇERİKLERİN TANIMI ---
 
 # KOÇ MODÜLÜ İÇERİĞİ
 COACH_CONTENT = """
@@ -150,7 +150,6 @@ with tab_coach:
         st.button("⏰ Pomodoro Zamanlayıcısı", type="secondary", key="coach_pomodoro")
     
     st.markdown("---")
-    # Koç Modülü varsayılan içeriğini gösterir
     st.markdown(COACH_CONTENT, unsafe_allow_html=True)
 
 
@@ -162,7 +161,7 @@ with tab_math:
     col_math_btn1, col_math_btn2, col_math_btn3 = st.columns(3)
     
     with col_math_btn1:
-        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="mat_konu") 
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="mat_konu") 
     with col_math_btn2:
         st.button("♦️ PDF Sonuç Kontrol", type="secondary", key="mat_pdf")
     with col_math_btn3:
@@ -170,11 +169,10 @@ with tab_math:
     
     st.markdown("---")
     
-    if konu_anlatimi_clicked:
-        st.info("Matematik Konu Anlatımı Detayı:")
+    with st.expander("📚 7. Sınıf Matematik Konularına Göz Atın"):
+        st.info("Aşağıda 7. Sınıf Matematik Müfredatına ait genel bir özet listelenmiştir. Daha fazla detay için linklere bakınız.")
         st.markdown(MATH_CONTENT, unsafe_allow_html=True)
-    else:
-        st.markdown(MATH_CONTENT, unsafe_allow_html=True) 
+        st.markdown("**💡 Koç Önerisi:** Karmaşık konuları anlamak için [YouTube'daki matematik kanallarını](https://www.youtube.com/@MatematikOgreniyorum/videos) ziyaret edebilirsiniz.")
 
 
 # ==============================================================================
@@ -185,7 +183,7 @@ with tab_tr:
     col_tr_btn1, col_tr_btn2, col_tr_btn3 = st.columns(3)
 
     with col_tr_btn1:
-        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="turk_konu") 
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="turk_konu") 
     with col_tr_btn2:
         st.button("♦️ Hikaye Analizi", type="secondary", key="turk_analiz")
     with col_tr_btn3:
@@ -193,22 +191,21 @@ with tab_tr:
 
     st.markdown("---")
     
-    if konu_anlatimi_clicked:
-        st.info("Türkçe Konu Anlatımı Detayı:")
+    with st.expander("📝 7. Sınıf Türkçe Konularına Göz Atın"):
+        st.info("Aşağıda 7. Sınıf Türkçe Müfredatına ait genel bir özet listelenmiştir. Dil bilgisi ve anlam konularına odaklanın.")
         st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
-    else:
-        st.markdown(TURKISH_CONTENT, unsafe_allow_html=True)
+        st.markdown("**💡 Koç Önerisi:** Özellikle fiiller (eylem) konusu için ek alıştırmalar çözmeniz tavsiye edilir.")
 
 
 # ==============================================================================
-# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ (İşlevsel) ---
+# --- 7. TAB 3: FEN BİLİMLERİ İÇERİKLERİ (Şimdi İşlevsel) ---
 # ==============================================================================
 with tab_sci:
     st.header("🧪 Fen Bilimleri Dersi İçerikleri")
     col_fen_btn1, col_fen_btn2, col_fen_btn3 = st.columns(3)
     
     with col_fen_btn1:
-        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="fen_konu") 
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="fen_konu") 
     with col_fen_btn2:
         st.button("🔬 Laboratuvar Deneyleri", type="secondary", key="fen_deney")
     with col_fen_btn3:
@@ -216,22 +213,21 @@ with tab_sci:
     
     st.markdown("---")
     
-    if konu_anlatimi_clicked:
-        st.info("Fen Bilimleri Konu Anlatımı Detayı:")
+    with st.expander("🔬 7. Sınıf Fen Bilimleri Konularına Göz Atın"):
+        st.info("Aşağıda 7. Sınıf Fen Bilimleri Müfredatına ait genel bir özet listelenmiştir. Deneyler ve kavramlara dikkat edin.")
         st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
-    else:
-        st.markdown(SCIENCE_CONTENT, unsafe_allow_html=True)
+        st.markdown("**💡 Koç Önerisi:** Hücre, kuvvet ve enerji gibi temel konuları mutlaka tekrar edin.")
 
 
 # ==============================================================================
-# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ (İşlevsel) ---
+# --- 8. TAB 4: SOSYAL BİLGİLER İÇERİKLERİ (Şimdi İşlevsel) ---
 # ==============================================================================
 with tab_soc:
     st.header("🌍 Sosyal Bilgiler Dersi İçerikleri")
     col_sosyal_btn1, col_sosyal_btn2, col_sosyal_btn3 = st.columns(3)
     
     with col_sosyal_btn1:
-        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="sos_konu") 
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="sos_konu") 
     with col_sosyal_btn2:
         st.button("📜 Tarihi Olaylar", type="secondary", key="sos_olay")
     with col_sosyal_btn3:
@@ -239,22 +235,21 @@ with tab_soc:
     
     st.markdown("---")
     
-    if konu_anlatimi_clicked:
-        st.info("Sosyal Bilgiler Konu Anlatımı Detayı:")
+    with st.expander("📜 7. Sınıf Sosyal Bilgiler Konularına Göz Atın"):
+        st.info("Aşağıda 7. Sınıf Sosyal Bilgiler Müfredatına ait genel bir özet listelenmiştir. Ünite konularını tekrar edin.")
         st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
-    else:
-        st.markdown(SOCIAL_CONTENT, unsafe_allow_html=True)
+        st.markdown("**💡 Koç Önerisi:** Birey ve Toplum ile Kültür ve Miras üniteleri genellikle en kapsamlı olanlardır.")
 
 
 # ==============================================================================
-# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (İşlevsel) ---
+# --- 9. TAB 5: İNGİLİZCE İÇERİKLERİ (Şimdi İşlevsel) ---
 # ==============================================================================
 with tab_eng:
     st.header("🗣️ İngilizce Dersi İçerikleri")
     col_ing_btn1, col_ing_btn2, col_ing_btn3 = st.columns(3)
     
     with col_ing_btn1:
-        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="ing_konu") 
+        st.button("📄 Konu Anlatımını Aç", type="primary", key="ing_konu") 
     with col_ing_btn2:
         st.button("💬 Konuşma Alıştırması", type="secondary", key="ing_konusma")
     with col_ing_btn3:
@@ -262,31 +257,5 @@ with tab_eng:
     
     st.markdown("---")
     
-    if konu_anlatimi_clicked:
-        st.info("İngilizce Konu Anlatımı Detayı:")
-        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
-    else:
-        st.markdown(ENGLISH_CONTENT, unsafe_allow_html=True)
-
-
-# ==============================================================================
-# --- 10. TAB 6: DİN KÜLTÜRÜ İÇERİKLERİ (İşlevsel) ---
-# ==============================================================================
-with tab_rel:
-    st.header("🕌 Din Kültürü ve Ahlak Bilgisi Dersi İçerikleri")
-    col_din_btn1, col_din_btn2, col_din_btn3 = st.columns(3)
-    
-    with col_din_btn1:
-        konu_anlatimi_clicked = st.button("📄 Konu Anlatımı", type="primary", key="din_konu") 
-    with col_din_btn2:
-        st.button("🕋 Kavram Özetleri", type="secondary", key="din_kavram")
-    with col_din_btn3:
-        st.button("🔥 Soru Çözümü", type="secondary", key="din_soru")
-    
-    st.markdown("---")
-    
-    if konu_anlatimi_clicked:
-        st.info("Din Kültürü Konu Anlatımı Detayı:")
-        st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
-    else:
-        st.markdown(RELIGION_CONTENT, unsafe_allow_html=True)
+    with st.expander("💬 7. Sınıf İngilizce Konularına Göz Atın"):
+        st.info("Aşağıda 7. Sınıf İngilizce Ünitelerine ait genel bir özet listelenmiştir. Kel
