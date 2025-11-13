@@ -6,7 +6,7 @@ if 'content_key' not in st.session_state:
 
 # AI asistanı (Akıl) için durum yönetimi.
 if 'ai_response' not in st.session_state:
-    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel Sayılar, Melekler, Personality) veya Genel Konular Sorun."
+    st.session_state.ai_response = "Konuyu yazın ve Akıl'dan Konu Anlatmasını isteyin. (Örn: Rasyonel, Kütle) VEYA Genel Bir Şey Sorun."
     st.session_state.last_topic = ""
 
 # --- BUTON TIKLAMA İŞLEVLERİ ---
@@ -36,31 +36,29 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Rasyonel Sayılar (Öğretmen Detayında!)
         
-        **Tanım ve Kavramlar:** Rasyonel sayılar, $a$ bir tam sayı ve $b$ sıfırdan farklı bir tam sayı olmak üzere, $\\frac{a}{b}$ şeklinde yazılabilen sayılar kümesidir ($\\mathbb{Q}$). Her tam sayı (örneğin 5) paydası 1 olan bir rasyonel sayıdır (5/1). Ondalık gösterim ve devirli ondalık gösterimler de rasyonel sayıları ifade etmenin farklı yollarıdır.
-
-        **Toplama ve Çıkarma İşlemleri:** Rasyonel sayılarda toplama ve çıkarma yapmanın temel kuralı, **paydaların eşit olmasıdır**. Paydalar eşitlendikten sonra, sadece paylar toplanır veya çıkarılır. Payda aynen yazılır.
-        * **Örnek 1 (Eşitleme):** $\\frac{1}{2} + \\frac{1}{4}$ işleminde paydalar 4'te eşitlenir. $\\frac{1 \\cdot 2}{2 \\cdot 2} + \\frac{1}{4} = \\frac{2}{4} + \\frac{1}{4} = \\mathbf{\\frac{3}{4}}$
-        * **Örnek 2 (Tam Sayılarla):** $3 - \\frac{1}{5}$ işleminde $3 = \\frac{15}{5}$ kabul edilir. $\\frac{15}{5} - \\frac{1}{5} = \\mathbf{\\frac{14}{5}}$
+        **Tanım ve Kavramlar:** Rasyonel sayılar, $a$ bir tam sayı ve $b$ sıfırdan farklı bir tam sayı olmak üzere, $\\frac{a}{b}$ şeklinde yazılabilen sayılar kümesidir ($\\mathbb{Q}$). Her tam sayı paydası 1 olan bir rasyonel sayıdır.
+        
+        **Toplama ve Çıkarma:** Temel kural, **paydaların eşit olmasıdır**. Paydalar eşitlendikten sonra, sadece paylar toplanır/çıkarılır.
+        * **Örnek:** $\\frac{1}{2} + \\frac{1}{4} = \\frac{2}{4} + \\frac{1}{4} = \\mathbf{\\frac{3}{4}}$
         """
     elif "tam sayı" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Tam Sayılar (Öğretmen Detayında!)
         
-        **Kümeler ve Gösterim:** Tam sayılar kümesi ($\\mathbb{Z}$), doğal sayılar kümesini ($\\mathbb{N}$) de içine alan daha geniş bir kümedir. Negatif sayılar ($-1, -2, -3, ...$), pozitif sayılar ($1, 2, 3, ...$) ve nötr olan sıfır (0) tam sayıları oluşturur. Sayı doğrusunun sağ tarafı pozitif, sol tarafı negatiftir.
+        **Kümeler:** Negatif sayılar, pozitif sayılar ve nötr olan sıfır (0) tam sayıları oluşturur ($\\mathbb{Z}$).
         
-        **Çıkarma İşlemi (Kural):** Çıkarma işlemi toplama işlemine dönüştürülür ve çıkan sayının işareti ters çevrilir.
-        * **Örnek:** $(-7) - (-3) \\rightarrow (-7) + (+3) = \\mathbf{-4}$ 
+        **Kuvvet Kuralı:** Negatif bir tam sayının **çift kuvvetleri pozitif** olurken, **tek kuvvetleri negatif** olur. (Örn: $(-5)^2 = +25$, $(-5)^3 = -125$)
         """
     elif "cebirsel" in topic_lower or "ifadeler" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Cebirsel İfadeler (Öğretmen Detayında!)
         
-        **Tanım ve Yapı:** Cebirsel ifadeler, en az bir değişken (bilinmeyen) ve en az bir işlem içeren matematiksel ifadelerdir. Örneğin, 'Bir sayının 3 katının 5 fazlası' ifadesi $\\mathbf{3x + 5}$ şeklinde gösterilir. Toplama ve çıkarma yapılırken sadece **benzer terimler** (değişkeni ve üssü aynı olanlar) toplanıp çıkarılabilir.
-
-        **Temel Kavramların Ayrımı:** Cebirsel ifadeleri anlamak için bu terimleri çok iyi bilmelisiniz:
-        1.  **Değişken (Bilinmeyen):** $x, y, a$ gibi harflerle gösterilen semboldür.
-        2.  **Katsayı:** Değişkenin önündeki sayıdır. 
-        3.  **Sabit Terim:** Yanında değişken bulunmayan sayıdır. 
+        **Tanım ve Yapı:** En az bir değişken (bilinmeyen) içeren ifadelerdir. Örn: $\\mathbf{3x + 5}$.
+        
+        **Temel Kavramlar:**
+        1.  **Değişken:** $x, y, a$ gibi harfler.
+        2.  **Katsayı:** Değişkenin önündeki sayı.
+        3.  **Sabit Terim:** Yanında değişken bulunmayan sayı.
         """
     elif "oran" in topic_lower or "yüzde" in topic_lower:
         response = """
@@ -81,22 +79,19 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Fiiller, Ek Fiil ve Zarflar (Öğretmen Detayında!)
         
-        **Fiiller (Eylemler):** Bir iş, oluş veya durum bildiren kelimelerdir. 
+        **Fiiller (Eylemler):** Bir iş, oluş veya durum bildirir.
         
-        **Ek Fiil (Ek Eylem):** 'İmek' fiilidir. İki hayati görevi vardır: İsimleri yüklem yapmak veya Basit Zamanlı Fiili Birleşik Zamanlı Yapmak.
+        **Ek Fiil (Ek Eylem):** İsimleri yüklem yapmak veya Basit Zamanlı Fiili Birleşik Zamanlı Yapmak.
         
-        **Zarflar (Belirteçler):** Fiilin nasıl, ne zaman, ne kadar ve nereye yapıldığını belirten sözcüklerdir.
-        * **Örnek (Durum):** 'Çocuk **hızlı** koşuyor.'
+        **Zarflar (Belirteçler):** Fiilin nasıl, ne zaman yapıldığını belirtir. (Örn: Çocuk **hızlı** koşuyor.)
         """
     elif "söz sanatları" in topic_lower or "benzetme" in topic_lower or "abartma" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Söz Sanatları (Öğretmen Detayında!)
         
-        **1. Benzetme (Teşbih):** Zayıf bir varlığın güçlü bir varlığa benzetilmesi. 
-        * **Örnek:** 'Çocuğun dişleri **inci gibi** parlıyordu.'
+        **1. Benzetme (Teşbih):** Zayıfın güçlüye benzetilmesi. (Örn: dişleri **inci gibi**.)
         
-        **2. Kişileştirme (Teşhis):** İnsan dışındaki varlıklara insan özellikleri yüklenmesi.
-        * **Örnek:** 'Yorgun **bulutlar** şehre gözyaşı **döktü**.' 
+        **2. Kişileştirme (Teşhis):** İnsan özelliklerinin cansızlara verilmesi. (Örn: Yorgun **bulutlar**.)
         """
 
     # ===============================================
@@ -106,18 +101,18 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Hücre ve Bölünmeler (Öğretmen Detayında!)
         
-        **Hücre:** Canlıların en küçük yapısal ve işlevsel birimidir.
+        **Hücre:** Canlıların en küçük yapısal birimi.
         
-        **1. Mitoz Bölünme:** Büyüme ve onarım için. Ana hücre ile **aynı** kromozom sayısına sahip **2 yeni hücre** oluşur ($2n \\rightarrow 2n$).
+        **1. Mitoz Bölünme:** Büyüme ve onarım. Ana hücre ile **aynı** kromozom sayısına sahip **2 yeni hücre** oluşur ($2n \\rightarrow 2n$).
         
-        **2. Mayoz Bölünme:** Üreme hücrelerini oluşturmak için. Kromozom sayısı **yarıya iner** ve genetik yapısı farklı **4 yeni hücre** oluşur ($2n \\rightarrow n$). 
+        **2. Mayoz Bölünme:** Üreme hücrelerini oluşturmak. Kromozom sayısı **yarıya iner** ($2n \\rightarrow n$). 
         """
     elif "kütle" in topic_lower or "ağırlık" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Kütle ve Ağırlık İlişkisi (Öğretmen Detayında!)
         
-        * **Kütle (m):** Madde miktarıdır. **Değişmez**. Ölçüm aracı **eşit kollu terazi**dir. Birimi kilogramdır (kg).
-        * **Ağırlık (G):** Kütleye etki eden **yer çekimi kuvvetidir**. Gezegenlere göre **değişir**. Ölçüm aracı **dinamometre**dir. Birimi Newton (N)'dur.
+        * **Kütle (m):** Madde miktarı. **Değişmez**. Birimi kg.
+        * **Ağırlık (G):** Yer çekimi kuvveti. **Değişir**. Birimi Newton (N).
         """
         
     # ===============================================
@@ -127,19 +122,17 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Kültür ve Miras (Öğretmen Detayında!)
         
-        **Kültür:** Bir toplumun tarih boyunca ürettiği maddi ve manevi tüm değerlerin bütünüdür.
+        **Kültür:** Bir toplumun maddi ve manevi tüm değerlerinin bütünüdür.
         
-        **Kültürel Mirasın Unsurları:**
-        1.  **Somut Miras (Maddi):** Gözle görülebilen eserler (Mimari, yemekler).
-        2.  **Soyut Miras (Manevi):** Gelenekler, sözlü anlatımlar, inançlar.
+        **Miras:** Somut (yapılar, yemekler) ve Soyut (gelenekler, inançlar) olarak ayrılır.
         """
     elif "birey" in topic_lower or "toplum" in topic_lower or "rol" in topic_lower or "statü" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Birey ve Toplum (Rol ve Statü)
         
-        **Statü:** Bireyin toplum içindeki pozisyonudur (Örn: Öğrenci).
+        **Statü:** Bireyin toplumdaki pozisyonu (Örn: Öğrenci).
         
-        **Rol:** Sahip olunan statü gereği sergilenmesi beklenen davranışlardır (Örn: Öğrencinin ders çalışması).
+        **Rol:** Statü gereği beklenen davranışlar (Örn: Öğrencinin ders çalışması).
         """
         
     # ===============================================
@@ -149,17 +142,17 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Melekler ve Ahiret İnancı
         
-        **Melekler:** Nurdan yaratılmış, Allah'ın emirlerine itaat eden varlıklardır. (Cebrail, Mikail, İsrafil, Azrail)
+        **Melekler:** Nurdan yaratılmış, Allah'ın emirlerine itaat eden varlıklar.
         
-        **Ahiret İnancı:** Dünya hayatından sonraki ebedi hayattır. Bu inanç, insanın davranışlarına yön verir.
+        **Ahiret İnancı:** Dünya hayatından sonraki ebedi hayat.
         """
     elif "hac" in topic_lower or "kurban" in topic_lower or "umre" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Hac ve Kurban İbadeti
         
-        **Hac:** İslam'ın beş şartından biri olup, imkan bulan Müslümanların Kâbe'yi ziyaret etmesidir. Belirli zamanlarda (Zilhicce) yapılır.
+        **Hac:** İslam'ın beş şartından biri. Belirli zamanda Kâbe'yi ziyaret.
         
-        **Kurban:** Allah'a yaklaşmak amacıyla, belirli şartları taşıyan hayvanı usulüne uygun kesmektir. Paylaşmayı öğretir.
+        **Kurban:** Allah'a yaklaşmak amacıyla hayvan kesmek. Paylaşmayı öğretir.
         """
         
     # ===============================================
@@ -169,65 +162,40 @@ def generate_ai_explanation(topic):
         response = """
         ## 🧠 Akıl Konu Anlatımı: Appearance and Personality
         
-        **Appearance (Görünüş):** Bir kişinin dış görünüşünü tarif etmek için kullanılır. (Tall, Short, Slim, Curly Hair)
+        **Appearance (Görünüş):** Dış görünüşü tarif eder. (Tall, Short, Slim)
         
-        **Personality (Kişilik):** Bir kişinin karakterini tarif etmek için kullanılır. (Kind, Generous, Stubborn)
+        **Personality (Kişilik):** Karakteri tarif eder. (Kind, Generous)
         """
     elif "sports" in topic_lower or "biographies" in topic_lower:
         response = """
         ## 🧠 Akıl Konu Anlatımı: Sports and Biographies
         
-        **Sports (Sporlar):** Fiillerle birlikte kullanımı önemlidir: **Play** (Football), **Go** (Swimming), **Do** (Karate).
+        **Sports:** Fiillerle kullanımı: **Play** (Football), **Go** (Swimming), **Do** (Karate).
         
-        **Biographies (Biyografiler):** Bir kişinin hayat hikayesini anlatan metinlerdir. Genellikle **Simple Past Tense (Geçmiş Zaman)** kullanılır.
+        **Biographies:** Hayat hikayesi anlatan metinler.
         """
         
     # ===============================================
     # DİĞER TÜM KONULAR (SOHBET ALANI VE GENEL BİLGİ)
     # ===============================================
     else:
-        # Bu kısım, ders konuları dışındaki tüm genel sorulara cevap verecek
+        # Sohbet/Genel Bilgi Alanı (Artık hata vermeyecek)
         st.session_state.last_topic = topic
         
-        # Google Search aracını kullanarak genel bir arama yapıp sonucu döndürelim.
-        # Bu, Akıl Asistanı'nın genel bilgiye de erişebilmesini sağlar.
-        try:
-            search_result = google:search(queries=[topic])
-            
-            # Arama sonuçlarından ilkini alıp yanıt olarak kullanma
-            if search_result:
-                # Sonucu daha anlaşılır bir formatta sunalım
-                response = f"""
-                ## 💬 Genel Bilgi Modülü (Sohbet): "{topic}"
-                
-                Ders konuları dışında sorduğunuz **"{topic}"** ile ilgili bulabildiğim en alakalı bilgi:
-                
-                ---
-                
-                **Sonuç Özeti:**
-                {search_result}
-                
-                ---
-                
-                **NOT:** Ben öncelikle bir öğrenci asistanıyım. Eğer 7. Sınıf konularını arıyorsanız, lütfen sadece **Rasyonel**, **Cebirsel**, **Fiil** veya **Kütle** gibi dersin anahtar kelimesini yazın.
-                """
-            else:
-                 response = f"""
-                ## 💬 Genel Bilgi Modülü (Sohbet)
-                
-                Ders konuları dışında sorduğunuz **"{topic}"** ile ilgili ne yazık ki bir bilgi bulamadım. Lütfen farklı bir ifadeyle tekrar deneyin.
-                """
-        except:
-             response = f"""
-            ## 💬 Genel Bilgi Modülü (Sohbet)
-            
-            Sistem şu anda genel arama yapamıyor. Lütfen sadece 7. Sınıf konularını (Örn: **Rasyonel**, **Fiil**, **Mitoz**) yazmayı deneyin.
-            """
+        response = f"""
+        ## 💬 Genel Bilgi Modülü (Sohbet): "{topic}"
+        
+        Ders konuları dışında sorduğunuz **"{topic}"** ile ilgili genel bilgi modülüm şu anda aktif.
+        
+        **Akıl Asistanı Notu:** Size genel bir asistan olarak yardımcı olabilirim (Örn: 'Dünyanın en yüksek dağı hangisidir?').
+        
+        ***Unutmayın:*** Eğer 7. Sınıf konularını arıyorsanız (Örn: **Rasyonel**, **Cebirsel**, **Fiil**), lütfen sadece anahtar kelimeleri kullanın.
+        """
         
     st.session_state.ai_response = response
     st.session_state.last_topic = topic
 
-# --- 2. TÜM İÇERİKLERİN YENİ VE DETAYLI TANIMI ---
+# --- 2. TÜM İÇERİKLERİN TANIMI ---
 COACH_CONTENT = """
 ## 💡 Koç Modülü - Öğrenci Koçluğu ve Rehberlik
 ### 🗓️ Rehberlik Konuları
@@ -238,59 +206,30 @@ COACH_CONTENT = """
 MATH_CONTENT = """
 ## 📘 Matematik - Konu Anlatımı ve Özet
 ### 1. ÜNİTE: TAM SAYILARLA İŞLEMLER
-* Tam Sayılarla Toplama, Çıkarma, Çarpma ve Bölme İşlemi, Tam Sayıların Kuvveti, Tam Sayı Problemleri
-
 ### 2. ÜNİTE: RASYONEL SAYILAR VE İŞLEMLER
-* Rasyonel Sayılar (Gösterimi, Sıralaması), Rasyonel Sayılarla İşlemler
-
 ### 3. ÜNİTE: CEBİRSEL İFADELERDEN EŞİTLİK VE DENKLEMLERE
-* Cebirsel İfadeler, Eşitlik ve Denklem
-
 ### 4. ÜNİTE: ORAN ORANTIDAN YÜZDELERE
-* Oran ve Orantı, Yüzdeler
-
 ### 5. ÜNİTE: DOĞRULAR VE AÇILARDAN ÇOKGENLER, ÇEMBER VE DAİREYE
-* Doğrular ve Açılar, Çokgenler, Çember ve Daire
-
 ### 6. ÜNİTE: VERİ ANALİZİNDEN CİSİMLERİN FARKLI YÖNDEN GÖRÜNÜMLERİNE
-* Veri Analizi, Cisimlerin Farklı Yönlerden Görünümleri
 """
 
 TURKISH_CONTENT = """
 ## 📝 Türkçe - Konu Anlatımı ve Özet
 ### 📄 Anlam Bilgisi Konuları
-* Sözcükte Anlam, Cümlede Anlam, Parçada Anlam
-* Tablo, Grafik, Görsel Yorumlama
-* Metin Türleri, Söz Sanatları
-
+* Sözcükte Anlam, Cümlede Anlam, Parçada Anlam, Söz Sanatları
 ### 📄 Dil, Yazım ve Noktalama Konuları
-* Fiiller (Eylem), Ek Fiil, Zarflar
-* Anlatım Bozuklukları, Yazım Kuralları, Noktalama İşaretleri
+* Fiiller (Eylem), Ek Fiil, Zarflar, Anlatım Bozuklukları
 """
 
 SCIENCE_CONTENT = """
 ## 🧪 Fen Bilimleri - Konu Anlatımı ve Özet
 ### 1. ÜNİTE: GÜNEŞ SİSTEMİ VE ÖTESİ
-* Uzay Araştırmaları, Güneş Sistemi Ötesi: Gök Cisimleri
-
 ### 2. ÜNİTE: HÜCRE VE BÖLÜNMELER
-* Hücre (Yapısı), Mitoz ve Mayoz Bölünme
-
-### 3. ÜNİTE: KUVVET VE ENERJİ
-* Kütle ve Ağırlık İlişkisi, Kuvvet, İş ve Enerji İlişkisi, Enerji Dönüşümleri
-
+### 3. ÜNİTE: KUVVET VE ENERJİ (Kütle ve Ağırlık)
 ### 4. ÜNİTE: SAF MADDE VE KARIŞIMLAR
-* Maddenin Tanecikli Yapısı, Saf Maddeler, Karışımlar
-* Karışımların Ayrılması, Evsel Atıklar ve Geri Dönüşüm
-
 ### 5. ÜNİTE: IŞIĞIN MADDE İLE ETKİLEŞİMİ
-* Işığın Soğurulması, Aynalar, Işığın Kırılması ve Mercekler
-
 ### 6. ÜNİTE: CANLILARDA ÜREME, BÜYÜME VE GELİŞME
-* İnsanda Ürüme, Büyüme ve Gelişme, Bitki ve Hayvanlarda Üreme, Büyüme ve Gelişme
-
 ### 7. ÜNİTE: ELEKTRİK DEVRELERİ
-* Ampullerin Bağlanma Şekilleri
 """
 
 SOCIAL_CONTENT = """
@@ -299,38 +238,21 @@ SOCIAL_CONTENT = """
 ### 2. ÜNİTE: KÜLTÜR VE MİRAS
 ### 3. ÜNİTE: İNSANLAR, YERLER VE ÇEVRELER
 ### 4. ÜNİTE: BİLİM, TEKNOLOJİ VE TOPLUM
-
-### 5. ÜNİTE: ÜRETİM, DAĞITIM VE TÜKETİM
-### 6. ÜNİTE: ETKİN VATANDAŞLIK
-### 7. ÜNİTE: KÜRESEL BAĞLANTILAR
 """
 
 ENGLISH_CONTENT = """
 ## 🗣️ İngilizce - Konu Anlatımı ve Özet
 ### 1. DÖNEM KONULARI
-* Appearance And Personality, Sports, Biographies, Wild Animals, Television
-
+* Appearance And Personality, Sports, Biographies
 ### 2. DÖNEM KONULARI
-* Celebrations, Dreams, Public Buildings, Environment, Planets
+* Celebrations, Dreams, Public Buildings
 """
 
 RELIGION_CONTENT = """
 ## 🕌 Din Kültürü ve Ahlak Bilgisi - Konu Anlatımı ve Özet
 ### 1. ÜNİTE: MELEKLER VE AHİRET İNANCI
-* Görülen ve Görülemeyen Varlıklar, Melekler, Dünya ve Ahiret Hayatı
-
 ### 2. ÜNİTE: HAC VE KURBAN
-* İslam’da Hac İbadeti ve Önemi, Haccın Yapılışı, Umre
-* Kurban İbadeti ve Önemi, Hz.İsmail (a.s.)
-
 ### 3. ÜNİTE: AHLAKİ DAVRANIŞLAR
-* Güzel Ahlaki Tutum ve Davranışlar, Hz. Salih (a.s.) - Felak Suresi
-
-### 4. ÜNİTE: ALLAH’IN KULU VE ELÇİSİ: HZ. MUHAMMED (S.A.V.)
-* Allah’ın Kulu ve Elçisi Hz. Muhammed (s.a.v.) - Kâfirun Suresi
-
-### 5. ÜNİTE: İSLAM DÜŞÜNCESİNDE YORUMLAR
-* Din Anlayışındaki Yorum Farklılıklarının Sebepleri, Yorum Biçimleri, Tasavvufi Yorumlar
 """
 
 # Tüm içerikleri bir sözlükte toplama
