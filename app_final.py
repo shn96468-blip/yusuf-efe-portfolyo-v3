@@ -9,6 +9,7 @@ YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
 
 # --- 2. DERS VE KONU TANIMLARI (Tüm dersler geri getirildi) ---
+# NOT: Manuel ders notları (büyük metin blokları) tamamen kaldırılmıştır.
 
 SUBJECT_MAP = {
     "tr": {
