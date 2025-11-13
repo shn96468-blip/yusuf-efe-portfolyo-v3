@@ -1,45 +1,12 @@
 import streamlit as st
 import os
 
-# --- 1. SABİT İÇERİKLER (APISIZ VE STABIL) ---
+# --- 1. SABİT İÇERİKLER ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
 YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
-# KRİTİK DEĞİŞİKLİK: Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
+# KRİTİK: Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
 TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
-
-# --- KRİTİK MANUEL İÇERİK BÖLÜMÜ ---
-# LÜTFEN İÇERİKLERİ AŞAĞIDAKİ ALANLARA YAPIŞTIRIN!
-
-MATH_NOTES = """
-## 📘 7. Sınıf Matematik Ana Konu Anlatımı
-
-### Tam Sayılarla Toplama ve Çıkarma İşlemi
-* Pozitif iki tam sayı toplanırken sayıların işareti dikkate alınmadan toplanır. Sonuca artı (+) işareti yazılır. Örn: (+5) + (+2) = (+7).
-* Negatif iki tam sayı toplanırken sayılar, işaretler dikkate alınmadan toplanır. Sonuca (-) işareti yazılır. Örn: (-5) + (-2) = (-7).
-* Ters (zıt) işaretli iki tam sayı toplanırken... (Lütfen geri kalan içeriği buradan devam ettirin)
-"""
-
-TURKISH_NOTES = """
-## 📝 Türkçe Ders Notları (Lütfen burayı doldurun)
-Buraya, Fiiller, Zarflar, Cümlede Anlam gibi konularınızın detaylı notlarını yazın.
-"""
-SCIENCE_NOTES = """
-## 🧪 Fen Bilimleri Ders Notları (Lütfen burayı doldurun)
-Buraya, Güneş Sistemi, Hücre ve Bölünmeler, Kuvvet ve Enerji konularınızın detaylı notlarını yazın.
-"""
-SOCIAL_NOTES = """
-## 🌍 Sosyal Bilgiler Ders Notları (Lütfen burayı doldurun)
-Buraya, Birey ve Toplum, Kültür ve Miras gibi konularınızın detaylı notlarını yazın.
-"""
-
-NOTES_MAP = {
-    "mat": MATH_NOTES,
-    "tr": TURKISH_NOTES,
-    "sci": SCIENCE_NOTES,
-    "soc": SOCIAL_NOTES,
-}
-
 
 # --- 2. DERS VE KONU TANIMLARI ---
 
@@ -63,16 +30,11 @@ SUBJECT_MAP = {
 }
 
 
-# --- 3. SESSION STATE VE SAYFA AYARLARI ---
-if 'active_content' not in st.session_state: st.session_state.active_content = None 
+# --- 3. SAYFA AYARLARI ---
 
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Portal")
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Ders Portalı")
 st.markdown("---")
-
-def set_active_content(content_type):
-    if st.session_state.active_content == content_type: st.session_state.active_content = None
-    else: st.session_state.active_content = content_type
 
 
 # --- 4. ARAMA FONKSİYONLARI ---
@@ -80,16 +42,14 @@ def get_search_link(query, search_engine):
     """Verilen sorgu için arama linki oluşturur."""
     
     if search_engine == "testcoz_quiz":
-        # TESTCOZ.COM DİREKT LİNKİ
         return TESTCOZ_ONLINE_LINK
     
     elif search_engine == "tonguc_video_search":
-        # TONGUÇ 7. SINIF VİDEO ARAMA SORGUSU
         search_query = f"{query} tonguç akademi 7. sınıf konu anlatımı"
         final_query = search_query.replace(' ', '+')
         return f"{YOUTUBE_LINK_BASLANGIS}{final_query}"
 
-    else: # Google araması (Hızlı Erişim/Notlar için)
+    else: # Google araması (Ders Notları veya Hızlı Erişim için)
         search_query = f"{query} 7. Sınıf Konu Anlatımı"
         final_query = search_query.replace(' ', '+')
         return f"{GOOGLE_LINK_BASLANGIC}{final_query}"
@@ -104,18 +64,14 @@ def render_subject_tab(tab_context, subject_key):
         
         # 3 KUTUCUK (Buton) Oluşturma
         col_notes, col_quiz, col_video = st.columns(3)
-        notes_key = f"{subject_key}_notes"
 
-        # --- A. DERS NOTLARI KUTUCUĞU (MANUEL İÇERİK GÖSTERİMİ) ---
+        # --- A. DERS NOTLARI KUTUCUĞU (GOOGLE LİNKİ) ---
         with col_notes:
-            notes_button_label = "⬆️ Notları Kapat" if st.session_state.active_content == notes_key else "📝 Detaylı Ders Notları"
-            st.button(
-                notes_button_label, 
-                key=f"{subject_key}_notes_btn", 
+            st.link_button(
+                "📝 Detaylı Ders Notlarını Bul", 
+                url=get_search_link(subject_data['title'], "google"),
                 type="primary", 
-                on_click=set_active_content, 
-                args=(notes_key,),
-                help="Koda manuel eklenmiş detaylı ders notlarını gösterir."
+                help=f"Bu buton, Google'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
             )
 
         # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
@@ -138,29 +94,22 @@ def render_subject_tab(tab_context, subject_key):
         
         st.markdown("---")
         
-        # --- İÇERİK GÖRÜNTÜLEME ALANI ---
-        if st.session_state.active_content == notes_key:
-            st.subheader(f"📘 {subject_data['title']} Ders Notları")
-            st.markdown(NOTES_MAP.get(subject_key, "### Bu ders için not içeriği henüz eklenmedi. Lütfen kodu düzenleyin."))
-            st.markdown("---")
+        # --- KONULARA GÖRE HIZLI ERİŞİM (GOOGLE ARAMA) ---
+        st.subheader("Konulara Göre Hızlı Erişim (Google Arama)")
+        st.info("Aşağıdaki konulara tıklayarak, ders notlarını Google'da hızla bulabilirsiniz.")
         
-        else:
-            # Konulara göre hızlı arama linkleri
-            st.subheader("Konulara Göre Hızlı Erişim (Google Arama)")
-            st.info("Aşağıdaki konulara tıklayarak, ders notlarını Google'da hızla bulabilirsiniz.")
+        cols_content = st.columns(3)
+        
+        for i, topic in enumerate(subject_data.get('topics', [])): # KRİTİK DÜZELTME: Hata yakalama eklendi
+            col = cols_content[i % 3]
             
-            cols_content = st.columns(3)
+            # Google Arama Linki (Notlar için)
+            google_link = get_search_link(topic, "google")
             
-            for i, topic in enumerate(subject_data['topics']):
-                col = cols_content[i % 3]
-                
-                # Google Arama Linki (Notlar için)
-                google_link = get_search_link(topic, "google")
-                
-                with col:
-                    st.markdown(f"**📚 {topic}**")
-                    st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
-                    st.markdown("---")
+            with col:
+                st.markdown(f"**📚 {topic}**")
+                st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
+                st.markdown("---")
 
 
 # --- 6. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI ---
