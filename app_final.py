@@ -3,11 +3,10 @@ import os
 
 # --- 1. SABİT İÇERİKLER (APISIZ VE STABIL) ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
-TONGUC_CHANNEL_LINK = "https://www.youtube.com/@tongucakademi" # KRİTİK: Tonguç Akademi'nin ana YouTube kanalı
+TONGUC_CHANNEL_LINK = "https://www.youtube.com/@tongucakademi" 
 
-# TEST ÇÖZME İÇİN GÜVENİLİR ARAMA SORGUSU (Site çalışmazsa Google bulsun)
+# TEST ÇÖZME İÇİN GÜVENİLİR ARAMA SORGUSU (Google'da TESTCOZ'u arasın)
 TESTCOZ_SEARCH_QUERY = "testcoz.online 7. sınıf test çöz" 
-
 
 # --- KRİTİK MANUEL İÇERİK BÖLÜMÜ ---
 # LÜTFEN İÇERİKLERİ AŞAĞIDAKİ ALANLARA YAPIŞTIRIN!
@@ -89,7 +88,8 @@ def get_search_link(query, search_engine):
         # TONGUÇ KANAL LİNKİ
         return TONGUC_CHANNEL_LINK
 
-    else: # Google araması (Ders Notları Hızlı Erişim için)
+    else: # Google araması (Hızlı Erişim/Notlar için)
+        # Hata burada oluşuyordu, şimdi doğru parametrelerle çağrılıyor.
         search_query = f"{query} 7. Sınıf Konu Anlatımı"
         final_query = search_query.replace(' ', '+')
         return f"{GOOGLE_LINK_BASLANGIC}{final_query}"
@@ -160,7 +160,6 @@ def render_subject_tab(tab_context, subject_key):
                 with col:
                     st.markdown(f"**📚 {topic}**")
                     st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
-                    # Video butonu kaldırıldı, yukarıdaki tek Tonguç butonu yeterli.
                     st.markdown("---")
 
 
