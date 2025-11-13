@@ -8,12 +8,25 @@ YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 # KRİTİK: Test çözme linkini sizin verdiğiniz URL'ye ayarlıyoruz.
 TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
 
-# --- 2. DERS VE KONU TANIMLARI (Sadece Matematik tutuldu) ---
+# --- 2. DERS VE KONU TANIMLARI (Tüm dersler geri getirildi) ---
 
-SUBJECT_DATA = {
-    "key": "mat",
-    "title": "🔢 Matematik",
-    "topics": ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler"],
+SUBJECT_MAP = {
+    "tr": {
+        "title": "📝 Türkçe",
+        "topics": ["Fiiller", "Zarflar", "Cümlede Anlam"],
+    },
+    "mat": {
+        "title": "🔢 Matematik",
+        "topics": ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler"],
+    },
+    "sci": {
+        "title": "🧪 Fen Bilimleri",
+        "topics": ["Güneş Sistemi", "Hücre ve Bölünmeler", "Kuvvet ve Enerji"],
+    },
+    "soc": {
+        "title": "🌍 Sosyal Bilgiler",
+        "topics": ["Birey ve Toplum", "Kültür ve Miras", "Bilim ve Teknoloji"],
+    }
 }
 
 
@@ -44,61 +57,73 @@ def get_search_link(query, search_engine):
         return f"{GOOGLE_LINK_BASLANGIC}{final_query}"
 
 
-# --- 5. MATEMATİK İÇERİĞİNİ DOĞRUDAN YAZDIRMA ---
-
-# Sekme yapısını tamamen kaldırdık. İçerik doğrudan ana sayfada yer alacak.
-subject_key = SUBJECT_DATA["key"]
-subject_title = SUBJECT_DATA["title"]
-subject_topics = SUBJECT_DATA["topics"]
-
-st.header(f"✨ {subject_title} Dersi")
-
-# 3 KUTUCUK (Buton) Oluşturma
-col_notes, col_quiz, col_video = st.columns(3)
-
-# --- A. DERS NOTLARI KUTUCUĞU (GOOGLE LİNKİ) ---
-with col_notes:
-    st.link_button(
-        "📝 Detaylı Ders Notlarını Bul", 
-        url=get_search_link(subject_title, "google"),
-        type="primary", 
-        help=f"Bu buton, Google'da '{subject_title} 7. Sınıf Konu Anlatımı' araması yapar."
-    )
-
-# --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
-with col_quiz:
-    st.link_button(
-        "✅ Test Çöz - Yeni Nesil Sorular", 
-        url=get_search_link("", "testcoz_quiz"), 
-        type="secondary", 
-        help="Doğrudan testcoz.com sitesini açar."
-    )
-
-# --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ YOUTUBE ARAMASI) ---
-with col_video:
-    st.link_button(
-        "📺 Tonguç Akademi 7. Sınıf Videoları", 
-        url=get_search_link(subject_title, "tonguc_video_search"), 
-        type="secondary",
-        help=f"YouTube'da '{subject_title} tonguç akademi 7. sınıf konu anlatımı' araması yapar."
-    )
-
-st.markdown("---")
-
-# --- KONULARA GÖRE HIZLI ERİŞİM (GOOGLE ARAMA) ---
-st.subheader("Konulara Göre Hızlı Erişim (Google Arama)")
-st.info("Aşağıdaki konulara tıklayarak, ders notlarını Google'da hızla bulabilirsiniz.")
-
-cols_content = st.columns(3)
-
-for i, topic in enumerate(subject_topics):
-    col = cols_content[i % 3]
+# --- 5. DERS SEKMELERİNİ ÇİZME VE İÇERİK MANTIĞI ---
+def render_subject_tab(tab_context, subject_key):
+    subject_data = SUBJECT_MAP[subject_key]
     
-    # Google Arama Linki (Notlar için)
-    google_link = get_search_link(topic, "google")
-    
-    with col:
-        st.markdown(f"**📚 {topic}**")
-        # Key parametresini direkt konuya eşitledik, bu da stabiliteyi artırır.
-        st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
+    with tab_context:
+        st.header(f"✨ {subject_data['title']} Dersi")
+        
+        # 3 KUTUCUK (Buton) Oluşturma
+        col_notes, col_quiz, col_video = st.columns(3)
+
+        # --- A. DERS NOTLARI KUTUCUĞU (GOOGLE LİNKİ) ---
+        with col_notes:
+            st.link_button(
+                "📝 Detaylı Ders Notlarını Bul", 
+                url=get_search_link(subject_data['title'], "google"),
+                type="primary", 
+                help=f"Bu buton, Google'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
+            )
+
+        # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
+        with col_quiz:
+            st.link_button(
+                "✅ Test Çöz - Yeni Nesil Sorular", 
+                url=get_search_link("", "testcoz_quiz"), 
+                type="secondary", 
+                help="Doğrudan testcoz.com sitesini açar."
+            )
+        
+        # --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ YOUTUBE ARAMASI) ---
+        with col_video:
+            st.link_button(
+                "📺 Tonguç Akademi 7. Sınıf Videoları", 
+                url=get_search_link(subject_data['title'], "tonguc_video_search"), 
+                type="secondary",
+                help=f"YouTube'da '{subject_data['title']} tonguç akademi 7. sınıf konu anlatımı' araması yapar."
+            )
+        
         st.markdown("---")
+        
+        # --- KONULARA GÖRE HIZLI ERİŞİM (GOOGLE ARAMA) ---
+        st.subheader("Konulara Göre Hızlı Erişim (Google Arama)")
+        st.info("Aşağıdaki konulara tıklayarak, ders notlarını Google'da hızla bulabilirsiniz.")
+        
+        cols_content = st.columns(3)
+        
+        for i, topic in enumerate(subject_data.get('topics', [])):
+            col = cols_content[i % 3]
+            
+            # Google Arama Linki (Notlar için)
+            google_link = get_search_link(topic, "google")
+            
+            with col:
+                st.markdown(f"**📚 {topic}**")
+                # Key parametresi, Streamlit'in butonları ayırt etmesini sağlar.
+                st.link_button("Notları Google'da Bul", url=google_link, type="primary", key=f"{subject_key}_{topic}_g")
+                st.markdown("---")
+
+
+# --- 6. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI ---
+tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
+    SUBJECT_MAP["mat"]["title"], 
+    SUBJECT_MAP["tr"]["title"], 
+    SUBJECT_MAP["sci"]["title"],
+    SUBJECT_MAP["soc"]["title"]
+])
+
+render_subject_tab(tab_math, "mat")
+render_subject_tab(tab_tr, "tr")
+render_subject_tab(tab_sci, "sci")
+render_subject_tab(tab_soc, "soc")
