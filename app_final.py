@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Kodlama sorununu çözmek için dosyanın en üstüne UTF-8 ayarı eklenmiştir.
+
 import streamlit as st
 import os
 from google import genai
@@ -8,13 +11,12 @@ from google.genai.errors import APIError
 # secrets.toml dosyasından API anahtarını güvenli şekilde yükler.
 try:
     if 'GEMINI_API_KEY' not in st.secrets:
-        # API anahtarı yoksa hatayı gösterir ve uygulamanın devam etmesini durdurur.
         st.error("⚠️ GEMINI_API_KEY bulunamadı. Lütfen Streamlit Cloud Secrets paneline ekleyin.")
         st.stop()
     
     # Gemini istemcisini API anahtarıyla başlat
     client = genai.Client(api_key=st.secrets['GEMINI_API_KEY'])
-    MODEL = 'gemini-2.5-flash' # Kullanılacak model
+    MODEL = 'gemini-2.5-flash' 
 
 except Exception as e:
     st.error(f"API İstemcisi Başlatılamadı: {e}")
@@ -22,12 +24,12 @@ except Exception as e:
 
 
 # --- 2. İÇERİK TANIMLARI ---
-# Bu değişkenler artık manuel içerik yerine, Yapay Zeka tarafından doldurulacaktır.
-# Her dersin içeriği, butona basıldığında Yapay Zeka tarafından oluşturulup bu değişkenlere kaydedilecektir.
-TURKISH_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
-MATH_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
-SCIENCE_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
-SOCIAL_CONTENT = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak."
+# Yapay Zeka tarafından doldurulacak içerikler için başlangıç mesajı.
+INITIAL_MESSAGE = "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak. Lütfen butona tıklayın."
+TURKISH_CONTENT = INITIAL_MESSAGE
+MATH_CONTENT = INITIAL_MESSAGE
+SCIENCE_CONTENT = INITIAL_MESSAGE
+SOCIAL_CONTENT = INITIAL_MESSAGE
 
 
 # --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
@@ -42,7 +44,6 @@ if 'ai_contents' not in st.session_state:
     }
 
 # --- HARİTALAR VE SABİTLER ---
-# CONTENT_MAP artık sadece session state'deki AI içeriklerini işaret ediyor.
 CONTENT_MAP = st.session_state.ai_contents
 
 
@@ -50,11 +51,11 @@ CONTENT_MAP = st.session_state.ai_contents
 def generate_content_with_ai(subject_title, content_key):
     """Konu anlatımını API'den otomatik olarak çeken fonksiyon."""
     
-    # Eğer içerik daha önce üretilmemişse (veya hala varsayılan mesajdaysa)
-    if st.session_state.ai_contents.get(content_key) == "Yapay Zeka (AI) bu içeriği otomatik olarak dolduracak.":
+    # Eğer içerik daha önce üretilmemişse 
+    if st.session_state.ai_contents.get(content_key) == INITIAL_MESSAGE:
         
         prompt = f"""
-        Sen 7. sınıf öğrencilerine ders veren bir öğretmensin. {subject_title} dersinin 1. dönem temel konularını (Konu Listesi dahil) sade, detaylı, net, öğretici bir dille anlat. Cevabını mutlaka başlıklar, kalınlaştırmalar ve madde işaretleri kullanarak formatla. 
+        Sen 7. sınıf öğrencilerine ders veren Akıl Öğretmensin. {subject_title} dersinin 1. dönem temel konularını detaylı ve öğretici bir dille anlat. Cevabını mutlaka başlıklar, kalınlaştırmalar ve madde işaretleri kullanarak formatla. Türkçe karakterleri kullanmaktan çekinme (ç, ş, ı, ü, ö, ğ).
         """
 
         with st.spinner(f"👨‍🏫 Akıl Öğretmen, '{subject_title}' dersi içeriğini otomatik olarak hazırlıyor..."):
@@ -65,7 +66,8 @@ def generate_content_with_ai(subject_title, content_key):
                     contents=prompt
                 )
                 # Cevabı session state'e kaydet
-                st.session_state.ai_contents[content_key] = f"## 👨‍🏫 {subject_title} Detaylı Konu Anlatımı ✨\n\n" + response.text
+                # UTF-8 sorunu için tüm cevaplarda strip() kullanarak temizleme yapılır.
+                st.session_state.ai_contents[content_key] = f"## 👨‍🏫 {subject_title} Detaylı Konu Anlatımı ✨\n\n" + response.text.strip()
 
             except APIError as e:
                 st.session_state.ai_contents[content_key] = f"""
@@ -103,7 +105,7 @@ tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
 def render_subject_tab(tab_context, subject_title, key_prefix):
     konu_key = f"{key_prefix}_konu"
     
-    # Konu Listeleri (Artık sadece listedir, içerik AI'dan gelecek)
+    # Konu Listeleri 
     if key_prefix == "tr":
         konu_listesi = ["Sözcükte Anlam", "Cümlede Anlam", "Parçada Anlam", "Fiiller", "Ek Fiil", "Zarflar", "Yazım Kuralları"]
     elif key_prefix == "mat":
@@ -124,6 +126,7 @@ def render_subject_tab(tab_context, subject_title, key_prefix):
         
         with col_btn1:
             button_label = "⬆️ Konuyu Gizle" if st.session_state.content_key == konu_key else "📄 Detaylı Konu Anlatımı (OTOMATİK)"
+            # Fonksiyon çağrısına subject_title eklendi
             st.button(button_label, type="primary", key=konu_key, on_click=toggle_content, args=(konu_key, subject_title)) 
                       
         with col_btn2: 
