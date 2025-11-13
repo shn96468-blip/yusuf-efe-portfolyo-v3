@@ -1,100 +1,148 @@
-# -*- coding: utf-8 -*-
-
 import streamlit as st
 import os
-from google import genai
-from google.genai.errors import APIError 
 
-# --- 1. KÜTÜPHANE VE API KURULUMU ---
+# --- 1. SABİT İÇERİKLER (LÜTFEN DOLDURUN) ---
+# Kullanıcı bu butonlara tıkladığında bu metinler görünecektir.
 
-try:
-    if 'GEMINI_API_KEY' not in st.secrets:
-        # Hata mesajındaki Türkçe karakterleri (ı, ş, ü) sildik.
-        st.error("⚠️ GEMINI_API_KEY bulunamadi. Lutfen Streamlit Cloud Secrets paneline ekleyin.")
-        st.stop()
-    
-    client = genai.Client(api_key=st.secrets['GEMINI_API_KEY'])
-    MODEL = 'gemini-2.5-flash' 
+MANUEL_NOTLAR = """
+### 📝 Detaylı Ders Notları Alanı
 
-except Exception as e:
-    st.error(f"API Istemcisi Baslatilamadi: {e}")
-    st.stop()
+Buraya, 7. sınıf ders konularının **özetlerini** ve **detaylı açıklamalarını** içeren metinlerinizi yapıştırın. Markdown (başlık, kalın yazı) kullanabilirsiniz.
 
+Örn: **Rasyonel Sayılar Nedir?**
+Payı ve paydası tam sayı olan ve paydası sıfır olmayan her sayıya rasyonel sayı denir.
+* Gösterimi: a/b şeklindedir.
+* Örnek: 1/2, -3/4, 5 gibi.
+"""
 
-# --- 2. SESSION STATE (DURUM YÖNETİMİ) ---
-if 'last_question' not in st.session_state: st.session_state.last_question = ""
-if 'ai_response' not in st.session_state: st.session_state.ai_response = ""
+SORU_COZME_LINK = "https://www.ornek-sorucozme-sitesi.com" # Buraya deneme sınavı/soru sitesi linki ekleyin
+YOUTUBE_LINK_BASLANGIC = "https://www.youtube.com/results?search_query=" # YouTube arama linkinin başlangıcı
 
 
-# --- 3. API ÇAĞRISI FONKSİYONU ---
-def generate_answer_with_ai(question):
-    """API'den cevap çeken ve Türkçe karakterleri temizleyen fonksiyon."""
-    
-    # Prompt, 7. sınıf seviyesinde bir cevap ister.
-    prompt = f"""
-    Sen 7. sinif ogrencilerine ders veren bir Yapay Zeka Asistanisin. Asagidaki soruya detayli ve ogretici bir dille cevap ver:
-    SORU: "{question}"
-    Cevabini basliklar ve madde isaretleri kullanarak formatla.
-    """
+# --- 2. DERS VE KONU TANIMLARI ---
 
-    with st.spinner(f"👨‍🏫 Akil Ogretmen, sorunuzu ('{question}') cevapliyor..."):
-        try:
-            response = client.models.generate_content(
-                model=MODEL,
-                contents=prompt
-            )
-            
-            # KRİTİK DÜZELTME: Hata veren Türkçe karakterleri silen fonksiyon
-            def remove_turkish_chars(text):
-                tr_chars = {'ı':'i', 'ğ':'g', 'ü':'u', 'ş':'s', 'ö':'o', 'ç':'c', 'İ':'I', 'Ğ':'G', 'Ü':'U', 'Ş':'S', 'Ö':'O', 'Ç':'C'}
-                for tr, en in tr_chars.items():
-                    text = text.replace(tr, en)
-                # Kalan tüm özel karakterleri ASCII dışı bırakarak hatayı engeller.
-                return text.encode('ascii', 'ignore').decode('ascii')
-            
-            # Temizlenmis metni kullan
-            clean_text = remove_turkish_chars(response.text)
-            
-            st.session_state.ai_response = f"## 📚 AKIL OGRETMEN'DEN CEVAP:\n\n" + clean_text.strip()
-            st.session_state.last_question = question
+SUBJECT_MAP = {
+    "tr": {
+        "title": "📝 Türkçe",
+        "topics": ["Fiiller", "Zarflar", "Cümlede Anlam"],
+    },
+    "mat": {
+        "title": "🔢 Matematik",
+        "topics": ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler"],
+    },
+    "sci": {
+        "title": "🧪 Fen Bilimleri",
+        "topics": ["Güneş Sistemi", "Hücre ve Bölünmeler", "Kuvvet ve Enerji"],
+    },
+    "soc": {
+        "title": "🌍 Sosyal Bilgiler",
+        "topics": ["Birey ve Toplum", "Kültür ve Miras", "Bilim ve Teknoloji"],
+    }
+}
 
-        except APIError as e:
-            st.session_state.ai_response = f"""
-            ## ❌ API Hatasi
-            Yapay Zeka Asistani su an baglanti kuramiyor. Lutfen anahtarinizi kontrol edin. Hata Detayi: {e}
-            """
-        except Exception as e:
-             # Eğer hata hala 'ascii' ise, son deneme basarisiz demektir.
-             st.session_state.ai_response = f"## ❌ Bir Hata Olustu: {e}"
+# --- 3. SESSION STATE (DURUM YÖNETİMİ) ---
+if 'active_tab' not in st.session_state: st.session_state.active_tab = "mat"
+if 'active_content' not in st.session_state: st.session_state.active_content = None 
 
-# --- 4. SAYFA AYARLARI ---
-st.set_page_config(layout="wide", page_title="Yusuf Efe Sahin | Yapay Zeka Asistani")
-st.title("🎓 Yusuf Efe Sahin | 7. Sınıf Yapay Zeka Asistanı")
-st.markdown("---")
 
-# --- 5. ANA SAYFA KODU ---
-
-st.header("❓ Bana Herhangi Bir Şey Sor")
-st.markdown("7. sınıf dersleriyle ilgili bir soru sor (Örn: Rasyonel sayılar nedir?).")
-
-# Soru girişi
-question_input = st.text_input(
-    label="Sorunuzu Yazınız",
-    placeholder="Sorunuz...",
-    label_visibility="collapsed"
-)
-
-# Buton
-if st.button("Cevap Ver", type="primary"):
-    if question_input:
-        generate_answer_with_ai(question_input)
+# --- 4. BUTON MANTIĞI ---
+def set_active_content(content_type):
+    """Aktif içeriği (Notlar, Soru, Video) ayarlar."""
+    if st.session_state.active_content == content_type:
+        st.session_state.active_content = None # Aynı butona tekrar basılırsa içeriği kapat
     else:
-        st.warning("Lutfen bir soru yaziniz.")
+        st.session_state.active_content = content_type
 
+def set_active_tab(tab_key):
+    st.session_state.active_tab = tab_key
+    st.session_state.active_content = None # Sekme değiştiğinde alt içeriği sıfırla
+
+
+# --- 5. SAYFA AYARLARI ---
+st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Portalı")
+st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Ders Portalı")
 st.markdown("---")
 
-# Sonuç alanı
-if st.session_state.ai_response:
-    st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
-else:
-    st.info("Cevabi gormek icin yukariya bir soru yazip butona tiklayin.")
+# --- 6. DERS SEKMELERİNİ ÇİZME VE İÇERİK MANTIĞI ---
+def render_subject_tab(tab_context, subject_key):
+    subject_data = SUBJECT_MAP[subject_key]
+    
+    with tab_context:
+        st.header(f"✨ {subject_data['title']} Dersi")
+        
+        # 3 KUTUCUK (Buton) Oluşturma
+        col_notes, col_quiz, col_video = st.columns(3)
+
+        with col_notes:
+            # Ders Notları Kutucuğu
+            notes_button_label = "✅ Notları Kapat" if st.session_state.active_content == f"{subject_key}_notes" else "📝 Detaylı Ders Notları"
+            st.button(
+                notes_button_label, 
+                key=f"{subject_key}_notes_btn", 
+                type="primary", 
+                on_click=set_active_content, 
+                args=(f"{subject_key}_notes",)
+            )
+
+        with col_quiz:
+            # Soru Çözme Kutucuğu (Doğrudan Link)
+            st.link_button(
+                "❓ Soru Çözme / Deneme", 
+                url=SORU_COZME_LINK, 
+                type="secondary", 
+                help="Farklı bir sayfada Soru Çözme Platformunu açar."
+            )
+        
+        with col_video:
+            # Video Kutucuğu
+            video_button_label = "✅ Videoları Kapat" if st.session_state.active_content == f"{subject_key}_video" else "📺 Video İzle"
+            st.button(
+                video_button_label, 
+                key=f"{subject_key}_video_btn", 
+                type="secondary",
+                on_click=set_active_content,
+                args=(f"{subject_key}_video",)
+            )
+        
+        st.markdown("---")
+        
+        # --- İÇERİK GÖRÜNTÜLEME ALANI ---
+        
+        # 1. Ders Notları İçeriği
+        if st.session_state.active_content == f"{subject_key}_notes":
+            st.subheader(f"📘 {subject_data['title']} Ders Notları")
+            st.markdown(MANUEL_NOTLAR)
+            st.markdown("---")
+            
+        # 2. Video Arama İçeriği
+        elif st.session_state.active_content == f"{subject_key}_video":
+            st.subheader(f"▶️ {subject_data['title']} Video Kaynakları")
+            st.info("Aşağıdaki konulara tıklayarak doğrudan YouTube'da arama yapabilir ve ilgili videoları izleyebilirsiniz.")
+            
+            # Konu linklerini listele
+            cols_link = st.columns(2)
+            for i, topic in enumerate(subject_data['topics']):
+                youtube_query = f"{topic} 7. Sınıf Konu Anlatımı"
+                youtube_link = f"{YOUTUBE_LINK_BASLANGIC}{youtube_query.replace(' ', '+')}"
+                
+                with cols_link[i % 2]:
+                    st.markdown(f"* [{topic} Konu Anlatımı]({youtube_link})")
+            st.markdown("---")
+
+        else:
+            # Hiçbir şey seçilmediğinde
+            st.info("Yukarıdaki seçeneklerden birini seçerek ders notlarına, soru çözme platformuna veya videolara ulaşabilirsiniz.")
+
+
+# --- 7. SEKMELERİN TANIMLANMASI VE ÇAĞRILMASI ---
+tab_math, tab_tr, tab_sci, tab_soc = st.tabs([
+    SUBJECT_MAP["mat"]["title"], 
+    SUBJECT_MAP["tr"]["title"], 
+    SUBJECT_MAP["sci"]["title"],
+    SUBJECT_MAP["soc"]["title"]
+])
+
+render_subject_tab(tab_math, "mat")
+render_subject_tab(tab_tr, "tr")
+render_subject_tab(tab_sci, "sci")
+render_subject_tab(tab_soc, "soc")
