@@ -42,9 +42,11 @@ def get_search_link(query, search_engine):
     """Verilen sorgu için arama linki oluşturur."""
     
     if search_engine == "testcoz_quiz":
+        # TESTCOZ.COM DİREKT LİNKİ
         return TESTCOZ_ONLINE_LINK
     
     elif search_engine == "tonguc_video_search":
+        # TONGUÇ 7. SINIF VİDEO ARAMA SORGUSU
         search_query = f"{query} tonguç akademi 7. sınıf konu anlatımı"
         final_query = search_query.replace(' ', '+')
         return f"{YOUTUBE_LINK_BASLANGIS}{final_query}"
@@ -100,7 +102,7 @@ def render_subject_tab(tab_context, subject_key):
         
         cols_content = st.columns(3)
         
-        for i, topic in enumerate(subject_data.get('topics', [])): # KRİTİK DÜZELTME: Hata yakalama eklendi
+        for i, topic in enumerate(subject_data.get('topics', [])):
             col = cols_content[i % 3]
             
             # Google Arama Linki (Notlar için)
