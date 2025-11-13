@@ -3,7 +3,7 @@ import os
 
 # --- 1. SABİT İÇERİKLER ---
 GOOGLE_LINK_BASLANGIC = "https://www.google.com/search?q="
-# KRİTİK DEĞİŞİKLİK: Tonguç 7. Sınıf kanalının direkt URL'si
+# Tonguç 7. Sınıf kanalının direkt URL'si
 TONGUC_KANAL_LINK = "https://www.youtube.com/@tonguc7"
 YOUTUBE_LINK_BASLANGIS = "https://www.youtube.com/results?search_query="
 
@@ -44,11 +44,9 @@ def get_search_link(query, search_engine):
     """Verilen sorgu için arama linki oluşturur."""
     
     if search_engine == "testcoz_quiz":
-        # TESTCOZ.COM DİREKT LİNKİ
         return TESTCOZ_ONLINE_LINK
     
     elif search_engine == "tonguc_kanal":
-        # TONGUÇ 7. SINIF KANAL DİREKT LİNKİ
         return TONGUC_KANAL_LINK
 
     else: # Google araması (Hızlı Erişim için)
@@ -64,24 +62,39 @@ def render_subject_tab(tab_context, subject_key):
     with tab_context:
         st.header(f"✨ {subject_data['title']} Dersi")
         
-        # Sadece Test ve Video Düğmeleri (2 KUTUCUK) Oluşturma
-        col_quiz, col_video = st.columns(2)
+        # 3 Düğme (Not, Test, Video) Oluşturma
+        col_notes, col_quiz, col_video = st.columns(3)
 
-        # --- A. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
+        # --- A. DERS NOTLARI KUTUCUĞU (GOOGLE LİNKİ) ---
+        with col_notes:
+            st.link_button(
+                "📝 Detaylı Ders Notlarını Bul", 
+                url=get_search_link(subject_data['title'], "google"),
+                type="secondary",
+                # KRİTİK: Benzersiz anahtar eklendi
+                key=f"notes_{subject_key}",
+                help=f"Bu buton, Google'da '{subject_data['title']} 7. Sınıf Konu Anlatımı' araması yapar."
+            )
+        
+        # --- B. SORU ÇÖZME KUTUCUĞU (TESTCOZ.COM DİREKT LİNK) ---
         with col_quiz:
             st.link_button(
                 "✅ Test Çöz - Yeni Nesil Sorular", 
                 url=get_search_link("", "testcoz_quiz"), 
                 type="primary", 
+                # KRİTİK: Benzersiz anahtar eklendi
+                key=f"quiz_{subject_key}",
                 help="Doğrudan testcoz.com sitesini açar."
             )
         
-        # --- B. VİDEO İZLE KUTUCUĞU (TONGUÇ KANAL DİREKT LİNK) ---
+        # --- C. VİDEO İZLE KUTUCUĞU (TONGUÇ KANAL DİREKT LİNK) ---
         with col_video:
             st.link_button(
                 "📺 Tonguç Akademi 7. Sınıf Kanalı", 
                 url=get_search_link("", "tonguc_kanal"), 
                 type="primary",
+                # KRİTİK: Benzersiz anahtar eklendi
+                key=f"tonguc_{subject_key}",
                 help=f"YouTube'da Tonguç Akademi 7. Sınıf kanalını doğrudan açar."
             )
         
@@ -102,8 +115,8 @@ def render_subject_tab(tab_context, subject_key):
             
             with col:
                 st.markdown(f"**📚 {topic}**")
-                # Key parametresi, Streamlit'in butonları ayırt etmesini sağlar.
-                st.link_button("Notları Google'da Bul", url=google_link, type="secondary", key=f"{subject_key}_{topic}_g")
+                # KRİTİK: Konu adı ile birleştirilmiş benzersiz anahtar
+                st.link_button("Notları Google'da Bul", url=google_link, type="secondary", key=f"topic_{subject_key}_{topic}_g")
                 st.markdown("---")
 
 
