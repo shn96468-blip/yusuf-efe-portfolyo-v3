@@ -1,4 +1,3 @@
-# KODUNUZ: (Bu kodu GitHub'daki app_final.py dosyanıza yapıştırın.)
 import streamlit as st
 import os
 
@@ -8,6 +7,7 @@ TONGUC_KANAL_LINK = "https://www.youtube.com/@tonguc7"
 TESTCOZ_ONLINE_LINK = "https://www.testcoz.com/" 
 
 # --- 2. DERS VE KONU TANIMLARI ---
+
 SUBJECT_MAP = {
     "tr": {"title": "📝 Türkçe", "topics": ["Fiiller", "Zarflar", "Cümlede Anlam"]},
     "mat": {"title": "🔢 Matematik", "topics": ["Tam Sayılarla İşlemler", "Rasyonel Sayılar", "Cebirsel İfadeler"]},
@@ -15,10 +15,15 @@ SUBJECT_MAP = {
     "soc": {"title": "🌍 Sosyal Bilgiler", "topics": ["Birey ve Toplum", "Kültür ve Miras", "Bilim ve Teknoloji"]}
 }
 
+
+# --- 3. SAYFA AYARLARI ---
+
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Portal")
 st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Ders Portalı")
 st.markdown("---")
 
+
+# --- 4. ARAMA FONKSİYONLARI ---
 def get_search_link(query, search_engine):
     if search_engine == "testcoz_quiz":
         return TESTCOZ_ONLINE_LINK
@@ -29,12 +34,15 @@ def get_search_link(query, search_engine):
         final_query = search_query.replace(' ', '+')
         return f"{GOOGLE_LINK_BASLANGIC}{final_query}"
 
+
+# --- 5. DERS SEKMELERİNİ ÇİZME VE İÇERİK MANTIĞI ---
 def render_subject_tab(tab_context, subject_key):
     subject_data = SUBJECT_MAP[subject_key]
     
     with tab_context:
         st.header(f"✨ {subject_data['title']} Dersi")
         
+        # 3 Düğme (Not, Test, Video) Oluşturma
         col_notes, col_quiz, col_video = st.columns(3)
 
         # A. DERS NOTLARI (GOOGLE LİNKİ) - KRİTİK: Benzersiz Anahtar
@@ -65,6 +73,8 @@ def render_subject_tab(tab_context, subject_key):
             )
         
         st.markdown("---")
+        
+        # KONULARA GÖRE HIZLI ERİŞİM (GOOGLE ARAMA)
         st.subheader("Konulara Göre Hızlı Erişim (Google Arama)")
         
         cols_content = st.columns(3)
