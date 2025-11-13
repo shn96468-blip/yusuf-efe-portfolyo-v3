@@ -9,7 +9,7 @@ except ImportError:
     build = None
 
 # BURAYI KENDİ ALDIĞINIZ YOUTUBE API ANAHTARINIZ İLE DEĞİŞTİRİN
-YOUTUBE_API_KEY = "BURAYA_ALDIĞINIZ_YOUTUBE_API_ANAHTARINI_YAZIN" 
+YOUTUBE_API_KEY = YOUTUBE_API_KEY = "BURAYA_ALDIĞINIZ_YOUTUBE_API_ANAHTARINI_YAZIN"
 
 YOUTUBE_SERVICE = None
 if build:
@@ -253,3 +253,4 @@ render_subject_tab(tab_sci, "🧪 Fen Bilimleri", "sci")
 render_subject_tab(tab_soc, "🌍 Sosyal Bilgiler", "soc")
 render_subject_tab(tab_eng, "🗣️ İngilizce", "eng")
 render_subject_tab(tab_rel, "🕌 Din Kültürü", "rel")
+
