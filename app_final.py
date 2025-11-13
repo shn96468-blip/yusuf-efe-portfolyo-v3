@@ -11,12 +11,13 @@ TESTCOZ_SEARCH_QUERY = "testcoz.online 7. sınıf test çöz"
 # --- KRİTİK MANUEL İÇERİK BÖLÜMÜ ---
 # LÜTFEN İÇERİKLERİ AŞAĞIDAKİ ALANLARA YAPIŞTIRIN!
 
+# Not: Matematik notları örneği düzeltildi ve temizlendi.
 MATH_NOTES = """
 ## 📘 7. Sınıf Matematik Ana Konu Anlatımı
 
 ### Tam Sayılarla Toplama ve Çıkarma İşlemi
-* Pozitif iki tam sayı toplanırken sayıların işareti dikkate alınmadan toplanır. Sonuca artı (+) işareti yazılır. Örn: $(+5)+(+2)=(+7)$.
-* Negatif iki tam sayı toplanırken sayılar, işaretler dikkate alınmadan toplanır. Sonuca (-) işareti yazılır. Örn: $(-5)+(-2)=(-7)$.
+* Pozitif iki tam sayı toplanırken sayıların işareti dikkate alınmadan toplanır. Sonuca artı (+) işareti yazılır. Örn: (+5) + (+2) = (+7)
+* Negatif iki tam sayı toplanırken sayılar, işaretler dikkate alınmadan toplanır. Sonuca (-) işareti yazılır. Örn: (-5) + (-2) = (-7)
 * Ters (zıt) işaretli iki tam sayı toplanırken... (Lütfen geri kalan içeriği buradan devam ettirin)
 """
 
@@ -64,6 +65,7 @@ SUBJECT_MAP = {
 
 
 # --- 3. SESSION STATE VE SAYFA AYARLARI ---
+# Not: Hata çözümü için st.session_state'in kontrolü baştan yapılıyor.
 if 'active_content' not in st.session_state: st.session_state.active_content = None 
 
 st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | 7. Sınıf Portal")
@@ -71,6 +73,7 @@ st.title("👨‍🎓 Yusuf Efe Şahin | 7. Sınıf Ders Portalı")
 st.markdown("---")
 
 def set_active_content(content_type):
+    # Bu fonksiyon, tıklandığında içeriği açıp kapamaya yarar.
     if st.session_state.active_content == content_type: st.session_state.active_content = None
     else: st.session_state.active_content = content_type
 
@@ -89,7 +92,6 @@ def get_search_link(query, search_engine):
         return TONGUC_CHANNEL_LINK
 
     else: # Google araması (Hızlı Erişim/Notlar için)
-        # Hata burada oluşuyordu, şimdi doğru parametrelerle çağrılıyor.
         search_query = f"{query} 7. Sınıf Konu Anlatımı"
         final_query = search_query.replace(' ', '+')
         return f"{GOOGLE_LINK_BASLANGIC}{final_query}"
