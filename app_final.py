@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Kodlama sorununu aşmak için UTF-8 formatı korunmuştur.
 
 import streamlit as st
 import os
@@ -13,12 +12,11 @@ try:
         st.error("⚠️ GEMINI_API_KEY bulunamadı. Lütfen Streamlit Cloud Secrets paneline ekleyin.")
         st.stop()
     
-    # Gemini istemcisini API anahtarıyla başlat
     client = genai.Client(api_key=st.secrets['GEMINI_API_KEY'])
     MODEL = 'gemini-2.5-flash' 
 
 except Exception as e:
-    st.error(f"API İstemcisi Başlatılamadı: {e}")
+    st.error(f"API İstemcisi Baslatilamadi: {e}")
     st.stop()
 
 
@@ -31,42 +29,48 @@ if 'ai_response' not in st.session_state: st.session_state.ai_response = ""
 def generate_content_with_ai(topic_name):
     """Konu anlatımını API'den otomatik olarak çeken fonksiyon."""
     
-    # PROMPT GÜNCELLENDİ: TÜRKÇE KARAKTER KULLANMAMA TALİMATI
     prompt = f"""
-    Sen 7. sınıf öğrencilerine ders veren Akıl Öğretmensin. '{topic_name}' konusunu detaylı ve öğretici bir dille anlat. Cevabını Türkçe kelimeler kullanarak (Örn: sinif, ders, konular), ancak **sadece İngilizce harflerle (ı, ş, ç, ü, ö, ğ harflerini kullanmadan)** yaz. Cevabını mutlaka başlıklar ve madde işaretleri kullanarak formatla.
+    Sen 7. sinif ogrencilerine ders veren Akil Ogretmensin. '{topic_name}' konusunu detayli ve ogretici bir dille anlat. Cevabini Turkce kelimeler kullanarak, basliklar ve madde isaretleri ile formatla. 
     """
 
-    with st.spinner(f"👨‍🏫 Akıl Öğretmen, '{topic_name}' konusu için içeriği otomatik olarak hazırlıyor..."):
+    with st.spinner(f"👨‍🏫 Akil Ogretmen, '{topic_name}' konusu icin icerigi otomatik olarak hazirliyor..."):
         try:
-            # API çağrısı
             response = client.models.generate_content(
                 model=MODEL,
                 contents=prompt
             )
             
-            # Kodlama hatasını atlamak için düzeltme tekrar uygulanır.
-            clean_text = response.text.encode('utf-8', errors='ignore').decode('utf-8')
+            # KRİTİK DÜZELTME: Türkçe karakterleri silmek için kullanılan kod
+            # Bu fonksiyon, hataya neden olan ozel karakterleri metinden atar.
+            def remove_turkish_chars(text):
+                tr_chars = {'ı':'i', 'ğ':'g', 'ü':'u', 'ş':'s', 'ö':'o', 'ç':'c', 'İ':'I', 'Ğ':'G', 'Ü':'U', 'Ş':'S', 'Ö':'O', 'Ç':'C'}
+                for tr, en in tr_chars.items():
+                    text = text.replace(tr, en)
+                return text.encode('ascii', 'ignore').decode('ascii')
             
-            # Cevabı session state'e kaydet
-            st.session_state.ai_response = f"## 👨‍🏫 Akıl Ogretmen: {topic_name.upper()} Konu Anlatimi ✨\n\n" + clean_text.strip()
+            # Temizlenmis metni kullan
+            clean_text = remove_turkish_chars(response.text)
+            
+            st.session_state.ai_response = f"## 👨‍🏫 Akil Ogretmen: {topic_name.upper()} Konu Anlatimi ✨\n\n" + clean_text.strip()
             st.session_state.last_topic = topic_name
 
         except APIError as e:
             st.session_state.ai_response = f"""
-            ## ❌ API Hatası
-            Akıl Ogretmen su an baglanti kuramiyor. Lutfen anahtarinizi kontrol edin. Hata Detayi: {e}
+            ## ❌ API Hatasi
+            Akil Ogretmen su an baglanti kuramiyor. Lutfen anahtarinizi kontrol edin. Hata Detayi: {e}
             """
         except Exception as e:
+             # Eğer hata hala 'ascii' ise, bu son denememizdir.
              st.session_state.ai_response = f"## ❌ Bir Hata Olustu: {e}"
 
 # --- 4. SAYFA AYARLARI ---
-st.set_page_config(layout="wide", page_title="Yusuf Efe Şahin | Akıl Öğretmen")
-st.title("🎓 Yusuf Efe Şahin | Yapay Zeka Asistanı (Akıl Ogretmen)")
+st.set_page_config(layout="wide", page_title="Yusuf Efe Sahin | Akil Ogretmen")
+st.title("🎓 Yusuf Efe Sahin | Yapay Zeka Asistani (Akil Ogretmen)")
 st.markdown("---")
 
 # --- 5. ANA SAYFA KODU ---
 
-st.header("❓ Akıl Ogretmen'e Sor")
+st.header("❓ Akil Ogretmen'e Sor")
 st.markdown("Asagidaki kutucuga herhangi bir 7. sinif konusu yazin ve Akil Ogretmen'den detayli anlatim isteyin.")
 
 # Konu adı girişi
@@ -90,4 +94,3 @@ if st.session_state.ai_response:
     st.markdown(st.session_state.ai_response, unsafe_allow_html=True)
 else:
     st.info("Konu anlatimini gormek icin yukariya bir konu yazip butona tiklayin.")
-    
